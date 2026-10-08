@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console professeur – Mini-entreprises 3e TQ et 4e EQ Comptabilité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,700&family=Fredoka:wght@600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#0a0618; --bg-1:#140b2c; --bg-2:#1c1238;
+  --pink:#ff3d8b; --magenta:#e935c5; --violet:#9d4edd; --indigo:#6366f1; --cyan:#22d3ee; --sky:#38bdf8;
+  --lime:#a3e635; --emerald:#34d399; --orange:#fb923c; --yellow:#fbbf24;
+  --text:rgba(255,255,255,.93); --soft:rgba(255,255,255,.72); --dim:rgba(255,255,255,.5);
+  --border:rgba(255,255,255,.12); --border-soft:rgba(255,255,255,.07);
+  --glass:rgba(255,255,255,.05); --glass-2:rgba(255,255,255,.08);
+  --grad:linear-gradient(120deg,var(--pink),var(--magenta) 35%,var(--violet) 70%,var(--indigo));
+  --ui:'Outfit','Segoe UI',Arial,sans-serif; --serif:'Fraunces',Georgia,serif; --mono:'Space Mono',Consolas,monospace;
+  --paper-ink:#1D1F33; --paper-line:#E3E5EF; --r:18px; --r-lg:26px;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{font-family:var(--ui); background:var(--bg-deep); color:var(--text); font-size:17px; line-height:1.5; min-height:100vh; overflow-x:hidden}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid var(--cyan); outline-offset:3px}
+[hidden]{display:none !important}
+.mesh{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden}
+.blob{position:absolute; border-radius:50%; filter:blur(110px); opacity:.32; mix-blend-mode:screen}
+.b1{width:620px;height:620px;background:var(--pink);top:-160px;left:10%;animation:d1 26s ease-in-out infinite}
+.b2{width:560px;height:560px;background:var(--violet);top:20%;right:-160px;animation:d2 30s ease-in-out infinite}
+.b3{width:600px;height:600px;background:var(--cyan);bottom:-220px;left:30%;opacity:.2;animation:d3 34s ease-in-out infinite}
+@keyframes d1{50%{transform:translate(90px,120px) scale(1.1)}} @keyframes d2{50%{transform:translate(-120px,100px)}} @keyframes d3{50%{transform:translate(120px,-90px) scale(1.15)}}
+body::after{content:''; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.05; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E")}
+.glass{background:var(--glass); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); border:1px solid var(--border); border-radius:var(--r-lg)}
+.grad{background:linear-gradient(120deg,var(--pink),var(--magenta) 30%,var(--violet) 60%,var(--cyan)); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; font-style:italic; font-weight:500; animation:gs 8s ease-in-out infinite}
+@keyframes gs{50%{background-position:100% 50%}}
+
+/* ═══ Structure ═══ */
+.app{position:relative; z-index:2; display:grid; grid-template-columns:268px minmax(0,1fr); min-height:100vh}
+.rail{position:sticky; top:0; height:100vh; padding:22px 16px; display:flex; flex-direction:column; gap:6px; background:rgba(10,6,24,.6); backdrop-filter:blur(20px); border-right:1px solid var(--border-soft)}
+.brand{display:flex; align-items:center; gap:12px; padding:4px 8px 18px}
+.brand .lg{width:44px; height:44px; border-radius:14px; background:var(--grad); display:grid; place-items:center; font-family:var(--serif); font-weight:700; color:#fff; box-shadow:0 0 24px rgba(233,53,197,.5)}
+.brand b{display:block; font-family:var(--serif); font-size:18px; line-height:1.1; color:#fff}
+.brand small{color:var(--dim); font-size:13px}
+.navlab{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); padding:14px 12px 6px}
+.nv{display:flex; align-items:center; gap:12px; width:100%; text-align:left; padding:11px 12px; border-radius:14px; border:1px solid transparent; background:none; color:var(--soft); cursor:pointer; font-size:16px; transition:background .2s}
+.nv .i{width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--glass-2); font-size:18px; flex:none}
+.nv:hover{background:var(--glass)}
+.nv.on{background:linear-gradient(120deg,rgba(255,61,139,.2),rgba(157,78,221,.2)); border-color:rgba(233,53,197,.35); color:#fff}
+.nv.on .i{background:var(--grad)}
+.rail .foot{margin-top:auto; font-size:13px; color:var(--dim); padding:8px}
+main{min-width:0; padding:26px 34px 60px}
+.topbar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:26px}
+.src{display:flex; align-items:center; gap:10px; padding:8px 16px; border-radius:999px; font-size:14px}
+.dot{width:9px; height:9px; border-radius:50%; background:var(--emerald); box-shadow:0 0 10px var(--emerald)}
+.dot.demo{background:var(--yellow); box-shadow:0 0 10px var(--yellow)}
+.dot.off{background:var(--pink); box-shadow:0 0 10px var(--pink)}
+.tb-r{margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.btn{border:0; border-radius:14px; padding:11px 20px; font-weight:600; font-size:15px; cursor:pointer; color:#fff; transition:transform .2s, box-shadow .2s}
+.btn-main{background:var(--grad); box-shadow:0 10px 26px rgba(233,53,197,.35)}
+.btn-main:hover{transform:translateY(-2px)}
+.btn:disabled{opacity:.35; cursor:not-allowed; transform:none; box-shadow:none}
+.btn-ghost{background:var(--glass); border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--glass-2)}
+.btn-ghost.on{border-color:var(--cyan); color:var(--cyan)}
+.spin{display:inline-block; width:16px; height:16px; border:3px solid rgba(255,255,255,.25); border-top-color:#fff; border-radius:50%; animation:sp .8s linear infinite; vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ═══ Titres de section ═══ */
+.sec-head{margin-bottom:22px}
+.kick{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); padding:6px 14px; border-radius:999px; background:var(--glass); border:1px solid var(--border); margin-bottom:12px}
+.kick .led{width:7px; height:7px; border-radius:50%; background:var(--lime); box-shadow:0 0 10px var(--lime)}
+h2.h{font-family:var(--serif); font-weight:600; font-size:clamp(32px,3.4vw,50px); line-height:1.05; letter-spacing:-.015em; color:#fff}
+.lead{color:var(--soft); font-size:18px; margin-top:8px; max-width:70ch}
+
+/* ═══ Vue d'ensemble ═══ */
+.kpis{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; margin-bottom:18px}
+.kpi{padding:18px 20px; position:relative; overflow:hidden}
+.kpi::after{content:''; position:absolute; right:-30px; top:-30px; width:110px; height:110px; border-radius:50%; background:var(--c,var(--pink)); opacity:.18; filter:blur(10px)}
+.kpi .n{font-family:var(--mono); font-weight:700; font-size:38px; line-height:1; color:#fff}
+.kpi .l{color:var(--soft); font-size:14px; margin-top:6px}
+.kpi .ic{font-size:22px; margin-bottom:8px}
+.grid2{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:18px}
+.panel{padding:22px 24px}
+.panel h3{font-family:var(--serif); font-weight:600; font-size:22px; color:#fff; margin-bottom:14px}
+.bar{display:grid; grid-template-columns:34px minmax(0,1fr) 150px 44px; align-items:center; gap:12px; padding:7px 0}
+.bar .e{font-size:22px; text-align:center}
+.bar .t{font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.bar .track{height:12px; border-radius:8px; background:rgba(255,255,255,.08); overflow:hidden}
+.bar .fill{height:100%; border-radius:8px; background:var(--grad); transition:width .8s cubic-bezier(.22,1,.36,1)}
+.bar .v{font-family:var(--mono); font-weight:700; text-align:right}
+.donut-wrap{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.legend{display:grid; gap:8px}
+.legend div{display:flex; align-items:center; gap:10px; font-size:15px}
+.legend i{width:14px; height:14px; border-radius:4px; flex:none}
+table.list{width:100%; border-collapse:collapse}
+table.list th{text-align:left; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); padding:10px 12px; border-bottom:1px solid var(--border)}
+table.list td{padding:10px 12px; border-bottom:1px solid var(--border-soft); vertical-align:middle}
+table.list tr:hover td{background:rgba(255,255,255,.03)}
+.who{display:flex; align-items:center; gap:12px}
+.who small{display:block; color:var(--dim); font-size:13px}
+.prog{height:8px; border-radius:6px; background:rgba(255,255,255,.08); overflow:hidden; min-width:120px}
+.prog i{display:block; height:100%; background:var(--grad)}
+.st{display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; padding:4px 12px; border-radius:999px}
+.st.termine{background:rgba(52,211,153,.15); color:#8ff0c6; border:1px solid rgba(52,211,153,.4)}
+.st.en_cours{background:rgba(56,189,248,.14); color:#9fdcff; border:1px solid rgba(56,189,248,.4)}
+.st.reinitialise{background:rgba(251,191,36,.14); color:#ffd97a; border:1px solid rgba(251,191,36,.4)}
+.link{background:none; border:1px solid var(--border); color:var(--text); border-radius:10px; padding:6px 12px; cursor:pointer; font-size:14px}
+.link:hover{border-color:var(--magenta); color:#ff9bd9}
+
+/* ═══ Logo, tuiles d'entreprise ═══ */
+.lg-mark{width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font-size:22px; flex:none}
+.f-moderne{font-family:var(--ui); font-weight:800}
+.f-elegant{font-family:'Playfair Display',Georgia,serif; font-style:italic; font-weight:700}
+.f-fun{font-family:'Fredoka','Comic Sans MS',sans-serif; font-weight:600}
+.f-street{font-family:'Bebas Neue',Impact,sans-serif; font-weight:400; letter-spacing:1.2px}
+.tiles{display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.tile{display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid var(--border); border-left:5px solid var(--b,#8E4EC6); cursor:pointer; text-align:left; color:var(--text); width:100%; transition:transform .25s, background .2s}
+.tile:hover{transform:translateY(-3px); background:rgba(255,255,255,.1)}
+.tile .nm{font-size:19px; line-height:1.1; color:#fff}
+.tile small{display:block; color:var(--soft); font-size:13px; margin-top:2px}
+.tile .enc{font-size:11px; color:#9fdcff}
+.cols{display:grid; gap:16px}
+.col{padding:18px; display:flex; flex-direction:column; gap:12px; position:relative; overflow:hidden}
+.col::before{content:''; position:absolute; inset:0 0 auto 0; height:5px; background:linear-gradient(90deg,var(--c1),var(--c2))}
+.col h3{font-family:var(--serif); font-weight:600; font-size:22px; color:#fff; line-height:1.15}
+.col .slog{font-style:italic; color:var(--c1); font-weight:600}
+.col .def{color:var(--soft); font-size:15px}
+.col .count{display:flex; align-items:baseline; gap:8px}
+.col .count b{font-family:var(--mono); font-size:44px; line-height:1; background:linear-gradient(90deg,var(--c1),var(--c2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.col .count span{color:var(--soft); font-size:14px}
+.refs{display:flex; flex-wrap:wrap; gap:6px}
+.ref{font-size:12.5px; padding:4px 10px; border-radius:999px; background:rgba(255,255,255,.07); color:var(--soft); border:1px dashed rgba(255,255,255,.2)}
+.empty{padding:16px; border:1px dashed var(--border); border-radius:14px; color:var(--dim); font-size:14px; text-align:center}
+.ask{display:flex; gap:14px; align-items:flex-start; padding:16px 20px; margin-top:20px; border-radius:var(--r); border:1px solid rgba(251,191,36,.45); background:rgba(251,191,36,.07)}
+.ask .q{font-size:26px}
+.ask b{color:var(--yellow)}
+.defs{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px}
+.defs > div{padding:16px 20px}
+.defs b{font-family:var(--serif); font-size:20px; color:#fff}
+.defs p{color:var(--soft); font-size:15px; margin-top:4px}
+.chain{display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:10px; align-items:stretch; margin-bottom:18px}
+.chain > div{padding:14px 16px; border-radius:16px; text-align:center}
+.chain .arr{display:grid; place-items:center; font-size:30px; color:var(--yellow); background:none; padding:0}
+.chain b{display:block; font-family:var(--serif); font-size:18px; color:#fff}
+.chain small{color:var(--soft)}
+
+/* ═══ Cartes d'identité (grille) ═══ */
+.idg{display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:16px}
+.idc{background:linear-gradient(135deg,#FAFBFF,#ECEAFB); color:var(--paper-ink); border-radius:18px; padding:18px 20px 16px 26px; position:relative; overflow:hidden; box-shadow:0 18px 44px rgba(0,0,0,.45); cursor:pointer; transition:transform .25s}
+.idc:hover{transform:translateY(-4px) rotate(-.3deg)}
+.idc::before{content:''; position:absolute; inset:0 auto 0 0; width:9px; background:var(--b,#8E4EC6)}
+.idc .hd{padding-right:86px; display:flex; align-items:center; gap:12px; border-bottom:2px solid var(--paper-line); padding-bottom:10px; margin-bottom:10px}
+.idc .hd .t{font-size:21px; line-height:1.1}
+.idc .hd small{display:block; color:#5B5F7A; font-size:13px; font-family:var(--ui); font-style:normal; font-weight:500; letter-spacing:0}
+.idc dl{display:grid; grid-template-columns:128px 1fr; gap:4px 10px; font-size:14px}
+.idc dt{color:#6B6F88}
+.idc dd{font-weight:500}
+.idc .num{font-family:var(--mono); font-weight:700; font-size:13.5px; background:#FFF3C4; border-radius:5px; padding:0 6px}
+.idc .num.hide{background:#1D1F33; color:transparent; user-select:none}
+.idc .ok{position:absolute; right:14px; top:14px; transform:rotate(-8deg); border:2px solid #2E9E5B; color:#2E9E5B; font-weight:800; font-size:11px; padding:1px 8px; border-radius:6px; opacity:.85}
+.idc .wip{position:absolute; right:14px; top:16px; font-size:11px; font-weight:700; color:#2B7BB9}
+
+/* ═══ Élève par élève ═══ */
+.pres-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:18px}
+.pres-top select{background:rgba(10,6,24,.6); color:#fff; border:1px solid var(--border); border-radius:12px; padding:10px 14px; font-size:15px}
+.pres-top option{background:var(--bg-1)}
+.arrow{width:48px; height:48px; border-radius:50%; border:1px solid var(--border); background:var(--glass); color:#fff; font-size:20px; cursor:pointer}
+.arrow:hover{background:var(--grad); border-color:transparent}
+.pos{font-family:var(--mono); color:var(--soft)}
+.pres{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:20px; align-items:start}
+.stage{padding:18px; border-radius:var(--r-lg); position:relative; overflow:hidden}
+.stage .front{width:100%; display:block; border-radius:18px; background:linear-gradient(180deg,#1b1340,#2a1a4d)}
+.who-big{display:flex; align-items:center; gap:16px; margin-bottom:6px}
+.who-big .lg-mark{width:74px; height:74px; font-size:36px}
+.who-big .dn{font-size:clamp(28px,2.6vw,40px); line-height:1.05; color:#fff}
+.who-big .sl{color:var(--soft); font-size:16px; margin-top:4px}
+.student{font-family:var(--serif); font-size:20px; color:#fff; margin:14px 0 10px}
+.student span{color:var(--dim); font-family:var(--ui); font-size:14px; margin-left:8px}
+.tags{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 16px}
+.tag{font-size:13.5px; font-weight:600; padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.07); border:1px solid var(--border)}
+.cards3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-top:20px}
+.card{padding:18px 20px}
+.card h4{font-family:var(--serif); font-weight:600; font-size:19px; color:#fff; margin-bottom:10px}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{font-size:13px; padding:5px 11px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid var(--border)}
+.stat-row{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:14px}
+.mini{padding:12px; border-radius:14px; background:rgba(255,255,255,.05); border:1px solid var(--border-soft); text-align:center}
+.mini b{display:block; font-family:var(--mono); font-size:22px; color:#fff}
+.mini span{font-size:12.5px; color:var(--dim)}
+.thumbs{display:flex; gap:10px; overflow-x:auto; padding:14px 4px 6px; margin-top:22px}
+.thumb{flex:none; display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:0; color:var(--soft); cursor:pointer; font-size:12px; width:74px; opacity:.6; transition:opacity .2s, transform .2s}
+.thumb:hover,.thumb.on{opacity:1; transform:translateY(-3px)}
+.thumb.on .lg-mark{box-shadow:0 0 0 3px #fff, 0 0 22px rgba(255,255,255,.4) !important}
+.idcard{background:linear-gradient(135deg,#F8F9FF,#ECEAFB); color:var(--paper-ink); border-radius:18px; padding:20px 22px 18px 30px; position:relative; overflow:hidden; box-shadow:0 18px 44px rgba(0,0,0,.45)}
+.idcard::before{content:""; position:absolute; inset:0 auto 0 0; width:10px; background:var(--b,#8E4EC6)}
+.idcard h5{font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#6B6F88; margin-bottom:8px}
+.idcard dl{display:grid; grid-template-columns:150px 1fr; gap:6px 12px; font-size:15px}
+.idcard dt{color:#6B6F88}
+.idcard .num{font-family:var(--mono); font-weight:700; background:#FFF3C4; border-radius:5px; padding:0 6px}
+.patri{background:#fff; color:var(--paper-ink); border-radius:14px; overflow:hidden}
+.patri .ph{background:var(--b,#8E4EC6); color:var(--ob,#fff); padding:8px 14px; font-weight:700; font-size:14px}
+.patri .pc{display:grid; grid-template-columns:1fr 1fr}
+.patri .pc > div{padding:10px 12px; font-size:13px}
+.patri .pc > div + div{border-left:2px solid var(--paper-line)}
+.patri h6{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#6B6F88; margin-bottom:4px}
+.patri .pl{display:flex; justify-content:space-between; gap:8px; padding:3px 0; border-bottom:1px dashed var(--paper-line)}
+.patri .pl span:last-child{font-family:var(--mono); font-weight:700; white-space:nowrap}
+.patri .neg span:last-child{color:#C0392B}
+.patri .pt{display:flex; justify-content:space-between; padding:8px 12px; background:#F4F2FB; font-weight:700; font-size:14px}
+.biz{width:100%; max-width:440px; aspect-ratio:85/55; background:#fff; color:#1D1F33; border-radius:12px; display:grid; grid-template-columns:34% 66%; overflow:hidden; box-shadow:0 14px 34px rgba(0,0,0,.4)}
+.biz .l{background:var(--b,#8E4EC6); display:grid; place-items:center}
+.biz .l .lg-mark{width:56px; height:56px; font-size:27px}
+.biz .r{padding:12px 14px; display:flex; flex-direction:column; justify-content:center; font-size:11.5px; color:#4A4E68; gap:1px}
+.biz .bn{font-size:18px; color:#1D1F33; line-height:1.1}
+.biz .bs{font-size:10.5px; margin-bottom:6px}
+.biz .who2{font-weight:700; color:#1D1F33; font-size:12.5px}
+
+/* ═══ Connexion ═══ */
+.gate{max-width:620px; margin:8vh auto 0; padding:34px 36px; text-align:left}
+.gate h2{font-family:var(--serif); font-size:40px; line-height:1.05; color:#fff; margin-bottom:10px}
+.gate label{display:block; font-weight:600; margin:18px 0 6px}
+.inp{width:100%; background:rgba(10,6,24,.6); color:#fff; border:1px solid var(--border); border-radius:14px; padding:13px 16px; font-size:16px}
+.inp:focus{outline:none; border-color:var(--magenta); box-shadow:0 0 0 4px rgba(233,53,197,.2)}
+.help{font-size:14px; color:var(--dim); margin-top:6px}
+.err{color:#ffb4c8; margin-top:10px}
+
+/* ═══ Donut, confettis ═══ */
+.donut text{font-family:var(--mono); font-weight:700}
+.fade-in{animation:fi .5s ease-out both}
+@keyframes fi{from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none}}
+
+/* ═══ Projection ═══ */
+body.projo{font-size:19px}
+body.projo .rail{display:none}
+body.projo .app{grid-template-columns:minmax(0,1fr)}
+body.projo main{padding:22px 40px}
+
+/* ═══ Module « Les étapes d'un achat » ═══ */
+.stepbar{display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:8px; margin-bottom:18px}
+.sb{display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border-radius:16px; background:var(--glass); border:1px solid var(--border); color:var(--soft); cursor:pointer; font-size:12.5px; text-align:center; line-height:1.2}
+.sb .n{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; font-size:17px; background:rgba(255,255,255,.08)}
+.sb.on{background:linear-gradient(120deg,rgba(255,61,139,.22),rgba(157,78,221,.22)); border-color:rgba(233,53,197,.45); color:#fff}
+.sb.on .n{background:var(--grad)}
+.sb.vu .n{background:rgba(52,211,153,.25)}
+.sb.lock{opacity:.6}
+.slide{display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:22px; align-items:start}
+.sx{padding:24px 26px}
+.sx .num{font-family:var(--mono); color:var(--yellow); font-size:14px}
+.sx h3{font-family:var(--serif); font-weight:600; font-size:clamp(26px,2.4vw,36px); line-height:1.1; color:#fff; margin:6px 0 14px}
+.sx .who{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.sx .who span{font-size:14px; font-weight:600; padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid var(--border)}
+.sx p{color:var(--soft); font-size:17px; margin-bottom:10px}
+.sx .retenir{margin-top:14px; padding:14px 16px; border-radius:14px; border:1px solid rgba(52,211,153,.45); background:rgba(52,211,153,.08); color:#d9fbe9; font-size:16px}
+.sx .retenir b{color:#9ff0c9}
+.sdoc{min-width:0}
+.slide.large{grid-template-columns:1fr}
+.slide.large .sx{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:6px 28px; align-items:start}
+.slide.large .sx .num,.slide.large .sx h3,.slide.large .sx .who{grid-column:1/-1}
+.ex-bar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:16px}
+.ex-bar select{background:rgba(10,6,24,.6); color:#fff; border:1px solid var(--border); border-radius:12px; padding:9px 12px; font-size:14px}
+.ex-bar option{background:var(--bg-1)}
+.paper{background:#fff; color:#1D1F33; border-radius:8px; padding:26px 30px; box-shadow:0 22px 60px rgba(0,0,0,.5); font-size:15px; line-height:1.45}
+.paper p{margin-bottom:8px}
+.paper .dh{display:flex; justify-content:space-between; gap:18px; align-items:flex-start}
+.paper .from{display:flex; gap:12px; align-items:flex-start}
+.paper .from .emb{width:48px; height:48px; border-radius:12px; display:grid; place-items:center; font-size:24px; flex:none}
+.paper .from .co{font-size:20px; line-height:1.15}
+.paper .from p{margin:3px 0 0; font-size:13px; color:#4A4E68}
+.paper .from .ids{font-family:var(--mono); font-size:11.5px}
+.paper .to{border:1px solid #D5D8E6; border-radius:8px; padding:10px 14px; min-width:200px; font-size:14px}
+.paper .to .lbl{font-size:11px; color:#6B6F88}
+.paper .place{text-align:right; margin:18px 0 6px; font-size:14px}
+.paper h3.doc{font-size:21px; letter-spacing:.5px; margin:2px 0}
+.paper .ref{font-family:var(--mono); font-size:12.5px; color:#4A4E68; margin-bottom:12px}
+.paper table{width:100%; border-collapse:collapse; margin:10px 0}
+.paper th{background:#F0F2FA; text-align:left; font-size:12.5px; padding:7px 8px; border-bottom:2px solid #1D1F33}
+.paper td{padding:7px 8px; border-bottom:1px solid #E3E5EF; font-size:14px}
+.paper .sig{margin-top:14px; display:flex; justify-content:flex-end}
+.paper .sig div{text-align:center; min-width:220px}
+.paper .signed{font-family:'Playfair Display',Georgia,serif; font-style:italic; font-size:22px; color:#2A2F7A}
+.paper .sig small{display:block; color:#6B6F88; font-size:12px}
+.paper .foot{margin-top:16px; border-top:1px solid #E3E5EF; padding-top:6px; font-size:11px; color:#8A8FA8; text-align:center}
+.offres3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px}
+.offre{background:#fff; color:#1D1F33; border-radius:12px; padding:14px; box-shadow:0 14px 34px rgba(0,0,0,.4); display:flex; flex-direction:column; gap:6px; position:relative; border:3px solid transparent; font-size:13px}
+.offre.on{border-color:#E935C5; box-shadow:0 0 0 4px rgba(233,53,197,.35), 0 14px 34px rgba(0,0,0,.4)}
+.offre.on::after{content:"✓ Offre choisie"; position:absolute; top:-12px; right:10px; background:var(--grad); color:#fff; font-weight:700; font-size:12px; padding:3px 10px; border-radius:999px}
+.offre .oh{border-bottom:2px solid #E3E5EF; padding-bottom:6px}
+.offre .oh b{font-size:15px}
+.offre .oh small{display:block; color:#6B6F88; font-size:11px; line-height:1.3}
+.offre .atout{align-self:flex-start; font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; background:#F1E9FF; color:#6B2FB3}
+.offre .art{font-weight:700; font-size:14px}
+.offre .ln{display:flex; justify-content:space-between; gap:6px}
+.offre .ln span:last-child{font-family:var(--mono); font-weight:700; white-space:nowrap}
+.offre .tot{display:flex; justify-content:space-between; background:#F4F2FB; border-radius:8px; padding:6px 8px; font-weight:800}
+.offre .tot span:last-child{font-family:var(--mono); white-space:nowrap}
+.offre .cond{font-size:12px; color:#4A4E68; display:grid; gap:1px}
+.mail{background:#fff; color:#1D1F33; border-radius:12px; overflow:hidden; box-shadow:0 22px 60px rgba(0,0,0,.5); font-size:15px}
+.mail .mh{background:#F0F2FA; padding:12px 18px; font-size:13.5px; display:grid; gap:3px; border-bottom:1px solid #E3E5EF}
+.mail .mh b{display:inline-block; width:58px; color:#6B6F88; font-weight:600}
+.mail .mb{padding:16px 20px; line-height:1.55}
+.mail .mb p{margin-bottom:8px}
+.methods{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px}
+.method{padding:12px 14px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid var(--border); font-size:14px}
+.method.on{border-color:rgba(233,53,197,.6); background:rgba(233,53,197,.12)}
+.method b{display:block; color:#fff; font-size:15px; margin-bottom:3px}
+.method .p{color:#9ff0c9} .method .c{color:#ffc4d4}
+.needs{display:grid; gap:12px}
+.needc{display:flex; gap:14px; align-items:center; padding:16px 18px; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid var(--border)}
+.needc .i{font-size:40px}
+.needc b{display:block; font-family:var(--serif); font-size:20px; color:#fff}
+.needc p{color:var(--soft); font-size:14px; margin:0}
+.budget{margin-top:12px; padding:14px 18px; border-radius:14px; background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.45); font-size:16px}
+.budget b{font-family:var(--mono); color:#9ff0c9}
+.cmp{width:100%; border-collapse:collapse; margin-top:14px; font-size:14px}
+.cmp th,.cmp td{padding:7px 9px; border-bottom:1px solid var(--border-soft); text-align:left}
+.cmp th{color:var(--dim); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase}
+.cmp td.best{color:#6ee7b7; font-weight:700}
+.checks{display:grid; gap:8px; margin-top:14px}
+.checks div{padding:10px 14px; border-radius:12px; background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.4); font-size:15px}
+.receipt{max-width:300px; margin:0 auto; background:#fff; color:#1D1F33; font-family:var(--mono); font-size:13px; padding:16px 18px; box-shadow:0 18px 40px rgba(0,0,0,.45); border-radius:6px}
+.receipt .c{text-align:center}
+.receipt hr{border:0; border-top:1px dashed #999; margin:8px 0}
+.receipt .r{display:flex; justify-content:space-between; gap:10px}
+.notif2{max-width:340px; margin:14px auto 0; background:rgba(255,255,255,.95); color:#1D1F33; border-radius:16px; padding:12px 14px; font-size:14px}
+.notif2 .nh{display:flex; justify-content:space-between; font-size:12px; color:#6B6F88}
+.lockdoc{position:relative; border-radius:10px; overflow:hidden}
+.lockdoc .paper{filter:blur(3px); opacity:.65}
+.lockdoc .lk{position:absolute; inset:0; display:grid; place-items:center; text-align:center; background:rgba(10,6,24,.35)}
+.lockdoc .lk div{background:rgba(10,6,24,.85); border:1px solid rgba(251,191,36,.6); border-radius:18px; padding:18px 24px; color:#fff; font-size:17px}
+.lockdoc .lk b{display:block; font-family:var(--serif); font-size:24px; color:var(--yellow)}
+.circuit{display:grid; grid-template-columns:200px minmax(0,1fr) 200px; gap:14px; align-items:stretch}
+.circuit .side{display:grid; place-items:center; text-align:center; padding:18px; border-radius:22px}
+.circuit .side .i{font-size:56px}
+.circuit .side b{display:block; font-family:var(--serif); font-size:22px; color:#fff}
+.circuit .flows{display:grid; gap:10px}
+.flow{display:grid; grid-template-columns:34px minmax(0,1fr) 34px; align-items:center; gap:8px; padding:10px 12px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid var(--border); font-size:15px}
+.flow .ar{font-size:24px; color:var(--yellow); text-align:center}
+.flow .t b{color:#fff} .flow .t small{display:block; color:var(--dim); font-size:12.5px}
+.flow.soon{opacity:.55; border-style:dashed}
+.snav{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:20px}
+@media (max-width:1200px){ .slide{grid-template-columns:1fr} .stepbar{grid-template-columns:repeat(4,minmax(0,1fr))} .offres3{grid-template-columns:1fr} .circuit{grid-template-columns:1fr} }
+
+@media (max-width:1200px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} .grid2,.pres{grid-template-columns:1fr} .cards3{grid-template-columns:1fr 1fr} }
+@media (max-width:900px){ .app{grid-template-columns:1fr} .rail{position:static; height:auto; flex-direction:row; flex-wrap:wrap} .rail .foot,.navlab{display:none} .cols{grid-template-columns:1fr !important} .chain{grid-template-columns:1fr} .chain .arr{transform:rotate(90deg)} .defs{grid-template-columns:1fr} .cards3{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation:none !important; transition:none !important} }
+</style>
+</head>
+<body>
+<div class="mesh" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="app" id="app"></div>
+<script>
+// ======================================================================
+//  CATALOGUE — 8 entreprises (fictives), 10 achats et 4 fournisseurs chacune
+// ======================================================================
+const TYPES = [
+{ id:"ferme", secteur:"primaire", emoji:"🐄", nom:"La ferme avec son magasin",
+  desc:"Tu élèves des vaches et tu cultives des légumes. Dans le magasin de la ferme, tu vends tes produits frais aux habitants de la région.",
+  achete:"semences, aliments pour animaux, emballages", vend:"légumes de saison, lait, œufs, fromages",
+  noms:["La Ferme du Terril","Les Saveurs du Pré","Ferme des Trois Tilleuls","Le Panier Fermier"],
+  slogans:["Du champ à ton assiette","Le goût du vrai","Frais, local et fait avec amour"],
+  produits:[["Semences de pommes de terre","sac de 25 kg","Pour planter les pommes de terre au printemps"],["Graines de carottes","sachet de 500 g","De quoi semer plusieurs longues rangées"],["Aliment pour vaches laitières","sac de 25 kg","Un mélange de céréales pour tes vaches"],["Foin","botte de 250 kg","La nourriture de base des vaches en hiver"],["Engrais naturel","sac de 25 kg","Pour nourrir la terre de tes champs"],["Boîtes à œufs","lot de 100","Pour vendre les œufs par 6 ou par 10"],["Bouteilles en verre pour le lait","caisse de 24","Des bouteilles consignées de 1 litre"],["Filets à légumes","lot de 100","Pour vendre pommes de terre et oignons"],["Papier pour emballer le fromage","rouleau de 50 m","Garde le fromage frais plus longtemps"],["Bottes en caoutchouc","paire","Indispensables dans la boue de la ferme"]],
+  fournisseurs:[["AgriCoop Hainaut","SC","Chaussée de Mons 210","7800","Ath","Belgique","Coopérative qui fournit tout le nécessaire aux agriculteurs","Prix bas"],["Semences Delvaux","SRL","Avenue de la Faculté 18","5030","Gembloux","Belgique","Spécialiste des graines, des semences et des engrais","Qualité premium"],["Agri Nord Distribution","SAS","Rue du Marché 45","59000","Lille","France","Grossiste agricole du nord de la France","Grand choix"],["Boerderij Groothandel","BV","Industrieweg 7","5461 JK","Veghel","Pays-Bas","Grossiste qui livre les fermes de tout le Benelux","Livraison rapide"]]},
+{ id:"pepiniere", secteur:"primaire", emoji:"🌱", nom:"La pépinière",
+  desc:"Tu fais pousser des plantes, des fleurs et des arbres dans tes serres, puis tu les vends aux particuliers et aux jardiniers.",
+  achete:"graines, bulbes, pots, terreau", vend:"plantes, fleurs, arbustes, arbres fruitiers",
+  noms:["Au Jardin Fleuri","Vert Passion","Graines de Bonheur","Les Serres du Borinage"],
+  slogans:["Faites fleurir vos envies","Des plantes qui ont du caractère","Le vert, c'est notre nature"],
+  produits:[["Terreau universel","sac de 50 litres","La terre idéale pour les pots et les semis"],["Pots en terre cuite","lot de 20","Des pots classiques de 15 cm"],["Graines de fleurs d'été","lot de 50 sachets","Tournesols, cosmos, capucines…"],["Bulbes de tulipes","filet de 50","À planter en automne pour des fleurs au printemps"],["Jeunes plants de fraisiers","plateau de 24","Prêts à grandir et à donner des fraises"],["Engrais pour plantes","bidon de 5 litres","Pour des plantes plus fortes et plus fleuries"],["Tuteurs en bambou","lot de 50","Pour aider les plantes à pousser bien droit"],["Arrosoirs","pièce","Arrosoir en métal de 10 litres"],["Gants de jardinage","paire","Protègent les mains des épines"],["Étiquettes pour plantes","lot de 500","Pour écrire le nom et le prix de chaque plante"]],
+  fournisseurs:[["Horti Wallonie","SRL","Rue des Horticulteurs 9","1300","Wavre","Belgique","Grossiste en fournitures pour jardineries","Livraison rapide"],["Terre & Racines","SA","Kortrijksesteenweg 120","9000","Gand","Belgique","Fabricant de terreaux et d'engrais","Prix bas"],["Bloemen Groothandel","BV","Bloemenweg 25","1431 GB","Aalsmeer","Pays-Bas","Grossiste installé près du plus grand marché aux fleurs d'Europe","Grand choix"],["Jardin Pro","SAS","Avenue de Denain 88","59300","Valenciennes","France","Matériel de jardinage pour les professionnels","Qualité premium"]]},
+{ id:"chocolaterie", secteur:"secondaire", emoji:"🍫", nom:"La chocolaterie artisanale",
+  desc:"Dans ton atelier, tu transformes le cacao, le sucre et le lait en pralines et en tablettes, que tu vends dans ta boutique.",
+  achete:"cacao, sucre, noisettes, emballages", vend:"pralines, tablettes, coffrets cadeaux",
+  noms:["L'Atelier Cacao","Praline & Cie","Douceur Noire","Les Chocolats du Borinage"],
+  slogans:["Le chocolat belge, avec passion","Craquez pour nos pralines","Fait main, fait pour vous"],
+  produits:[["Fèves de cacao","sac de 25 kg","La matière première de tout chocolat"],["Chocolat de couverture noir","bloc de 5 kg","Pour enrober les pralines"],["Sucre de canne","sac de 25 kg","Pour adoucir le chocolat"],["Lait en poudre","sac de 25 kg","Indispensable pour le chocolat au lait"],["Noisettes grillées","sac de 5 kg","Pour le praliné et les tablettes"],["Beurre de cacao","bloc de 5 kg","Rend le chocolat fondant"],["Boîtes à pralines","lot de 100","Boîtes cadeaux de 250 g"],["Papier doré","rouleau de 50 m","Pour emballer les tablettes"],["Moules à pralines","pièce","Moule de 24 pralines"],["Rubans cadeaux","rouleau de 50 m","La touche finale des coffrets"]],
+  fournisseurs:[["Cacao Import","SA","Noorderlaan 55","2030","Anvers","Belgique","Importateur de cacao d'Afrique et d'Amérique du Sud","Grand choix"],["Douceurs & Co","SRL","Rue des Confiseurs 12","4000","Liège","Belgique","Grossiste pour chocolatiers et pâtissiers","Livraison rapide"],["Emballages Prestige","SAS","Rue de l'Épeule 30","59100","Roubaix","France","Spécialiste des ingrédients et emballages haut de gamme","Qualité premium"],["Noten & Suiker","BV","Havenstraat 8","3011 AB","Rotterdam","Pays-Bas","Grossiste en fruits secs, sucre et cacao","Prix bas"]]},
+{ id:"textile", secteur:"secondaire", emoji:"👕", nom:"L'atelier de T-shirts personnalisés",
+  desc:"Tu imprimes des dessins, des prénoms ou des logos sur des T-shirts, des sweats et des casquettes, selon les envies de tes clients.",
+  achete:"T-shirts blancs, sweats, encres, vinyle", vend:"vêtements personnalisés",
+  noms:["Borinage Print","L'Atelier du T-shirt","Street Ink","Mon Style Unique"],
+  slogans:["Ton style, ton message","On imprime tes idées","Unique comme toi"],
+  produits:[["T-shirts blancs en coton","carton de 50","T-shirts vierges à personnaliser"],["Sweats à capuche","carton de 20","Sweats noirs, gris ou blancs"],["Casquettes","carton de 25","Casquettes réglables à imprimer"],["Sacs en tissu","lot de 50","Sacs en coton naturel"],["Encre textile noire","pot de 1 kg","Encre qui résiste au lavage"],["Encres textiles de couleur","lot de 4 pots","Rouge, bleu, jaune et vert"],["Papier transfert","paquet de 100 feuilles","Pour transférer un dessin au fer chaud"],["Vinyle flex","rouleau de 5 m","Pour découper des lettres et des logos"],["Sachets d'emballage","lot de 500","Pour emballer chaque vêtement vendu"],["Étiquettes à ta marque","lot de 1 000","Pour coudre ton logo dans le col"]],
+  fournisseurs:[["Textiles Delcourt","SRL","Rue du Midi 77","7700","Mouscron","Belgique","Grossiste en vêtements vierges","Prix bas"],["PrintSupply","BV","Strijpsestraat 40","5616 GS","Eindhoven","Pays-Bas","Tout le matériel pour imprimer sur textile","Livraison rapide"],["Encres & Couleurs","SAS","Rue de la Soie 14","69001","Lyon","France","Fabricant d'encres et de textiles de qualité","Qualité premium"],["BlankWear","GmbH","Industriestraße 21","50667","Cologne","Allemagne","Grossiste européen en textile","Grand choix"]]},
+{ id:"baskets", secteur:"tertiaire", emoji:"👟", nom:"Le magasin de baskets",
+  desc:"Tu vends des baskets et des accessoires aux jeunes et aux sportifs, et tu les conseilles pour trouver la bonne paire.",
+  achete:"baskets, chaussettes, accessoires", vend:"les mêmes articles, à tes clients",
+  noms:["Sneak'Up","Street Kicks","Pas de Géant","Chaussure à ton Pied"],
+  slogans:["Chaque pas compte","Le style commence par les pieds","Tes pieds vont adorer"],
+  produits:[["Baskets de running","paire","Légères et confortables pour courir"],["Baskets en toile","paire","Le classique qui va avec tout"],["Baskets montantes","paire","Style street, cheville maintenue"],["Baskets pour enfants","paire","Du 28 au 35, avec scratch"],["Claquettes","paire","Pour la piscine ou l'été"],["Chaussettes de sport","lot de 3 paires","Blanches ou noires"],["Semelles confort","paire","Pour marcher toute la journée"],["Spray imperméabilisant","flacon","Protège les baskets de la pluie"],["Kit de nettoyage","kit","Brosse et produit pour baskets blanches"],["Lacets de couleur","lot de 5 paires","Pour personnaliser ses baskets"]],
+  fournisseurs:[["Sport Distribution","SA","Boulevard Industriel 60","1070","Anderlecht","Belgique","Grossiste en articles de sport","Grand choix"],["Shoes Europe","BV","Venrayseweg 100","5928 RH","Venlo","Pays-Bas","Centre de distribution de chaussures","Livraison rapide"],["Pied Léger","SAS","Route de Béthune 25","62300","Lens","France","Fabricant de baskets","Qualité premium"],["Sneaker Großhandel","GmbH","Kölner Straße 15","40211","Düsseldorf","Allemagne","Grossiste qui vend en très grandes quantités","Prix bas"]]},
+{ id:"gaming", secteur:"tertiaire", emoji:"🎮", nom:"La boutique gaming et high-tech",
+  desc:"Tu vends des consoles, des jeux et des accessoires aux joueurs, et tu les aides à choisir le bon matériel.",
+  achete:"consoles, manettes, casques, accessoires", vend:"les mêmes articles, à tes clients",
+  noms:["Level Up Store","Pixel Shop","Game Zone","Joystick Corner"],
+  slogans:["Passe au niveau supérieur","Le jeu commence ici","Game on !"],
+  produits:[["Consoles de jeux","pièce","La console de salon la plus demandée"],["Manettes sans fil","pièce","Compatibles avec la console"],["Casques gaming","pièce","Avec micro pour jouer en ligne"],["Claviers gaming","pièce","Clavier lumineux et résistant"],["Souris gaming","pièce","Précise et rapide"],["Tapis de souris XXL","pièce","Couvre tout le bureau"],["Cartes cadeaux jeux vidéo","lot de 10","Cartes de 25 € à offrir"],["Câbles HDMI","lot de 10","Pour brancher la console à l'écran"],["Chaises gaming","pièce","Confortables pour de longues parties"],["Housses de transport","lot de 10","Pour protéger la console en voyage"]],
+  fournisseurs:[["TechDistri","SA","Leuvensesteenweg 510","1930","Zaventem","Belgique","Grossiste en électronique et jeux vidéo","Livraison rapide"],["Game Import","BV","Minervum 12","4817 ZL","Breda","Pays-Bas","Importateur de consoles et d'accessoires","Grand choix"],["Numérik Grossiste","SAS","Rue de la Belle Borne 8","95700","Roissy-en-France","France","Vente en gros de matériel high-tech","Prix bas"],["ElektroHandel","GmbH","Jülicher Straße 200","52070","Aix-la-Chapelle","Allemagne","Fabricant d'accessoires gaming","Qualité premium"]]},
+{ id:"velos", secteur:"tertiaire", emoji:"🚲", nom:"Le magasin de vélos",
+  desc:"Tu vends des vélos et des accessoires, et tu répares les vélos de tes clients dans ton atelier.",
+  achete:"vélos, casques, pièces détachées", vend:"vélos, accessoires et réparations",
+  noms:["Roue Libre","Le Guidon Malin","Cycl'Hainaut","Vélo Village"],
+  slogans:["En selle !","Roulez plus loin","La liberté sur deux roues"],
+  produits:[["Vélos de ville","pièce","Avec panier et éclairage"],["VTT","pièce","Vélo tout terrain pour les chemins"],["Vélos électriques","pièce","Une batterie pour aller plus loin"],["Vélos pour enfants","pièce","Roues de 16 pouces"],["Casques de vélo","pièce","Pour rouler en sécurité"],["Antivols","pièce","Antivol en U très solide"],["Chambres à air","lot de 10","Pour réparer les crevaisons"],["Pneus","pièce","Pneus pour vélo de ville"],["Kits d'éclairage","kit","Lampes avant et arrière rechargeables"],["Sacoches","pièce","Pour transporter ses affaires"]],
+  fournisseurs:[["Cycles Benelux","SA","Kempische Steenweg 300","3500","Hasselt","Belgique","Grossiste en vélos et accessoires","Grand choix"],["Fietsen Groothandel","BV","Europalaan 50","3526 KS","Utrecht","Pays-Bas","Importateur de vélos électriques","Qualité premium"],["Vélo Pièces","SAS","Rue de la Manufacture 3","42000","Saint-Étienne","France","Spécialiste des pièces détachées","Prix bas"],["RadTeile","GmbH","Landsberger Straße 150","80339","Munich","Allemagne","Fabricant d'accessoires pour vélos","Livraison rapide"]]},
+{ id:"animalerie", secteur:"tertiaire", emoji:"🐶", nom:"L'animalerie",
+  desc:"Tu vends de la nourriture, des jouets et des accessoires pour les chiens, les chats, les poissons et les rongeurs, et tu conseilles leurs propriétaires.",
+  achete:"croquettes, litière, accessoires", vend:"les mêmes articles, à tes clients",
+  noms:["Patte & Moustache","Wouf & Miaou","Le Paradis des Animaux","Compagnons Store"],
+  slogans:["Ils le méritent bien","Pour le bonheur de vos compagnons","Tout pour vos animaux"],
+  produits:[["Croquettes pour chiens","sac de 12 kg","Pour chiens adultes"],["Croquettes pour chats","sac de 10 kg","Pour chats adultes"],["Litière pour chats","sac de 20 litres","Absorbe les odeurs"],["Paniers pour chiens","pièce","Coussin doux et lavable"],["Arbres à chat","pièce","Pour grimper et griffer"],["Laisses","pièce","Laisse solide de 2 mètres"],["Jouets pour chiens","lot de 10","Balles et cordes à mâcher"],["Aquariums","pièce","Aquarium de 60 litres avec filtre"],["Nourriture pour poissons","lot de 20 boîtes","Flocons pour poissons d'eau douce"],["Cages pour rongeurs","pièce","Pour lapins nains et cobayes"]],
+  fournisseurs:[["Animal Distribution","SA","Avenue de l'Industrie 40","6040","Jumet","Belgique","Grossiste en produits pour animaux","Grand choix"],["PetFood Europe","BV","Ringbaan-Oost 102","5013 CD","Tilburg","Pays-Bas","Fabricant de croquettes","Prix bas"],["Croq'Pro","SAS","Rue Jules Verne 12","80000","Amiens","France","Spécialiste des accessoires pour animaux","Qualité premium"],["Tierbedarf Rhein","GmbH","Rheinweg 44","53113","Bonn","Allemagne","Grossiste qui livre toute l'Europe","Livraison rapide"]]}
+];
+
+// ======================================================================
+//  COMPLÉMENTS PAR ENTREPRISE : stratégies, symboles du logo, vitrine
+// ======================================================================
+const EXTRAS = {
+  ferme:{ symboles:["🐄","🌾","🥕","🧀","🥚","🌻"], vitrine:["🥕","🥚","🧀","🥛"],
+    strat:["Des légumes et du lait à petits prix, pour les familles qui veulent économiser.","Des produits frais et de qualité, à des prix corrects.","Des produits bio et des fromages affinés : plus chers, mais d'exception."] },
+  pepiniere:{ symboles:["🌱","🌷","🌻","🌳","🍓","🌵"], vitrine:["🌷","🌻","🌵","🌳"],
+    strat:["Des plantes et des fleurs pas chères, vendues en grande quantité.","Un grand choix de plantes en bonne santé, à prix raisonnables.","Des plantes rares et des conseils de spécialiste, à prix élevés."] },
+  chocolaterie:{ symboles:["🍫","🍬","🎁","💝","🌰","👑"], vitrine:["🍫","🍬","🎁","💝"],
+    strat:["Des tablettes simples à petit prix, pour tous les jours.","De bonnes pralines, pour se faire plaisir sans se ruiner.","Des pralines de luxe dans des coffrets élégants, pour les grandes occasions."] },
+  textile:{ symboles:["👕","🎨","✂️","⚡","🔥","⭐"], vitrine:["👕","🧢","🎨","👕"],
+    strat:["Des T-shirts imprimés à petits prix, prêts en un jour.","Des vêtements de bonne qualité, personnalisés avec soin.","Des pièces uniques en coton bio, avec des dessins faits sur mesure."] },
+  baskets:{ symboles:["👟","⚡","🏃","⭐","🔥","👑"], vitrine:["👟","🧦","👟","🎒"],
+    strat:["Des baskets à petits prix pour tout le monde (environ 30 € la paire).","Des baskets confortables et tendance (environ 70 € la paire).","Des baskets haut de gamme et des éditions limitées (plus de 150 € la paire)."] },
+  gaming:{ symboles:["🎮","🕹️","🎧","👾","⚡","🏆"], vitrine:["🎮","🎧","🕹️","👾"],
+    strat:["Des accessoires pas chers et des jeux d'occasion.","Le bon matériel au bon prix, avec de bons conseils.","Du matériel haut de gamme pour les joueurs les plus exigeants."] },
+  velos:{ symboles:["🚲","⚙️","🏁","🌍","⚡","⛰️"], vitrine:["🚲","⛑️","🔧","🚲"],
+    strat:["Des vélos simples et solides, à petits prix.","De bons vélos pour tous les jours, avec un entretien sérieux.","Des vélos électriques et sportifs haut de gamme, avec un service sur mesure."] },
+  animalerie:{ symboles:["🐶","🐱","🐾","🐟","🦴","❤️"], vitrine:["🐶","🐱","🐟","🦴"],
+    strat:["De la nourriture et des accessoires à petits prix.","Des produits de qualité et de bons conseils.","Des produits haut de gamme et des soins pour les animaux les plus choyés."] }
+};
+TYPES.forEach(t => Object.assign(t, EXTRAS[t.id]));
+
+const STRATEGIES = [
+  { id:"petit", nom:"Petits prix", icone:"💰", cls:"st-petit", atout:"Prix bas",
+    texte:"Tu vends pas cher. Beaucoup de clients viennent chez toi, mais tu gagnes peu d'argent sur chaque vente : il faudra vendre beaucoup !",
+    jauge:{prix:1, qualite:1, clients:3} },
+  { id:"milieu", nom:"Bon rapport qualité-prix", icone:"⚖️", cls:"st-milieu", atout:"Grand choix",
+    texte:"Des produits de bonne qualité à des prix raisonnables. C'est l'équilibre : ni les moins chers, ni les plus chers.",
+    jauge:{prix:2, qualite:2, clients:2} },
+  { id:"haut", nom:"Haut de gamme", icone:"💎", cls:"st-haut", atout:"Qualité premium",
+    texte:"Tu vends cher des produits de grande qualité, avec un service aux petits soins. Moins de clients, mais tu gagnes plus sur chaque vente.",
+    jauge:{prix:3, qualite:3, clients:1} }
+];
+const RAISONS = ["Mes futurs clients ont peu d'argent","Je veux vendre beaucoup","Je veux proposer de la qualité","Je veux gagner plus sur chaque vente","Je veux me démarquer des autres magasins","Je veux prendre le temps de conseiller mes clients"];
+
+const COULEURS2 = [["Blanc","#FFFFFF"],["Noir","#1D1F33"],["Doré","#D4A537"],["Crème","#F5EBD8"],["Bleu nuit","#1E2A5A"]];
+const FACADES = [["brique","Brique","Chaleureuse et classique"],["bois","Bois","Nature et artisanale"],["pierre","Pierre","Élégante et ancienne"],["moderne","Moderne","Vitrée et épurée"]];
+const AUVENTS = [["raye","Rayé"],["uni","Uni"],["sans","Sans auvent"]];
+const AMBIANCES = [["chaleureuse","Chaleureuse","#FFD89A","#F4A259"],["lumineuse","Lumineuse","#F4F7FF","#BFD7FF"],["nature","Nature","#D6F2D2","#86CF95"],["prestige","Prestige","#3A2D45","#C9A34E"]];
+const ACCUEILS = ["Bienvenue chez nous !","Entrez, c'est ouvert !","Au plaisir de vous conseiller","Ici, chaque client compte"];
+
+const APPORT = 10000;
+const FRAIS = { seul:150, plusieurs:3000 };   // seul = entreprise individuelle ; plusieurs = société (SRL), avec 1 à 5 personnes
+const euro = (n) => n.toLocaleString("fr-BE") + " €";
+
+// ======================================================================
+//  LES BIENS À ACHETER ET LEURS FOURNISSEURS (identiques pour toute la classe)
+// ======================================================================
+const BIENS = [
+  { id:"mobilier", nom:"Le mobilier", court:"mobilier", icone:"🪑", pourquoi:"Pour accueillir tes clients et travailler confortablement : une table, des chaises et un comptoir.",
+    fournisseurs:[
+      { code:"MBP", nom:"MeubloPrix", forme:"SRL", rue:"Route de Mons 154", cp:"7301", ville:"Hornu", tel:"065 71 22 40", web:"www.meubloprix.be", atout:"Prix bas",
+        article:"Ensemble mobilier en mélaminé blanc", detail:"1 table de travail, 4 chaises empilables, 1 comptoir d'accueil", ref:"ENS-MEL-01", qualite:"Simple et pratique", prix:690, remise:0, livraison:35, delai:10, garantie:1 },
+      { code:"BCO", nom:"Bureau & Co", forme:"SA", rue:"Avenue Wilson 410", cp:"7012", ville:"Jemappes", tel:"065 82 15 90", web:"www.bureauetco.be", atout:"Bon rapport qualité-prix",
+        article:"Ensemble mobilier en bois clair", detail:"1 table en hêtre, 4 chaises rembourrées, 1 comptoir avec rangements", ref:"ENS-BOIS-24", qualite:"Solide et chaleureux", prix:1180, remise:5, livraison:0, delai:5, garantie:2 },
+      { code:"DSG", nom:"Design Intérieur", forme:"SRL", rue:"Boulevard d'Avroy 77", cp:"4000", ville:"Liège", tel:"04 221 33 08", web:"www.design-interieur.be", atout:"Qualité premium",
+        article:"Ensemble mobilier design en chêne massif", detail:"1 table design, 4 chaises en cuir, 1 comptoir éclairé, montage compris", ref:"DSG-CHENE-PRO", qualite:"Haut de gamme, fait pour durer", prix:1890, remise:0, livraison:0, delai:3, garantie:3 } ] },
+  { id:"caisse", nom:"La caisse enregistreuse", court:"caisse enregistreuse", icone:"🧾", pourquoi:"Pour encaisser tes clients, imprimer les tickets de caisse et garder une trace de chaque vente.",
+    fournisseurs:[
+      { code:"CPL", nom:"CaissePlus", forme:"SRL", rue:"Rue de la Station 12", cp:"7080", ville:"Frameries", tel:"065 67 40 11", web:"www.caisseplus.be", atout:"Prix bas",
+        article:"Caisse enregistreuse simple", detail:"Clavier, tiroir-caisse et imprimante de tickets", ref:"CR-100", qualite:"Simple et efficace", prix:290, remise:0, livraison:25, delai:8, garantie:1 },
+      { code:"ENC", nom:"Encaiss'Tech", forme:"SA", rue:"Chaussée de Bruxelles 200", cp:"7000", ville:"Mons", tel:"065 31 77 52", web:"www.encaisstech.be", atout:"Bon rapport qualité-prix",
+        article:"Caisse tactile avec lecteur de codes-barres", detail:"Écran tactile, tiroir-caisse, imprimante et lecteur de codes-barres", ref:"CT-SCAN-2", qualite:"Moderne et rapide", prix:690, remise:5, livraison:0, delai:5, garantie:2 },
+      { code:"BLG", nom:"Belgo Caisse Premium", forme:"SRL", rue:"Avenue Louise 320", cp:"1050", ville:"Bruxelles", tel:"02 640 18 25", web:"www.belgocaisse.be", atout:"Qualité premium",
+        article:"Caisse tactile tout-en-un avec terminal de paiement", detail:"Grand écran tactile, terminal pour cartes bancaires, logiciel de gestion du stock, installation comprise", ref:"PRO-ALL-IN", qualite:"Complète et professionnelle", prix:1290, remise:0, livraison:0, delai:3, garantie:3 } ] },
+  { id:"ordinateur", nom:"L'ordinateur", court:"ordinateur", icone:"💻", pourquoi:"Pour écrire tes documents (bons de commande, factures), envoyer des e-mails et suivre ton argent.",
+    fournisseurs:[
+      { code:"PCD", nom:"PC Discount", forme:"SA", rue:"Rue du Grand Quiévroy 8", cp:"7000", ville:"Mons", tel:"065 33 90 14", web:"www.pcdiscount.be", atout:"Prix bas",
+        article:"Ordinateur portable 15 pouces", detail:"Pour le traitement de texte, les e-mails et internet", ref:"NB-15-ESS", qualite:"Basique mais suffisant", prix:499, remise:0, livraison:20, delai:7, garantie:1 },
+      { code:"INF", nom:"InfoMons", forme:"SRL", rue:"Rue de Nimy 54", cp:"7000", ville:"Mons", tel:"065 35 26 61", web:"www.infomons.be", atout:"Bon rapport qualité-prix",
+        article:"Ordinateur portable performant + logiciel de gestion", detail:"Rapide et léger, avec un logiciel pour faire tes factures", ref:"NB-PRO-GEST", qualite:"Rapide et complet", prix:899, remise:5, livraison:0, delai:4, garantie:2 },
+      { code:"DGX", nom:"Digital Expert", forme:"SRL", rue:"Grand-Place 3", cp:"7500", ville:"Tournai", tel:"069 22 48 70", web:"www.digitalexpert.be", atout:"Qualité premium",
+        article:"Ordinateur tout-en-un 27 pouces + imprimante", detail:"Grand écran, imprimante couleur, installation et formation d'une heure comprises", ref:"AIO-27-PRINT", qualite:"Très haut de gamme", prix:1490, remise:0, livraison:0, delai:3, garantie:3 } ] }
+];
+const METHODES = [
+  { id:"magasin", icone:"🚶", nom:"Aller dans les magasins", texte:"Tu vas voir les produits sur place, tu peux les toucher et poser tes questions au vendeur.",
+    pro:"Tu vois et tu touches le produit", con:"Ça prend du temps et il faut se déplacer dans 3 magasins", duree:"environ 1 journée",
+    anim:["🚶","🚗","🏬"], recit:"Tu as visité 3 magasins. Chaque vendeur t'a remis une offre de prix écrite." },
+  { id:"telephone", icone:"📞", nom:"Téléphoner aux fournisseurs", texte:"Tu appelles 3 fournisseurs pour leur demander leurs prix et leurs conditions.",
+    pro:"C'est rapide et tu peux poser tes questions", con:"Au téléphone, rien n'est écrit : il faut demander une confirmation", duree:"environ 1 heure",
+    anim:["📞","☎️","📱"], recit:"Tu as appelé 3 fournisseurs. Pour être sûr(e), ils t'ont envoyé leur offre de prix par e-mail." },
+  { id:"email", icone:"✉️", nom:"Envoyer des e-mails", texte:"Tu écris à 3 fournisseurs pour leur demander une offre de prix.",
+    pro:"Tout est écrit : c'est une preuve", con:"Il faut attendre leur réponse (1 ou 2 jours)", duree:"1 à 2 jours d'attente",
+    anim:["✉️","📨","📬"], recit:"Tu as envoyé une demande de prix à 3 fournisseurs. Ils t'ont répondu avec leur offre de prix." },
+  { id:"internet", icone:"🌐", nom:"Comparer sur internet", texte:"Tu compares les prix sur le site d'un fournisseur et sur au moins 2 autres sites.",
+    pro:"C'est rapide et tu vois beaucoup de produits", con:"Tu ne vois pas le produit en vrai, attention aux frais de livraison", duree:"environ 30 minutes",
+    anim:["💻","🔎","🛒"], recit:"Tu as comparé 3 sites internet. Tu as enregistré l'offre de prix de chacun." }
+];
+const RAISONS_OFFRE = ["Le prix le plus bas","La meilleure qualité","La livraison la plus rapide","La garantie la plus longue","La livraison gratuite","Ça colle à ma stratégie"];
+const ETAPES_ACHAT = [["bien","Choisir le bien"],["methode","Chercher"],["offres","Comparer"],["commande","Commander"],["notif","Commande prête"],["livraison","Livraison"],["paiement","Paiement"],["patrimoine","Patrimoine"]];
+
+// ======================================================================
+//  CONFIGURATION
+// ======================================================================
+const CONFIG = {
+  ENDPOINT_URL: "https://script.google.com/macros/s/AKfycbwliltGZSZ99qaUpQ3MmWlJXINPYIQCua_hwGEGQNmw69CEwr8OA80jWykJ7Vr9268x/exec",
+  CLE_STOCKAGE: "mini-entreprise-3tq4eq-prof-cle",
+  AUTO_REFRESH_S: 90
+};
+const STYLES = [["moderne","Moderne"],["elegant","Élégant"],["fun","Fun"],["street","Street"]];
+const POLICES = { moderne:"Outfit, Arial, sans-serif", elegant:"'Playfair Display', Georgia, serif", fun:"Fredoka, 'Comic Sans MS', sans-serif", street:"'Bebas Neue', Impact, sans-serif" };
+const SECTEURS = {
+  primaire:{ titre:"Primaire", slogan:"« Je prends dans la nature »", def:"Il regroupe les activités qui tirent leurs richesses du sol, du sous-sol, des rivières et de la mer.", c1:"#a3e635", c2:"#34d399", ex:["Agriculture","Élevage","Pêche","Carrières"] },
+  secondaire:{ titre:"Secondaire", slogan:"« Je transforme »", def:"Il regroupe les activités qui transforment les matières premières en produits finis ou semi-finis.", c1:"#22d3ee", c2:"#38bdf8", ex:["Industrie automobile","Brasserie","Laiterie","Construction"] },
+  tertiaire:{ titre:"Tertiaire", slogan:"« Je rends un service »", def:"Il comprend les services : les activités qui ne cultivent pas, n'extraient pas et ne transforment pas. Le commerce en fait partie.", c1:"#ff3d8b", c2:"#e935c5", ex:["Commerce","Banques","Transport","Enseignement"] }
+};
+const FAMILLES = [
+  { id:"fabrique", titre:"Elles FABRIQUENT des biens", def:"Dans leurs usines ou leurs ateliers, elles produisent des objets ou des aliments.", ex:["Audi Brussels","AB InBev","Puratos","GSK"], c1:"#22d3ee", c2:"#6366f1" },
+  { id:"service", titre:"Elles RENDENT des services", def:"Elles apportent une aide, un travail, un accès à quelque chose.", ex:["Belfius","Proximus","SNCB","AG"], c1:"#9d4edd", c2:"#e935c5" },
+  { id:"mixte", titre:"Elles rendent des services ET vendent des biens", def:"Elles font les deux à la fois !", ex:["Le garage","Le salon de coiffure"], c1:"#fb923c", c2:"#fbbf24" },
+  { id:"distribue", titre:"Elles DISTRIBUENT des biens", def:"Elles achètent des produits aux fabricants et les revendent aux consommateurs.", ex:["Colruyt","Delhaize","Lidl","Action","Decathlon"], c1:"#ff3d8b", c2:"#e935c5" }
+];
+const FAMILLE_TYPE = { ferme:"fabrique", pepiniere:"fabrique", chocolaterie:"fabrique", textile:"fabrique", baskets:"distribue", gaming:"distribue", velos:"mixte", animalerie:"distribue" };
+const BS_TYPE = { velos:"deux" };   // les autres vendent des biens
+const STATUTS = { termine:"Terminée", en_cours:"En cours", reinitialise:"Réinitialisée" };
+
+// ======================================================================
+//  OUTILS
+// ======================================================================
+const $ = (s, r=document) => r.querySelector(s);
+const esc = (t) => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lum = (hex) => { if (!hex) return 0; const n = parseInt(hex.slice(1),16); return (0.299*((n>>16)&255) + 0.587*((n>>8)&255) + 0.114*(n&255))/255; };
+const onColor = (hex) => lum(hex) > .62 ? "#1D1F33" : "#FFFFFF";
+const typeOf = (E) => TYPES.find(t => t.id === E.typeId);
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const heure = (d) => d.toLocaleTimeString("fr-BE", {hour:"2-digit", minute:"2-digit"});
+
+function jsonp(params, timeout = 40000){
+  return new Promise((resolve, reject) => {
+    const cb = "cbJ" + Date.now() + Math.floor(Math.random()*1e6);
+    const s = document.createElement("script");
+    let fini = false;
+    // Une réponse qui arrive en retard ne provoque plus d'erreur : la fonction reste définie (vide) un moment.
+    const fin = () => { fini = true; clearTimeout(t); s.remove(); window[cb] = function(){}; setTimeout(() => { try { delete window[cb]; } catch(e) {} }, 120000); };
+    const t = setTimeout(() => { if (!fini){ fin(); reject(new Error("timeout")); } }, timeout);
+    window[cb] = (d) => { if (fini) return; fin(); resolve(d); };
+    s.onerror = () => { if (!fini){ fin(); reject(new Error("reseau")); } };
+    s.src = CONFIG.ENDPOINT_URL + "?" + new URLSearchParams(Object.assign({}, params, {callback:cb, _:Date.now()})).toString();
+    document.body.appendChild(s);
+  });
+}
+
+// ======================================================================
+//  NORMALISATION : un dossier du Sheet → une fiche « entreprise » simple
+// ======================================================================
+function normaliser(d){
+  const m = (d.missions || {})["1"] || {}, ent = Object.assign({}, d.entreprise || {}), et = m.etatApp || {};
+  const iv = ent.identiteVisuelle || {}, bq = ent.boutique || {}, ad = ent.adresse || {}, st = ent.strategie || {};
+  const typeId = ent.typeId || et.typeId;
+  if (!typeId) return null;
+  const direction = ent.direction || et.direction || (ent.forme && ent.forme.indexOf("SRL") >= 0 ? "plusieurs" : ent.forme ? "seul" : "");
+  const nom = ent.nom || et.nom || "";
+  return {
+    email:(d.eleve || {}).email || "", prenom:(d.eleve || {}).prenom || "", nomEleve:(d.eleve || {}).nom || "", classe:(d.eleve || {}).classe || "",
+    statut: m.statut || "en_cours", etape: (m.etape && m.etape.etapesTerminees) || Object.keys(et.done || {}).length || 0,
+    xp: +m.xp || +et.xp || 0, niveau: (m.recompenses || {}).niveau || "", badges: ((m.recompenses || {}).badges || []).length,
+    duree: m.dureeMinutes, maj: m.dernier_envoi || d.maj_le || "",
+    typeId, nom, denomination: ent.denomination || (nom + (direction === "plusieurs" ? " SRL" : "")), slogan: ent.slogan || et.slogan || "",
+    strategie: st.id || et.strategie || "", raisons: st.raisons || et.raisons || [],
+    couleur: iv.couleurPrincipale || et.couleur || "", couleur2: iv.couleurAccompagnement || et.couleur2 || "",
+    style: iv.styleEcriture || et.style || "moderne", symbole: iv.symbole || et.symbole || "",
+    facade: bq.facade || et.facade || "", auvent: bq.auvent || et.auvent || "", ambiance: bq.ambiance || et.ambiance || "", accueil: bq.phraseAccueil || et.accueil || "",
+    rue: ad.rue || et.rue || "", numero: ad.numero || et.numero || "", cp: ad.cp || "", commune: ad.commune || et.commune || "",
+    direction, nbAssocies: +ent.nbAssocies || +et.nbAssocies || 1,
+    bce: ent.numeroEntreprise || (et.ids || {}).bce || "", iban: ent.iban || (et.ids || {}).iban || "",
+    email2: ent.email || "", dateCreation: ent.dateCreation || et.dateCreation || "",
+    enBanque: ent.argent ? ent.argent.argentEnBanque : null, frais: ent.argent ? ent.argent.fraisDeCreation : null,
+    concurrent: ((m.bonus || {}).concurrent) || ((et.bonus || {}).concurrent) || "",
+    m2: (d.missions || {})["2"] || null
+  };
+}
+const forme = (E) => E.direction === "plusieurs" ? "Société (SRL)" : E.direction === "seul" ? "Entreprise individuelle" : "";
+const fonctionE = (E) => E.direction === "plusieurs" ? (E.nbAssocies > 1 ? "Gérant(e) et associé(e)" : "Gérant(e)") : "Indépendant(e)";
+const strat = (E) => STRATEGIES.find(s => s.id === E.strategie);
+const adr = (E) => (E.rue && E.numero ? `${E.rue} ${E.numero}` : "") + (E.commune ? `, ${E.cp} ${E.commune}` : "");
+
+// ======================================================================
+//  VISUELS : logo, vitrine, carte de visite, carte d'identité, patrimoine
+// ======================================================================
+function logoMark(E, size){
+  const b = E.couleur || "#8E4EC6", c2 = E.couleur2 || "#FFFFFF", t = typeOf(E);
+  return `<div class="lg-mark" style="background:${b}; box-shadow:0 0 0 3px ${c2}, 0 6px 16px rgba(0,0,0,.3); ${size ? `width:${size}px;height:${size}px;font-size:${size/2}px` : ""}">${E.symbole || (t ? t.emoji : "★")}</div>`;
+}
+const nomSurBlanc = (E) => E.couleur && lum(E.couleur) <= .62 ? E.couleur : "#1D1F33";
+function texteEnseigne(E){ const f = E.couleur || "#8E4EC6"; return E.couleur2 && Math.abs(lum(E.couleur2) - lum(f)) > .35 ? E.couleur2 : onColor(f); }
+function vitrine(E, uid){
+  const t = typeOf(E), brand = E.couleur || "#8E4EC6", c2 = E.couleur2 || "#FFFFFF";
+  const nom = E.nom || "…", fs = Math.max(13, Math.min(30, 250 / (0.56 * Math.max(nom.length, 6))));
+  const amb = AMBIANCES.find(a => a[0] === E.ambiance) || ["", "", "#4A3F73", "#2E2654"];
+  const facadeFill = { brique:`url(#pb-${uid})`, bois:`url(#pw-${uid})`, pierre:`url(#ps-${uid})`, moderne:`url(#pm-${uid})` }[E.facade] || "#3a3160";
+  const porte = E.facade === "moderne" ? "#1d2230" : "#3b2a20";
+  const produits = (t ? t.vitrine : ["✨","✨","✨","✨"]).map((e,i) => `<text x="${78 + i*46}" y="206" font-size="26" text-anchor="middle">${e}</text>`).join("");
+  const fillA = E.auvent === "raye" ? `url(#pst-${uid})` : brand;
+  const auvent = !E.auvent || E.auvent === "sans" ? "" : `<polygon points="36,94 254,94 262,118 28,118" fill="${fillA}" stroke="rgba(0,0,0,.25)"/>` + Array.from({length:10}, (_,i) => `<circle cx="${50 + i*21}" cy="118" r="10.5" fill="${fillA}"/>`).join("");
+  return `<svg class="front" viewBox="0 0 400 300" role="img" aria-label="Vitrine de ${esc(nom)}">
+    <defs>
+      <pattern id="pb-${uid}" width="24" height="12" patternUnits="userSpaceOnUse"><rect width="24" height="12" fill="#A0503A"/><path d="M0 .5H24M0 6.5H24M12 0V6M.5 6V12M23.5 6V12" stroke="#7B3726"/></pattern>
+      <pattern id="pw-${uid}" width="16" height="40" patternUnits="userSpaceOnUse"><rect width="16" height="40" fill="#8B5A2B"/><path d="M15.5 0V40" stroke="#5E3B1A"/><path d="M4 8q3 6 0 12" stroke="#7a4d24" fill="none"/></pattern>
+      <pattern id="ps-${uid}" width="40" height="24" patternUnits="userSpaceOnUse"><rect width="40" height="24" fill="#A8A29E"/><path d="M0 .5H40M0 12.5H40M20 0V12M.5 12V24M39.5 12V24" stroke="#86807B"/></pattern>
+      <pattern id="pm-${uid}" width="50" height="60" patternUnits="userSpaceOnUse"><rect width="50" height="60" fill="#2F3440"/><path d="M49.5 0V60M0 59.5H50" stroke="#3E4452"/></pattern>
+      <pattern id="pst-${uid}" width="28" height="30" patternUnits="userSpaceOnUse"><rect width="14" height="30" fill="${brand}"/><rect x="14" width="14" height="30" fill="#FFFFFF"/></pattern>
+      <linearGradient id="amb-${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${amb[2]}"/><stop offset="1" stop-color="${amb[3]}"/></linearGradient>
+    </defs>
+    <rect x="14" y="6" width="372" height="10" rx="3" fill="#2B2340"/>
+    <rect x="20" y="14" width="360" height="250" fill="${facadeFill}"/>
+    <rect x="40" y="26" width="320" height="56" rx="9" fill="${brand}" stroke="rgba(0,0,0,.25)"/>
+    <circle cx="72" cy="54" r="19" fill="${c2}"/><text x="72" y="61" font-size="20" text-anchor="middle">${E.symbole || (t ? t.emoji : "★")}</text>
+    <text x="218" y="${54 + fs*0.35}" font-size="${fs.toFixed(1)}" text-anchor="middle" fill="${texteEnseigne(E)}" style="font-family:${POLICES[E.style] || POLICES.moderne}; font-weight:${E.style === "street" ? 400 : 700}; ${E.style === "elegant" ? "font-style:italic;" : ""}">${esc(nom)}</text>
+    <rect x="44" y="116" width="202" height="124" fill="url(#amb-${uid})" stroke="#1b1b1b" stroke-width="${E.facade === "moderne" ? 2 : 5}"/>
+    <path d="M56 208H236" stroke="rgba(0,0,0,.25)" stroke-width="3"/>${produits}
+    <polygon points="60,122 96,122 70,234 44,234" fill="rgba(255,255,255,.18)"/>${auvent}
+    <rect x="276" y="108" width="80" height="156" fill="${porte}" stroke="#141414" stroke-width="3"/>
+    <rect x="286" y="120" width="60" height="84" fill="url(#amb-${uid})" opacity=".85"/>
+    <rect x="294" y="130" width="44" height="15" rx="3" fill="#fff"/><text x="316" y="141" font-size="9" text-anchor="middle" fill="#1D1F33" style="font-family:Outfit,Arial;font-weight:700">OUVERT</text>
+    <circle cx="344" cy="190" r="4" fill="#E8C66A"/>
+    ${E.numero ? `<rect x="362" y="118" width="26" height="20" rx="4" fill="#1E2A5A"/><text x="375" y="132" font-size="11" text-anchor="middle" fill="#fff" style="font-family:Outfit,Arial;font-weight:700">${esc(E.numero)}</text>` : ""}
+    <rect x="0" y="262" width="400" height="38" fill="#3b3552"/><rect x="0" y="262" width="400" height="3" fill="#57507a"/>
+    ${E.accueil ? `<rect x="84" y="244" width="172" height="34" rx="5" fill="#1f2a24" stroke="#8b6b3a" stroke-width="3"/><text x="170" y="266" font-size="11" text-anchor="middle" fill="#fff" style="font-family:Fredoka,'Comic Sans MS',sans-serif">${esc(E.accueil)}</text>` : ""}
+    <text x="30" y="258" font-size="22">🌿</text></svg>`;
+}
+function carteVisite(E){
+  return `<div class="biz" style="--b:${E.couleur || "#8E4EC6"}"><div class="l">${logoMark(E)}</div>
+    <div class="r"><div class="bn f-${E.style}" style="color:${nomSurBlanc(E)}">${esc(E.denomination)}</div><div class="bs">${esc(E.slogan)}</div>
+      <div class="who2">${esc(E.prenom)} ${esc(E.nomEleve)}</div><div>${esc(fonctionE(E))}</div><div>${esc(adr(E))}</div><div>${esc(E.email2)}</div></div></div>`;
+}
+function patrimoine(E){
+  if (E.enBanque == null) return `<div class="empty">Patrimoine pas encore calculé (l'élève n'a pas encore choisi sa forme d'entreprise).</div>`;
+  const apport = E.enBanque + E.frais, f = (n) => n.toLocaleString("fr-BE") + " €";
+  return `<div class="patri" style="--b:${E.couleur || "#8E4EC6"};--ob:${onColor(E.couleur || "#8E4EC6")}"><div class="ph">Patrimoine de départ</div>
+    <div class="pc"><div><h6>Ce qu'elle possède</h6><div class="pl"><span style="color:#9A9DB4;font-style:italic">Matériel</span><span>0 €</span></div><div class="pl"><span>Argent en banque</span><span>${f(E.enBanque)}</span></div><div class="pl" style="font-weight:800;border-bottom:0"><span>Total</span><span>${f(E.enBanque)}</span></div></div>
+      <div><h6>D'où vient l'argent</h6><div class="pl"><span>Apport</span><span>${f(apport)}</span></div><div class="pl neg"><span>Frais de création</span><span>− ${f(E.frais)}</span></div><div class="pl" style="font-weight:800;border-bottom:0"><span>Total</span><span>${f(E.enBanque)}</span></div></div></div>
+    <div class="pt"><span>Valeur de l'entreprise</span><span>${f(E.enBanque)}</span></div></div>`;
+}
+function donut(parts, size = 170, label = ""){
+  const tot = parts.reduce((s,p) => s + p.v, 0) || 1, r = 62, c = 2*Math.PI*r; let off = 0;
+  const arcs = parts.filter(p => p.v > 0).map(p => { const len = p.v / tot * c, a = `<circle cx="85" cy="85" r="${r}" fill="none" stroke="${p.c}" stroke-width="22" stroke-dasharray="${len} ${c - len}" stroke-dashoffset="${-off}" transform="rotate(-90 85 85)"/>`; off += len; return a; }).join("");
+  return `<svg class="donut" width="${size}" height="${size}" viewBox="0 0 170 170"><circle cx="85" cy="85" r="${r}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="22"/>${arcs}
+    <text x="85" y="84" text-anchor="middle" font-size="30" fill="#fff">${parts.reduce((s,p) => s + p.v, 0)}</text><text x="85" y="104" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.6)" style="font-family:Outfit">${label}</text></svg>`;
+}
+const tile = (E) => { const t = typeOf(E);
+  return `<button class="tile" style="--b:${E.couleur || "#8E4EC6"}" data-open="${esc(E.email)}">${logoMark(E)}<span><span class="nm f-${E.style}">${esc(E.denomination || E.nom || "(sans nom)")}</span>
+    <small>${t ? t.emoji + " " + esc(t.nom) : ""} · ${esc(E.prenom)}</small>${E.statut !== "termine" ? `<span class="enc">⏳ ${esc(STATUTS[E.statut] || E.statut)}</span>` : ""}</span></button>`; };
+const ask = (html) => `<div class="ask"><div class="q">💬</div><div><b>À demander à la classe :</b> ${html}</div></div>`;
+const head = (kick, titre, lead) => `<div class="sec-head"><div class="kick"><span class="led"></span>${kick}</div><h2 class="h">${titre}</h2>${lead ? `<p class="lead">${lead}</p>` : ""}</div>`;
+
+// ======================================================================
+//  ÉTAT DE LA CONSOLE
+// ======================================================================
+const APP = { etape:0, exemple:"fictif", exAchat:0, vue:"ensemble", source:null, cle:"", liste:[], config:null, maj:null, idx:0, cacherNums:false, auto:true, busy:false, err:"" };
+try { APP.cle = localStorage.getItem(CONFIG.CLE_STOCKAGE) || ""; } catch(e) {}
+const VUES = [
+  ["ensemble","🏠","Vue d'ensemble"], ["eleve","👤","Élève par élève"],
+  ["sep","Mission 2"],
+  ["etapes","🧭","Les étapes d'un achat"],
+  ["sep","Le cours : fiche 1"],
+  ["identites","📇","Cartes d'identité"], ["biens","🧺","Biens ou services"], ["familles","🏭","Que font-elles ?"],
+  ["secteurs","🌍","Secteurs d'activité"], ["formes","⚖️","Individuelle ou société"]
+];
+const avecEntreprise = () => APP.liste.filter(E => E.typeId);
+
+// ======================================================================
+//  VUES
+// ======================================================================
+const V = {};
+
+V.ensemble = () => {
+  const L = APP.liste, n = L.length, fin = L.filter(E => E.statut === "termine").length, enc = n - fin;
+  const xp = n ? Math.round(L.reduce((s,E) => s + E.xp, 0) / n) : 0;
+  const durs = L.filter(E => E.duree != null && E.statut === "termine").map(E => E.duree);
+  const dmoy = durs.length ? Math.round(durs.reduce((a,b) => a + b, 0) / durs.length) : 0;
+  const max = APP.config && APP.config.max ? APP.config.max : 4;
+  const parType = TYPES.map(t => [t, L.filter(E => E.typeId === t.id).length]);
+  const sCount = STRATEGIES.map(s => ({ s, v:L.filter(E => E.strategie === s.id).length }));
+  const scols = { petit:"#a3e635", milieu:"#38bdf8", haut:"#fbbf24" };
+  return head("Mini-entreprises 3e TQ et 4e EQ Comptabilité", "La classe en <span class='grad'>un coup d'œil</span>", "L'avancement de chacun et les grandes tendances de la classe. Clique sur un élève pour découvrir son entreprise.")
+  + `<div class="kpis fade-in">
+      <div class="kpi glass" style="--c:#ff3d8b"><div class="ic">👥</div><div class="n">${n}</div><div class="l">entreprises créées ou en cours</div></div>
+      <div class="kpi glass" style="--c:#34d399"><div class="ic">✅</div><div class="n">${fin}</div><div class="l">missions terminées</div></div>
+      <div class="kpi glass" style="--c:#38bdf8"><div class="ic">⏳</div><div class="n">${enc}</div><div class="l">en cours</div></div>
+      <div class="kpi glass" style="--c:#fbbf24"><div class="ic">⭐</div><div class="n">${xp}</div><div class="l">XP en moyenne</div></div>
+      <div class="kpi glass" style="--c:#9d4edd"><div class="ic">⏱️</div><div class="n">${dmoy || "–"}</div><div class="l">minutes en moyenne</div></div>
+    </div>
+    <div class="grid2 fade-in">
+      <div class="panel glass"><h3>Les activités choisies</h3>
+        ${parType.map(([t,v]) => `<div class="bar"><span class="e">${t.emoji}</span><span class="t">${esc(t.nom)}</span><span class="track"><span class="fill" style="display:block;width:${pct(v, max)}%"></span></span><span class="v">${v}/${max}</span></div>`).join("")}</div>
+      <div class="panel glass"><h3>Les stratégies</h3>
+        <div class="donut-wrap">${donut(sCount.map(x => ({v:x.v, c:scols[x.s.id]})), 170, "entreprises")}
+          <div class="legend">${sCount.map(x => `<div><i style="background:${scols[x.s.id]}"></i>${x.s.icone} ${esc(x.s.nom)} : <b>${x.v}</b></div>`).join("")}</div></div>
+        ${APP.config ? `<h3 style="margin-top:18px">Accès des élèves</h3><div class="chips"><span class="chip">${APP.config.acces ? "🟢 Ouvert" : "🔴 Fermé"}${APP.config.acces && APP.config.expiration ? " jusqu'à " + heure(new Date(APP.config.expiration)) : ""}</span><span class="chip">Missions ouvertes : ${(APP.config.missionsOuvertes || []).join(", ") || "aucune"}</span></div>` : ""}
+      </div>
+    </div>
+    <div class="panel glass fade-in" style="margin-top:18px"><h3>Les élèves</h3>
+      <table class="list"><thead><tr><th>Élève</th><th>Entreprise</th><th>Avancement</th><th>Statut</th><th>XP</th><th></th></tr></thead><tbody>
+      ${L.map(E => { const t = typeOf(E); return `<tr><td><div class="who"><b>${esc(E.prenom)} ${esc(E.nomEleve)}</b></div><small style="color:var(--dim)">${esc(E.email)}</small></td>
+        <td><div class="who">${logoMark(E, 36)}<div><span class="f-${E.style}" style="font-size:17px">${esc(E.denomination || E.nom || "–")}</span><small>${t ? t.emoji + " " + esc(t.nom) : ""}</small></div></div></td>
+        <td><div class="prog"><i style="width:${pct(E.etape, 9)}%"></i></div><small style="color:var(--dim)">${E.etape}/9 étapes</small></td>
+        <td><span class="st ${E.statut}">${esc(STATUTS[E.statut] || E.statut)}</span></td><td style="font-family:var(--mono)">${E.xp}</td>
+        <td><button class="link" data-open="${esc(E.email)}">Voir →</button></td></tr>`; }).join("") || `<tr><td colspan="6"><div class="empty">Aucune donnée pour le moment.</div></td></tr>`}
+      </tbody></table></div>`;
+};
+
+V.eleve = () => {
+  const L = avecEntreprise();
+  if (!L.length) return head("Élève par élève", "Aucune entreprise <span class='grad'>pour l'instant</span>", "Les entreprises apparaîtront ici dès que les élèves auront commencé la mission 1.");
+  APP.idx = Math.max(0, Math.min(APP.idx, L.length - 1));
+  const E = L[APP.idx], t = typeOf(E), s = strat(E), fam = FAMILLES.find(f => f.id === FAMILLE_TYPE[E.typeId]), sec = SECTEURS[t.secteur];
+  const bq = [E.facade && ("Façade " + FACADES.find(f => f[0] === E.facade)[1].toLowerCase()), E.auvent && (AUVENTS.find(a => a[0] === E.auvent)[1]),
+              E.ambiance && ("Ambiance " + AMBIANCES.find(a => a[0] === E.ambiance)[1].toLowerCase()), E.style && ("Écriture " + STYLES.find(x => x[0] === E.style)[1].toLowerCase())].filter(Boolean);
+  const num = (v) => v ? `<span class="num">${esc(v)}</span>` : "–";
+  return `<div class="pres-top">
+      <button class="arrow" data-nav="-1" aria-label="Élève précédent">←</button><button class="arrow" data-nav="1" aria-label="Élève suivant">→</button>
+      <span class="pos">${APP.idx + 1} / ${L.length}</span>
+      <select id="selEleve" aria-label="Choisir un élève">${L.map((x,i) => `<option value="${i}" ${i === APP.idx ? "selected" : ""}>${esc(x.prenom)} ${esc(x.nomEleve)} – ${esc(x.denomination || x.nom)}</option>`).join("")}</select>
+      <span class="st ${E.statut}">${esc(STATUTS[E.statut] || E.statut)}</span>
+    </div>
+    <div class="pres fade-in" key="${esc(E.email)}">
+      <div class="stage glass">${vitrine(E, "pres")}</div>
+      <div>
+        <div class="who-big">${logoMark(E, 74)}<div><div class="dn f-${E.style}">${esc(E.denomination || E.nom)}</div><div class="sl">${esc(E.slogan)}</div></div></div>
+        <div class="student">${esc(E.prenom)} ${esc(E.nomEleve)}<span>${esc(fonctionE(E))}</span></div>
+        <div class="tags">
+          <span class="tag">${t.emoji} ${esc(t.nom)}</span>
+          <span class="tag" style="border-color:${sec.c1};color:${sec.c1}">Secteur ${esc(sec.titre.toLowerCase())}</span>
+          <span class="tag" style="border-color:${fam.c1};color:${fam.c1}">${esc(fam.titre.replace("Elles ", "").toLowerCase())}</span>
+          ${E.direction ? `<span class="tag">${E.direction === "plusieurs" ? "🏢" : "🙋"} ${esc(forme(E))}${E.direction === "plusieurs" ? (E.nbAssocies > 1 ? " · " + E.nbAssocies + " associés" : " · seul(e)") : ""}</span>` : ""}
+          ${s ? `<span class="tag">${s.icone} ${esc(s.nom)}</span>` : ""}
+        </div>
+        <div class="idcard" style="--b:${E.couleur || "#8E4EC6"}"><h5>Carte d'identité de l'entreprise</h5><dl>
+          <dt>Dénomination</dt><dd class="f-${E.style}" style="font-size:17px">${esc(E.denomination || "–")}</dd>
+          <dt>Forme</dt><dd>${esc(forme(E) || "–")}</dd>
+          <dt>Siège social</dt><dd>${esc(adr(E) || "–")}</dd>
+          <dt>N° d'entreprise</dt><dd>${num(E.bce)}</dd>
+          <dt>N° de TVA</dt><dd>${E.bce ? num("BE " + E.bce) : "–"}</dd>
+          <dt>Compte (IBAN)</dt><dd>${num(E.iban)}</dd>
+          <dt>E-mail</dt><dd>${esc(E.email2 || "–")}</dd></dl></div>
+        <div class="stat-row"><div class="mini"><b>${E.etape}/9</b><span>étapes</span></div><div class="mini"><b>${E.xp}</b><span>XP</span></div>
+          <div class="mini"><b>${E.badges}</b><span>badges</span></div><div class="mini"><b>${E.duree != null ? E.duree + "'" : "–"}</b><span>durée</span></div></div>
+      </div>
+    </div>
+    <div class="cards3 fade-in">
+      <div class="card glass"><h4>🎯 Sa stratégie</h4>${s ? `<p style="font-size:18px;color:#fff;margin-bottom:6px">${s.icone} ${esc(s.nom)}</p>
+        <p style="color:var(--soft);font-size:14px;margin-bottom:10px">${esc(t.strat[STRATEGIES.indexOf(s)])}</p>
+        <div class="chips">${E.raisons.map(r => `<span class="chip">${esc(r)}</span>`).join("")}</div>` : `<div class="empty">Pas encore choisie</div>`}</div>
+      <div class="card glass"><h4>🏪 Sa boutique</h4><div class="chips">${bq.map(b => `<span class="chip">${esc(b)}</span>`).join("") || `<span class="chip">Pas encore imaginée</span>`}</div>
+        ${E.accueil ? `<p style="margin-top:12px;font-family:Fredoka,sans-serif;font-size:18px;color:#fff">« ${esc(E.accueil)} »</p>` : ""}
+        ${E.concurrent ? `<p style="margin-top:12px;color:var(--soft);font-size:14px">🔎 Son concurrent : <b style="color:#fff">${esc(E.concurrent)}</b></p>` : ""}</div>
+      <div class="card glass"><h4>💶 Son patrimoine</h4>${patrimoine(E)}</div>
+    </div>
+    <div class="grid2 fade-in" style="margin-top:16px;align-items:stretch"><div class="card glass"><h4>🪪 Sa carte de visite</h4>${carteVisite(E)}</div>
+      <div class="card glass"><h4>🗓️ Création</h4><p style="color:var(--soft)">${E.dateCreation ? "Créée le " + esc(E.dateCreation) + (E.commune ? " à " + esc(E.commune) : "") : "Pas encore officiellement créée"}</p>
+        <p style="color:var(--dim);font-size:14px;margin-top:8px">${esc(E.email)}${E.classe ? " · " + esc(E.classe) : ""}</p></div></div>
+    <div class="thumbs">${L.map((x,i) => `<button class="thumb ${i === APP.idx ? "on" : ""}" data-idx="${i}">${logoMark(x, 52)}<span>${esc(x.prenom)}</span></button>`).join("")}</div>`;
+};
+
+V.identites = () => {
+  const L = avecEntreprise();
+  return head("Fiche 1 · Partie 2", "Chaque entreprise a <span class='grad'>une identité</span>", "Dénomination, siège social, numéro d'entreprise (BCE), numéro de TVA et compte bancaire (IBAN) : la carte d'identité de chaque entreprise de la classe.")
+    + `<div class="topbar" style="margin:-6px 0 18px"><button class="btn btn-ghost ${APP.cacherNums ? "on" : ""}" data-act="nums">${APP.cacherNums ? "👁️ Montrer les numéros" : "🙈 Cacher les numéros (jeu en classe)"}</button></div>
+    <div class="idg fade-in">${L.map(E => { const nm = (v) => v ? `<span class="num ${APP.cacherNums ? "hide" : ""}">${esc(v)}</span>` : "–";
+      return `<div class="idc" style="--b:${E.couleur || "#8E4EC6"}" data-open="${esc(E.email)}">
+        <div class="hd">${logoMark(E, 46)}<div><div class="t f-${E.style}">${esc(E.denomination || E.nom)}</div><small>${esc(E.prenom)} ${esc(E.nomEleve)}</small></div></div>
+        <dl><dt>Forme</dt><dd>${esc(forme(E) || "–")}</dd><dt>Siège social</dt><dd>${esc(adr(E) || "–")}</dd>
+          <dt>N° d'entreprise</dt><dd>${nm(E.bce)}</dd><dt>N° de TVA</dt><dd>${E.bce ? nm("BE " + E.bce) : "–"}</dd><dt>IBAN</dt><dd>${nm(E.iban)}</dd></dl>
+        ${E.bce ? `<span class="ok">ENREGISTRÉE</span>` : `<span class="wip">⏳ en création</span>`}</div>`; }).join("") || `<div class="empty">Aucune entreprise pour l'instant.</div>`}</div>`
+    + ask("Quel numéro commence par <b>BE</b> ? À quoi sert-il ? Quelle différence avec le numéro d'entreprise ? Et le troisième numéro, qui paie avec ?");
+};
+
+V.biens = () => {
+  const L = avecEntreprise(), biens = L.filter(E => BS_TYPE[E.typeId] !== "deux"), deux = L.filter(E => BS_TYPE[E.typeId] === "deux");
+  const col = (c1, c2, titre, def, arr, extra) => `<div class="col glass" style="--c1:${c1};--c2:${c2}"><h3>${titre}</h3><p class="def">${def}</p>
+      <div class="count"><b>${arr.length}</b><span>entreprise${arr.length > 1 ? "s" : ""} de la classe</span></div>${extra || ""}
+      <div class="tiles">${arr.map(tile).join("") || `<div class="empty">Aucune entreprise de la classe ici.</div>`}</div></div>`;
+  return head("Fiche 1 · Partie 1", "Un bien ou <span class='grad'>un service</span> ?", "Est-ce que je peux le toucher et l'emporter chez moi ? Si oui, c'est un bien. Si non, c'est un service.")
+    + `<div class="defs"><div class="glass"><b>🧺 Un bien</b><p>Une chose matérielle : on peut la toucher, l'emporter, la stocker. Un pull, un smartphone, une baguette, un vélo…</p></div>
+      <div class="glass"><b>🤲 Un service</b><p>Une aide, un travail rendu à quelqu'un : on ne peut pas le mettre dans un sac. Une coupe de cheveux, un trajet en train, une réparation…</p></div></div>
+    <div class="cols fade-in" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr)">
+      ${col("#22d3ee","#6366f1","Elles vendent des biens","Leurs clients repartent avec quelque chose dans les mains.", biens)}
+      ${col("#fb923c","#fbbf24","Elles vendent des biens ET des services","Elles vendent des objets… et rendent aussi un service.", deux, `<div class="refs"><span class="ref">🔧 Le magasin de vélos répare aussi les vélos</span></div>`)}
+      ${col("#9d4edd","#e935c5","Elles rendent des services","Leurs clients repartent sans rien dans les mains, mais avec un travail fait pour eux.", [], `<div class="refs">${["Coiffeur","Banque","Auto-école","Médecin"].map(r => `<span class="ref">${r}</span>`).join("")}</div>`)}
+    </div>` + ask("Aucune entreprise de la classe ne vend <b>uniquement</b> des services. Pourquoi, d'après vous ? Quel service chacun pourrait-il ajouter à son entreprise (livraison, conseil, emballage cadeau, réparation…) ?");
+};
+
+V.familles = () => {
+  const L = avecEntreprise();
+  return head("Fiche 1 · Partie 3", "Que font <span class='grad'>les entreprises</span> ?", "Fabriquer, rendre service, vendre… Les quatre grandes familles du cours, avec les entreprises de la classe.")
+    + `<div class="chain fade-in"><div class="glass"><b>🏭 Le fabricant</b><small>produit le bien</small></div><div class="arr">→</div>
+      <div class="glass" style="border-color:rgba(255,61,139,.5)"><b>🏪 Le magasin</b><small>c'est là que travaille le vendeur</small></div><div class="arr">→</div>
+      <div class="glass"><b>🛍️ Le client</b><small>achète et utilise le bien</small></div></div>
+    <div class="cols fade-in" style="grid-template-columns:repeat(4,minmax(0,1fr))">${FAMILLES.map(f => { const arr = L.filter(E => FAMILLE_TYPE[E.typeId] === f.id);
+      return `<div class="col glass" style="--c1:${f.c1};--c2:${f.c2}"><h3>${esc(f.titre)}</h3><p class="def">${esc(f.def)}</p>
+        <div class="refs">${f.ex.map(x => `<span class="ref">${esc(x)}</span>`).join("")}</div>
+        <div class="count"><b>${arr.length}</b><span>de la classe</span></div>
+        <div class="tiles">${arr.map(tile).join("") || `<div class="empty">Aucune entreprise de la classe.</div>`}</div></div>`; }).join("")}</div>`
+    + ask("La plupart des vendeurs travaillent dans quelle famille ? La ferme vend aussi dans son magasin : fait-elle seulement « fabriquer » ?");
+};
+
+V.secteurs = () => {
+  const L = avecEntreprise(), n = L.length || 1;
+  return head("Fiche 1 · Partie 4", "Les trois <span class='grad'>secteurs d'activité</span>", "De la nature… jusqu'au rayon du magasin. Dans quel secteur se trouve chaque entreprise de la classe ?")
+    + `<div class="chain fade-in"><div class="glass" style="border-color:rgba(163,230,53,.5)"><b>🌱 Dans la nature</b><small>on récolte les fèves de cacao</small></div><div class="arr">→</div>
+      <div class="glass" style="border-color:rgba(34,211,238,.5)"><b>🏭 À l'usine</b><small>on fabrique les tablettes</small></div><div class="arr">→</div>
+      <div class="glass" style="border-color:rgba(255,61,139,.5)"><b>🏪 Au magasin</b><small>le vendeur conseille et encaisse</small></div></div>
+    <div class="cols fade-in" style="grid-template-columns:repeat(3,minmax(0,1fr))">${Object.entries(SECTEURS).map(([k,s]) => { const arr = L.filter(E => typeOf(E).secteur === k);
+      return `<div class="col glass" style="--c1:${s.c1};--c2:${s.c2}"><h3>${s.titre}</h3><span class="slog">${s.slogan}</span><p class="def">${esc(s.def)}</p>
+        <div class="refs">${s.ex.map(x => `<span class="ref">${esc(x)}</span>`).join("")}</div>
+        <div class="count"><b>${arr.length}</b><span>entreprise${arr.length > 1 ? "s" : ""} · ${pct(arr.length, n)} % de la classe</span></div>
+        <div class="tiles">${arr.map(tile).join("") || `<div class="empty">Aucune entreprise de la classe.</div>`}</div></div>`; }).join("")}</div>`
+    + ask("Une même entreprise peut-elle avoir des activités dans plusieurs secteurs ? Pensez à la ferme qui élève ses vaches, fabrique son fromage… et le vend dans son magasin.");
+};
+
+V.formes = () => {
+  const L = avecEntreprise(), ind = L.filter(E => E.direction === "seul"), soc = L.filter(E => E.direction === "plusieurs"), nd = L.filter(E => !E.direction);
+  const box = (c1, c2, ico, titre, arr, pros, cons, frais) => `<div class="col glass" style="--c1:${c1};--c2:${c2}"><h3>${ico} ${titre}</h3>
+      <div class="count"><b>${arr.length}</b><span>entreprise${arr.length > 1 ? "s" : ""} · ${pct(arr.length, L.length)} %</span></div>
+      <div class="chips">${pros.map(p => `<span class="chip" style="border-color:rgba(52,211,153,.5)">✓ ${p}</span>`).join("")}${cons.map(p => `<span class="chip" style="border-color:rgba(255,61,139,.5)">✗ ${p}</span>`).join("")}</div>
+      <p class="def">Frais de création dans le jeu : <b style="color:#fff">${frais}</b></p>
+      <div class="tiles">${arr.map(tile).join("") || `<div class="empty">Aucune entreprise de la classe.</div>`}</div></div>`;
+  return head("Fiche 1 · Partie 5", "Individuelle ou <span class='grad'>société</span> ?", "L'entreprise, c'est la personne elle-même (entreprise individuelle), ou une société qui a sa propre existence, créée seul(e) ou avec des associés ?")
+    + `<div class="grid2 fade-in" style="grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);margin-bottom:18px">
+        <div class="panel glass"><h3>La répartition dans la classe</h3><div class="donut-wrap">${donut([{v:ind.length,c:"#38bdf8"},{v:soc.length,c:"#e935c5"},{v:nd.length,c:"rgba(255,255,255,.25)"}], 190, "entreprises")}
+          <div class="legend"><div><i style="background:#38bdf8"></i>Entreprises individuelles : <b>${ind.length}</b></div><div><i style="background:#e935c5"></i>Sociétés (SRL) : <b>${soc.length}</b></div>${nd.length ? `<div><i style="background:rgba(255,255,255,.25)"></i>Pas encore décidé : <b>${nd.length}</b></div>` : ""}</div></div></div>
+        <div class="panel glass"><h3>Comment les reconnaître ?</h3><p style="color:var(--soft)">Regarde juste après le nom : s'il y a <b style="color:#fff">SA, SRL ou SC</b>, c'est une société. S'il n'y a aucun sigle, c'est souvent une entreprise individuelle.</p>
+          <div class="chips" style="margin-top:12px">${soc.slice(0,4).map(E => `<span class="chip">${esc(E.denomination)}</span>`).join("")}${ind.slice(0,3).map(E => `<span class="chip">${esc(E.denomination)}</span>`).join("")}</div></div>
+      </div>
+      <div class="cols fade-in" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+        ${box("#38bdf8","#6366f1","🙋","Entreprise individuelle", ind, ["Simple et peu coûteuse","On garde tous les bénéfices"], ["On paie les dettes avec ses biens personnels"], "environ " + FRAIS.seul.toLocaleString("fr-BE") + " €")}
+        ${box("#e935c5","#9d4edd","🏢","Société (SRL)", soc, ["Biens personnels protégés","Seul(e) ou avec des associés"], ["Plus chère (notaire, comptable)","Avec des associés, bénéfices partagés"], "environ " + FRAIS.plusieurs.toLocaleString("fr-BE") + " €")}
+      </div>` + ask("Pourquoi certains ont-ils choisi la société malgré des frais de création beaucoup plus élevés ? Qui a le plus d'argent en banque au départ ? Peut-on créer une société tout seul ?");
+};
+
+// ======================================================================
+//  COQUILLE : menu, barre du haut, connexion
+// ======================================================================
+function rail(){
+  return `<nav class="rail" aria-label="Menu"><div class="brand"><div class="lg">SL</div><div><b>Mini-entreprises</b><small>Console professeur · 3e TQ et 4e EQ Comptabilité</small></div></div>
+    ${VUES.map(v => v[0] === "sep" ? `<div class="navlab">${v[1]}</div>` : `<button class="nv ${APP.vue === v[0] ? "on" : ""}" data-vue="${v[0]}"><span class="i">${v[1]}</span>${v[2]}</button>`).join("")}
+    <div class="foot">Mission 1 : création de l'entreprise<br>Données : ${APP.source === "demo" ? "démonstration" : "Google Sheet"}</div></nav>`;
+}
+function topbar(){
+  const quand = APP.maj ? (APP.maj.toDateString() === new Date().toDateString() ? heure(APP.maj) : APP.maj.toLocaleDateString("fr-BE") + " " + heure(APP.maj)) : "";
+  const s = APP.source === "demo" ? `<span class="dot demo"></span>Données de démonstration`
+    : APP.err ? `<span class="dot off"></span>${esc(APP.err)}${quand ? " · données de " + quand : ""}`
+    : APP.busy ? `<span class="spin"></span> Actualisation…${quand ? " · données de " + quand : ""}`
+    : `<span class="dot"></span>En direct du Google Sheet${quand ? " · mis à jour à " + quand : ""}`;
+  return `<div class="topbar"><div class="src glass">${s}</div>
+    <div class="tb-r">
+      ${APP.source === "live" ? `<button class="btn btn-ghost ${APP.auto ? "on" : ""}" data-act="auto" title="Actualiser toutes les ${CONFIG.AUTO_REFRESH_S} secondes">${APP.auto ? "⏱️ Auto : oui" : "⏱️ Auto : non"}</button>
+        <button class="btn btn-ghost" data-act="refresh">${APP.busy ? `<span class="spin"></span>` : "🔄"} Actualiser</button>` : ""}
+      <button class="btn btn-ghost" data-act="projo">📽️ Projection</button>
+      <button class="btn btn-ghost" data-act="deco">${APP.source === "demo" ? "🔑 Se connecter" : "🚪 Déconnexion"}</button>
+    </div></div>`;
+}
+function gate(){
+  return `<main style="grid-column:1/-1"><div class="gate glass fade-in">
+    <div class="kick"><span class="led"></span>Console professeur</div>
+    <h2>Les entreprises de <span class="grad">ta classe</span></h2>
+    <p style="color:var(--soft)">Entre la clé professeur (la valeur de <b>CLE_PROF</b> dans l'onglet « Config » de ton Google Sheet). Elle reste enregistrée sur cet ordinateur.</p>
+    <label for="cle">Clé professeur</label><input class="inp" id="cle" type="password" value="${esc(APP.cle)}" autocomplete="off" spellcheck="false">
+    ${APP.err ? `<div class="err">${esc(APP.err)}</div>` : ""}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+      <button class="btn btn-main" data-act="login">${APP.busy ? `<span class="spin"></span> Connexion…` : "Se connecter"}</button>
+      <button class="btn btn-ghost" data-act="demo">✨ Voir avec des données de démonstration</button></div>
+  </div></main>`;
+}
+function render(){
+  const app = $("#app");
+  if (!APP.source){ app.innerHTML = gate(); const c = $("#cle"); if (c) c.focus(); return; }
+  app.innerHTML = rail() + `<main>${topbar()}<div id="vue">${V[APP.vue]()}</div></main>`;
+}
+
+// ======================================================================
+//  MODULE « LES ÉTAPES D'UN ACHAT » (mission 2) – présentation en classe
+// ======================================================================
+const eurC = (n) => (Math.round(n * 100) / 100).toLocaleString("fr-BE", {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits:2}) + " €";
+const bceDe = (base8) => { const b = String(base8).padStart(8,"0"), n = b + String(97 - (parseInt(b,10) % 97)).padStart(2,"0"); return `${n.slice(0,4)}.${n.slice(4,7)}.${n.slice(7)}`; };
+
+/** Entreprise et achat fictifs, identiques à ce que les élèves ont vécu. */
+const E_FICTIF = { prenom:"Alex", nomEleve:"Martin", classe:"3e TQ", typeId:"velos", nom:"Roue Libre", denomination:"Roue Libre", slogan:"La liberté sur deux roues",
+  couleur:"#12A594", couleur2:"#FFFFFF", style:"fun", symbole:"🚲", rue:"Rue de la Gare", numero:"18", cp:"7080", commune:"Frameries", direction:"seul", nbAssocies:1,
+  bce:bceDe(10234567), iban:"BE71 0631 2345 6769", email2:"contact@rouelibre.be", enBanque:9850, frais:150 };
+function achatDepuisCatalogue(bienId, methodeId, choix, raisons, E){
+  const b = BIENS.find(x => x.id === bienId);
+  const offres = b.fournisseurs.map((f, k) => { const remise = Math.round(f.prix * f.remise) / 100;
+    return { numero:`OP-${f.code}-4821`, fNom:f.nom, fForme:f.forme, fAdresse:`${f.rue}, ${f.cp} ${f.ville}`, fRue:f.rue, fVille:`${f.cp} ${f.ville}`, fTva:"BE " + bceDe(40000000 + k * 1234567),
+      fTel:f.tel, fWeb:f.web, atout:f.atout, ref:f.ref, article:f.article, detail:f.detail, prix:f.prix, remisePct:f.remise, remise, livraison:f.livraison, total:f.prix - remise + f.livraison,
+      delai:f.delai, garantie:f.garantie, paiement:"à la livraison" }; });
+  const o = offres[choix];
+  return { bien:b, methode:METHODES.find(m => m.id === methodeId), offres, choix, raisons,
+    bc:{ numero:"BC-2026-001", date:"5 octobre 2026", signature:`${E.prenom} ${E.nomEleve}` },
+    livraisonPrevue:"vendredi 9 octobre", bl:{ numero:`BL-${b.fournisseurs[choix].code}-30418`, date:"9 octobre 2026", signature:`${E.prenom} ${E.nomEleve}`, colis:1 },
+    paiement:{ montant:o.total, date:"9 octobre 2026" }, budgetAvant:E.enBanque };
+}
+/** Un achat réel d'élève (données envoyées par la mission 2) remis dans le même format. */
+function achatDepuisEleve(E, k){
+  const x = (E.m2.achats || [])[k]; if (!x || !x.offreChoisie) return null;
+  const offres = (x.offresRecues || []).map(o => ({ numero:o.numero, fNom:o.fournisseur.nom, fForme:o.fournisseur.forme, fAdresse:o.fournisseur.adresse,
+    fRue:(o.fournisseur.adresse || "").split(",")[0], fVille:(o.fournisseur.adresse || "").split(",").slice(1).join(",").trim(), fTva:o.fournisseur.numeroTVA,
+    fTel:o.fournisseur.telephone, fWeb:o.fournisseur.site, atout:o.fournisseur.atout, ref:o.reference, article:o.article, detail:o.detail, prix:o.prix,
+    remisePct:o.remisePourcent, remise:o.remise, livraison:o.fraisLivraison, total:o.totalAPayer, delai:o.delaiJours, garantie:o.garantieAns, paiement:o.paiement }));
+  const choix = Math.max(0, offres.findIndex(o => o.numero === x.offreChoisie.numero));
+  const payes = (E.m2.achats || []).slice(0, k).filter(a => a.paiement).reduce((s, a) => s + a.paiement.montant, 0);
+  return { bien:BIENS.find(b => b.id === x.bien.id), methode:METHODES.find(m => m.id === (x.methode || {}).id) || METHODES[0], offres, choix, raisons:x.raisonsDuChoix || [],
+    bc:{ numero:(x.bonDeCommande || {}).numero || "–", date:(x.bonDeCommande || {}).date || "", signature:(x.bonDeCommande || {}).signature || "" },
+    livraisonPrevue:(x.notification || {}).livraisonPrevue || "", bl:{ numero:(x.bonDeLivraison || {}).numero || "–", date:(x.bonDeLivraison || {}).date || "", signature:(x.bonDeLivraison || {}).signature || "", colis:x.bien.id === "mobilier" ? 6 : 1 },
+    paiement:{ montant:(x.paiement || {}).montant || offres[choix].total, date:(x.paiement || {}).date || "" }, budgetAvant:(E.enBanque || 0) - payes };
+}
+const elevesM2 = () => APP.liste.filter(E => E.m2 && (E.m2.achats || []).some(a => a.paiement));
+function exemple(){
+  if (APP.exemple && APP.exemple !== "fictif"){
+    const E = APP.liste.find(x => x.email === APP.exemple);
+    if (E && E.m2){ const A = achatDepuisEleve(E, APP.exAchat || 0); if (A) return { E, A, fictif:false }; }
+  }
+  return { E:E_FICTIF, A:achatDepuisCatalogue("ordinateur", "email", 1, ["La garantie la plus longue", "La livraison gratuite"], E_FICTIF), fictif:true };
+}
+
+// ---------- Documents ----------
+const enteteAcheteur = (E) => `<div class="from"><div class="emb" style="background:${E.couleur || "#8E4EC6"};color:${onColor(E.couleur || "#8E4EC6")}">${E.symbole || "★"}</div><div>
+  <div class="co f-${E.style}">${esc(E.denomination || E.nom)}</div><p>${esc(E.rue)} ${esc(E.numero)}<br>${esc(E.cp)} ${esc(E.commune)}<br>${esc(E.email2)}</p>
+  <p class="ids">N° d'entreprise ${esc(E.bce)}<br>TVA BE ${esc(E.bce)}<br>IBAN ${esc(E.iban)}</p></div></div>`;
+const blocFourn = (o, lbl) => `<div class="to"><div class="lbl">${lbl}</div><b>${esc(o.fNom)} ${esc(o.fForme)}</b><br>${esc(o.fRue)}<br>${esc(o.fVille)}<br><span style="font-family:var(--mono);font-size:11.5px">TVA ${esc(o.fTva)}</span></div>`;
+function lignes(o){
+  return `<table><thead><tr><th>Référence</th><th>Désignation</th><th>Qté</th><th>Prix unitaire</th><th>Total</th></tr></thead><tbody>
+    <tr><td style="font-family:var(--mono)">${esc(o.ref)}</td><td>${esc(o.article)}</td><td>1</td><td>${eurC(o.prix)}</td><td>${eurC(o.prix)}</td></tr>
+    ${o.remise ? `<tr><td></td><td>Remise de ${o.remisePct} %</td><td></td><td></td><td>− ${eurC(o.remise)}</td></tr>` : ""}
+    <tr><td></td><td>Livraison</td><td></td><td></td><td>${o.livraison ? eurC(o.livraison) : "gratuite"}</td></tr>
+    <tr><td></td><td><b>Total à payer (TVA comprise)</b></td><td></td><td></td><td><b>${eurC(o.total)}</b></td></tr></tbody></table>`;
+}
+function docOffre(o, choisi){
+  return `<div class="offre ${choisi ? "on" : ""}"><div class="oh"><b>${esc(o.fNom)} ${esc(o.fForme)}</b><small>${esc(o.fAdresse)}<br>Tél. ${esc(o.fTel)} · ${esc(o.fWeb)}</small></div>
+    <span class="atout">${esc(o.atout)}</span><div class="art">${esc(o.article)}</div>
+    <div class="ln"><span>Prix</span><span>${eurC(o.prix)}</span></div>${o.remise ? `<div class="ln"><span>Remise ${o.remisePct} %</span><span>− ${eurC(o.remise)}</span></div>` : ""}
+    <div class="ln"><span>Livraison</span><span>${o.livraison ? eurC(o.livraison) : "gratuite"}</span></div>
+    <div class="tot"><span>Total</span><span>${eurC(o.total)}</span></div>
+    <div class="cond"><span><b>Délai :</b> ${o.delai} jours</span><span><b>Garantie :</b> ${o.garantie} an${o.garantie > 1 ? "s" : ""}</span><span><b>Paiement :</b> ${esc(o.paiement)}</span></div></div>`;
+}
+function tableauComparatif(A){
+  const v = (f) => A.offres.map(f), best = (arr, min) => arr.indexOf(min ? Math.min(...arr) : Math.max(...arr));
+  const bT = best(v(o => o.total), true), bD = best(v(o => o.delai), true), bG = best(v(o => o.garantie), false);
+  return `<table class="cmp"><thead><tr><th>Fournisseur</th><th>Total</th><th>Délai</th><th>Livraison</th><th>Garantie</th></tr></thead><tbody>
+    ${A.offres.map((o,k) => `<tr><td>${k === A.choix ? "👉 " : ""}${esc(o.fNom)}</td><td class="${k === bT ? "best" : ""}">${eurC(o.total)}</td><td class="${k === bD ? "best" : ""}">${o.delai} j</td><td>${o.livraison ? eurC(o.livraison) : "gratuite"}</td><td class="${k === bG ? "best" : ""}">${o.garantie} an${o.garantie > 1 ? "s" : ""}</td></tr>`).join("")}</tbody></table>`;
+}
+function docBC(E, A){ const o = A.offres[A.choix];
+  return `<div class="paper"><div class="dh">${enteteAcheteur(E)}${blocFourn(o, "Fournisseur")}</div>
+    <div class="place">${esc(E.commune)}, le ${esc(A.bc.date)}</div><h3 class="doc">BON DE COMMANDE</h3><div class="ref">N° ${esc(A.bc.numero)} · Votre offre n° ${esc(o.numero)}</div>
+    ${lignes(o)}<p><b>Conditions :</b> livraison sous ${o.delai} jours · livraison ${o.livraison ? "payante" : "gratuite"} · garantie ${o.garantie} an${o.garantie > 1 ? "s" : ""} · paiement ${esc(o.paiement)}.</p>
+    <div class="sig"><div><div class="signed">${esc(A.bc.signature)}</div><small>Bon pour commande</small></div></div><div class="foot">Document fictif – projet pédagogique, Institut Saint-Luc de Frameries</div></div>`;
+}
+function docBL(E, A){ const o = A.offres[A.choix];
+  return `<div class="paper"><div class="dh"><div class="from"><div class="emb" style="background:#1E2A5A;color:#fff">📦</div><div><div class="co">${esc(o.fNom)} ${esc(o.fForme)}</div><p>${esc(o.fRue)}<br>${esc(o.fVille)}<br>Tél. ${esc(o.fTel)}</p></div></div>
+      <div class="to"><div class="lbl">Destinataire</div><b>${esc(E.denomination || E.nom)}</b><br>${esc(E.rue)} ${esc(E.numero)}<br>${esc(E.cp)} ${esc(E.commune)}</div></div>
+    <div class="place">Le ${esc(A.bl.date)}</div><h3 class="doc">BON DE LIVRAISON</h3><div class="ref">N° ${esc(A.bl.numero)} · Votre commande n° ${esc(A.bc.numero)} · Colis : ${A.bl.colis}</div>
+    <table><thead><tr><th>Référence</th><th>Désignation</th><th>Quantité livrée</th></tr></thead><tbody><tr><td style="font-family:var(--mono)">${esc(o.ref)}</td><td>${esc(o.article)}</td><td>1</td></tr></tbody></table>
+    <p><b>Conditions :</b> paiement ${esc(o.paiement)} – à régler : <b>${eurC(o.total)}</b>.</p>
+    <div class="sig"><div><div class="signed">${esc(A.bl.signature)}</div><small>Réception</small></div></div><div class="foot">Document fictif – projet pédagogique, Institut Saint-Luc de Frameries</div></div>`;
+}
+function docRecu(A){ const o = A.offres[A.choix];
+  return `<div class="receipt"><div class="c"><b>${esc(o.fNom)} ${esc(o.fForme)}</b></div><hr>
+    <div class="r"><span>Date</span><span>${esc(A.paiement.date)}</span></div><div class="r"><span>Commande</span><span>${esc(A.bc.numero)}</span></div><div class="r"><span>Livraison</span><span>${esc(A.bl.numero)}</span></div><hr>
+    <div class="r"><b>MONTANT PAYÉ</b><b>${eurC(A.paiement.montant)}</b></div><div class="r"><span>Payé par</span><span>carte bancaire</span></div><hr><div class="c">✔ PAYÉ – Merci !</div></div>`;
+}
+function docDemande(E, A){
+  return `<div class="mail"><div class="mh"><div><b>De :</b> ${esc(E.email2)}</div><div><b>À :</b> ${A.offres.map(o => esc(o.fNom)).join(", ")}</div><div><b>Objet :</b> Demande de prix – ${esc(A.bien.nom.toLowerCase())}</div></div>
+    <div class="mb"><p>Madame, Monsieur,</p><p>Notre entreprise <b>${esc(E.denomination || E.nom)}</b> souhaite acheter ${A.bien.id === "mobilier" ? "du mobilier (une table, des chaises et un comptoir)" : A.bien.id === "caisse" ? "une caisse enregistreuse" : "un ordinateur"}.</p>
+      <p>Pourriez-vous nous envoyer votre <b>meilleure offre de prix</b> en précisant : le prix, les remises éventuelles, le délai et les frais de livraison, la garantie et les conditions de paiement ?</p>
+      <p>Avec nos remerciements,<br>${esc(E.prenom)} ${esc(E.nomEleve)}</p></div></div>`;
+}
+function docFactureVerrouillee(E, A){ const o = A.offres[A.choix], ht = Math.round(o.total / 1.21 * 100) / 100;
+  return `<div class="lockdoc"><div class="paper"><div class="dh"><div class="from"><div class="emb" style="background:#1E2A5A;color:#fff">🧾</div><div><div class="co">${esc(o.fNom)}</div></div></div>${blocFourn(o, "Client")}</div>
+      <h3 class="doc">FACTURE</h3><div class="ref">N° F-2026-…</div><table><tbody><tr><td>${esc(o.article)}</td><td>${eurC(ht)}</td></tr><tr><td>TVA 21 %</td><td>${eurC(o.total - ht)}</td></tr><tr><td><b>Total</b></td><td><b>${eurC(o.total)}</b></td></tr></tbody></table><p>PAYÉE</p></div>
+    <div class="lk"><div><b>🔒 Prochaine mission</b>La facture arrive bientôt…</div></div></div>`;
+}
+
+// ---------- Les étapes ----------
+function ETAPES(E, A){ const o = A.offres[A.choix];
+  return [
+    { ico:"🎯", court:"Besoins", titre:"Déterminer les besoins de l'entreprise", qui:["🙋 L'acheteur : toi"], doc:"La liste des besoins",
+      texte:["Avant d'acheter, on se pose deux questions : de quoi mon entreprise a-t-elle vraiment besoin pour fonctionner ? Et combien d'argent ai-je pour le faire ?","Pour ouvrir, chaque entreprise avait besoin au minimum de trois biens."],
+      retenir:"On n'achète pas au hasard : on part des <b>besoins</b> et du <b>budget</b>.",
+      question:"Votre entreprise a-t-elle besoin d'autre chose pour fonctionner ? Qu'achèteriez-vous ensuite ?",
+      visuel:`<div class="needs">${BIENS.map(b => `<div class="needc"><div class="i">${b.icone}</div><div><b>${esc(b.nom)}</b><p>${esc(b.pourquoi)}</p></div></div>`).join("")}</div>
+        <div class="budget">🏦 Budget de ${esc(E.denomination || E.nom)} avant l'achat : <b>${eurC(A.budgetAvant)}</b></div>` },
+    { ico:"📞", court:"Contacter", titre:"Contacter les fournisseurs", qui:["🙋 L'acheteur → 🏭 les fournisseurs"], doc:"La demande de prix",
+      texte:["Pour connaître les prix, on contacte plusieurs fournisseurs : en allant au magasin, par téléphone, par e-mail ou sur internet.","Une demande écrite (comme un e-mail) est la meilleure solution : elle laisse une trace."],
+      retenir:"La règle d'or : toujours comparer <b>au moins 3 fournisseurs</b>.",
+      question:"Quelle méthode avez-vous choisie ? Pourquoi une demande écrite est-elle plus sûre qu'un coup de téléphone ?",
+      visuel:docDemande(E, A) + `<div class="methods">${METHODES.map(m => `<div class="method ${m.id === A.methode.id ? "on" : ""}"><b>${m.icone} ${esc(m.nom)}</b><span class="p">✓ ${esc(m.pro)}</span><br><span class="c">✗ ${esc(m.con)}</span></div>`).join("")}</div>` },
+    { ico:"⚖️", court:"Choisir", titre:"Étudier et choisir une offre", qui:["🏭 Les fournisseurs → 🙋 l'acheteur"], doc:"L'offre de prix",
+      texte:["Chaque fournisseur répond avec une offre de prix : son prix, mais aussi ses conditions de vente (délai, livraison, garantie, paiement).","On compare tout, pas seulement le prix, puis on choisit pour de bonnes raisons."],
+      retenir:`Offre choisie : <b>${esc(o.fNom)}</b>${A.raisons.length ? ", parce que : " + esc(A.raisons.join(", ").toLowerCase()) : ""}.`,
+      question:"L'offre la moins chère est-elle toujours la meilleure ? Qu'est-ce qui peut faire changer d'avis ?",
+      visuel:`<div class="offres3">${A.offres.map((x,k) => docOffre(x, k === A.choix)).join("")}</div>${tableauComparatif(A)}` },
+    { ico:"📝", court:"Commander", titre:"Établir le bon de commande", qui:["🙋 L'acheteur → 🏭 le fournisseur"], doc:"Le bon de commande",
+      texte:["On ne dit pas simplement « je prends » : on envoie un bon de commande, une preuve écrite de ce qu'on achète.","Avant de l'envoyer, on vérifie : le bon fournisseur, le bon article, le bon prix, les bonnes conditions. Puis on signe."],
+      retenir:"Le bon de commande, c'est l'engagement de l'acheteur : on le <b>vérifie</b> et on le <b>signe</b>.",
+      question:"Que se passerait-il si on se trompait de quantité sur le bon de commande ?",
+      visuel:docBC(E, A) },
+    { ico:"📦", court:"Recevoir", titre:"Recevoir et vérifier la livraison", qui:["🏭 Le fournisseur → 🙋 l'acheteur"], doc:"Le bon de livraison",
+      texte:[`Le fournisseur prévient que la commande est prête (SMS ou e-mail), puis le livreur apporte la marchandise avec un bon de livraison.`,"Avant de signer, on compare le bon de livraison avec le bon de commande et on vérifie le colis."],
+      retenir:"Signer le bon de livraison veut dire : « J'ai bien tout reçu. » Après, il est <b>trop tard</b> pour se plaindre !",
+      question:"Que faites-vous si le colis est abîmé ou s'il manque un article ?",
+      visuel:`<div class="notif2"><div class="nh"><span>💬 SMS</span><span>${esc(o.fNom)}</span></div>Votre commande ${esc(A.bc.numero)} est prête ! Livraison prévue le ${esc(A.livraisonPrevue)}.</div><div style="height:14px"></div>${docBL(E, A)}
+        <div class="checks"><div>☑ C'est bien l'article commandé (même référence)</div><div>☑ La quantité est correcte : 1</div><div>☑ Le colis est en bon état</div></div>` },
+    { ico:"💳", court:"Payer", titre:"Payer la livraison", qui:["🙋 L'acheteur → 🏭 le fournisseur"], doc:"Le reçu de paiement",
+      texte:["Les conditions de vente prévoyaient un paiement à la livraison (on dit aussi « contre remboursement ») : on paie au moment où l'on reçoit la marchandise.","Le reçu est la preuve que l'on a payé : on le garde précieusement."],
+      retenir:`L'argent sort du compte en banque (− ${eurC(A.paiement.montant)}), mais l'entreprise possède maintenant ${A.bien.id === "mobilier" ? "du mobilier" : A.bien.id === "caisse" ? "une caisse enregistreuse" : "un ordinateur"} : c'est un <b>investissement</b>.`,
+      question:"Pourquoi faut-il garder le reçu ? Connaissez-vous d'autres façons de payer un fournisseur ?",
+      visuel:docRecu(A) },
+    { ico:"🧾", court:"Facture", titre:"Recevoir la facture", qui:["🏭 Le fournisseur → 🙋 l'acheteur"], doc:"La facture", lock:true,
+      texte:["Il manque encore un document : la facture. Elle détaille le prix hors TVA, la TVA (taxe sur la valeur ajoutée) et le total.","Pour un achat déjà payé, elle porte la mention « payée » : on parle de facture acquittée. On la compare avec le bon de commande et le bon de livraison."],
+      retenir:"🔒 C'est le programme de la <b>prochaine mission</b> !",
+      question:"D'après vous, à quoi sert une facture si on a déjà payé et reçu un reçu ?",
+      visuel:docFactureVerrouillee(E, A) },
+    { ico:"🔄", court:"Le circuit", large:true, titre:"Le circuit des documents", qui:["🙋 L'acheteur", "🏭 Le fournisseur"], doc:"Tous les documents",
+      texte:["Un achat, c'est un aller-retour de documents entre l'acheteur et le fournisseur. Chaque document a son rôle et sert de preuve.","Dans votre entreprise, vous garderez toujours une copie de chacun d'eux."],
+      retenir:"Demande de prix → offre de prix → bon de commande → bon de livraison → paiement → facture.",
+      question:"Qui envoie quel document ? Pouvez-vous refaire le circuit sans regarder l'écran ?",
+      visuel:`<div class="circuit"><div class="side glass"><div><div class="i">🙋</div><b>L'acheteur</b><small style="color:var(--soft)">${esc(E.denomination || E.nom)}</small></div></div>
+        <div class="flows">${[["→","Demande de prix","« Quels sont vos prix ? »"],["←","Offre de prix","Le prix et les conditions de vente"],["→","Bon de commande","« Je confirme mon achat »"],
+          ["←","Marchandise + bon de livraison","L'acheteur vérifie et signe"],["→","Paiement","Le fournisseur remet un reçu"],["←","Facture","Prochaine mission", true]]
+          .map(f => `<div class="flow ${f[3] ? "soon" : ""}"><span class="ar">${f[0] === "→" ? "➡️" : ""}</span><span class="t"><b>${f[1]}</b><small>${f[2]}</small></span><span class="ar">${f[0] === "←" ? "⬅️" : ""}</span></div>`).join("")}</div>
+        <div class="side glass"><div><div class="i">🏭</div><b>Le fournisseur</b><small style="color:var(--soft)">${esc(o.fNom)}</small></div></div></div>` }
+  ];
+}
+
+V.etapes = () => {
+  const { E, A, fictif } = exemple(), L = ETAPES(E, A), n = APP.etape = Math.max(0, Math.min(APP.etape || 0, L.length - 1)), s = L[n];
+  const options = elevesM2();
+  return head("Mission 2 · Équipe ton entreprise", "Les étapes <span class='grad'>d'un achat</span>", "De l'idée d'acheter jusqu'au paiement : ce que chaque élève a vécu dans la mission 2, étape par étape.")
+    + `<div class="ex-bar"><span class="chip">📁 Exemple utilisé :</span>
+        <select id="selEx" aria-label="Exemple"><option value="fictif" ${fictif ? "selected" : ""}>Exemple fictif : ${esc(E_FICTIF.denomination)} (ordinateur)</option>
+          ${options.map(x => `<option value="${esc(x.email)}" ${!fictif && E.email === x.email ? "selected" : ""}>${esc(x.prenom)} ${esc(x.nomEleve)} – ${esc(x.denomination)}</option>`).join("")}</select>
+        ${!fictif ? `<select id="selAchat" aria-label="Achat">${(E.m2.achats || []).map((a,k) => a.paiement ? `<option value="${k}" ${k === (APP.exAchat || 0) ? "selected" : ""}>Achat ${k + 1} : ${esc(a.bien.nom)}</option>` : "").join("")}</select>` : ""}
+        ${options.length ? "" : `<span class="help">Les exemples des élèves apparaîtront ici dès qu'ils auront terminé un achat.</span>`}</div>
+    <div class="stepbar">${L.map((x,i) => `<button class="sb ${i === n ? "on" : i < n ? "vu" : ""} ${x.lock ? "lock" : ""}" data-etape="${i}"><span class="n">${x.ico}</span>${i < 7 ? (i + 1) + ". " : ""}${esc(x.court)}</button>`).join("")}</div>
+    <div class="slide ${s.large ? "large" : ""} fade-in">
+      <div class="sx glass"><div class="num">${n < 7 ? `ÉTAPE ${n + 1} SUR 7` : "POUR RÉSUMER"}</div><h3>${esc(s.titre)}</h3>
+        <div class="who">${s.qui.map(q => `<span>${q}</span>`).join("")}<span>📄 ${esc(s.doc)}</span></div>
+        ${s.texte.map(t => `<p>${t}</p>`).join("")}<div class="retenir">💡 ${s.retenir}</div></div>
+      <div class="sdoc">${s.visuel}</div>
+    </div>
+    ${ask(esc(s.question))}
+    <div class="snav"><button class="btn btn-ghost" data-snav="-1" ${n === 0 ? "disabled" : ""}>← Étape précédente</button><span class="pos">${n + 1} / ${L.length}</span><button class="btn btn-main" data-snav="1" ${n === L.length - 1 ? "disabled" : ""}>Étape suivante →</button></div>`;
+};
+
+// ======================================================================
+//  DONNÉES : Google Sheet ou démonstration
+// ======================================================================
+const CLE_CACHE = "mini-entreprise-3tq4eq-prof-cache";
+const attendre = (ms) => new Promise(r => setTimeout(r, ms));
+function appliquerDonnees(r, maj){
+  APP.source = "live"; APP.config = r.config || null; APP.maj = maj;
+  APP.liste = (r.dossiers || []).map(normaliser).filter(Boolean).sort((a,b) => (a.nomEleve + a.prenom).localeCompare(b.nomEleve + b.prenom, "fr"));
+}
+/** Chargement robuste : 3 essais espacés (60 s chacun) ; les dernières données restent affichées en cas d'échec. */
+async function charger(silencieux){
+  if (!APP.cle){ APP.err = "Entre la clé professeur."; render(); return; }
+  if (APP.busy) return;
+  APP.busy = true; if (!silencieux) render();
+  const essais = silencieux ? 1 : 3;
+  for (let i = 0; i < essais; i++){
+    try {
+      const r = await jsonp({action:"eleves", cle:APP.cle}, 60000);
+      APP.busy = false;
+      if (!r || !r.ok){
+        APP.err = r && r.erreur === "cle_invalide" ? "Clé incorrecte : vérifie CLE_PROF dans l'onglet Config." : "Réponse inattendue du Google Sheet.";
+        if (!APP.liste.length) APP.source = null; render(); return;
+      }
+      try { localStorage.setItem(CONFIG.CLE_STOCKAGE, APP.cle); localStorage.setItem(CLE_CACHE, JSON.stringify({ maj:Date.now(), dossiers:r.dossiers, config:r.config })); } catch(e) {}
+      APP.err = ""; appliquerDonnees(r, new Date()); render(); return;
+    } catch(e) {
+      if (i < essais - 1){ APP.err = `Google est très occupé (élèves en plein travail) : nouvel essai ${i + 2}/${essais}…`; render(); await attendre(4000 + i * 6000); }
+    }
+  }
+  APP.busy = false;
+  if (APP.liste.length) APP.err = "Google est très occupé : affichage des dernières données reçues. Nouvel essai automatique dans un instant.";
+  else { APP.err = "Impossible de joindre le Google Sheet pour l'instant (Google est peut-être très occupé). Réessaie dans un instant."; APP.source = null; }
+  render();
+}
+function demo(){
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280, pick = (a) => a[Math.floor(rnd() * a.length)];
+  const eleves = [["Yanis","Dubois"],["Léa","Dupuis"],["Emma","Lambert"],["Noah","Martin"],["Inès","Moreau"],["Lucas","Leroy"],["Sara","Benali"],["Mathis","Laurent"],
+    ["Chloé","Lefèvre"],["Adam","El Amrani"],["Lina","Janssens"],["Nathan","Simon"],["Manon","Dumont"],["Ilyes","Haddad"],["Zoé","Petit"],["Rayan","Lemaire"]];
+  const communes = [["Frameries","7080"],["Mons","7000"],["Quaregnon","7390"],["Colfontaine","7340"],["Boussu","7300"],["Dour","7370"]];
+  const rues = ["Rue du Commerce","Rue de la Gare","Grand-Place","Rue Neuve","Rue des Artisans","Avenue des Tilleuls"];
+  const couleurs = ["#E5484D","#F76B15","#FFC53D","#30A46C","#12A594","#3E63DD","#8E4EC6","#E93D82"];
+  const bce = () => { const b = "1" + String(Math.floor(rnd()*1e7)).padStart(7,"0"), n = b + String(97 - (parseInt(b,10) % 97)).padStart(2,"0"); return `${n.slice(0,4)}.${n.slice(4,7)}.${n.slice(7)}`; };
+  const ordre = ["baskets","chocolaterie","gaming","ferme","velos","textile","animalerie","pepiniere","baskets","gaming","chocolaterie","velos","textile","animalerie","baskets","ferme"];
+  return eleves.map(([p,n], i) => {
+    const t = TYPES.find(x => x.id === ordre[i]), s = pick(STRATEGIES), dir = rnd() < .4 ? "plusieurs" : "seul", c = pick(communes), fin = i < 13, nom = t.noms[i % 4];
+    const etapes = fin ? 9 : 4 + (i % 4), frais = FRAIS[dir];
+    const ent = { typeId:t.id, activite:t.nom, secteur:t.secteur, nom, denomination: nom + (dir === "plusieurs" ? " SRL" : ""), slogan:t.slogans[i % 3],
+      strategie:{ id:s.id, nom:s.nom, raisons:[pick(RAISONS)] }, direction: etapes >= 7 ? dir : "", forme: etapes >= 7 ? (dir === "plusieurs" ? "Société (SRL)" : "Entreprise individuelle") : "",
+      nbAssocies: dir === "plusieurs" ? 1 + (i % 4) : 1,
+      identiteVisuelle:{ couleurPrincipale:pick(couleurs), couleurAccompagnement:pick(COULEURS2)[1], styleEcriture:pick(STYLES)[0], symbole:pick(t.symboles) },
+      boutique: etapes >= 5 ? { facade:pick(FACADES)[0], auvent:pick(AUVENTS)[0], ambiance:pick(AMBIANCES)[0], phraseAccueil:pick(ACCUEILS) } : {},
+      adresse: etapes >= 6 ? { rue:pick(rues), numero:String(1 + Math.floor(rnd()*150)), cp:c[1], commune:c[0] } : {},
+      email:`contact@${nom.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"")}.be`,
+      numeroEntreprise: etapes >= 8 ? bce() : "", iban: etapes >= 8 ? "BE" + String(10 + i) + " 0630 " + String(1000 + i*37).slice(0,4) + " " + String(2000 + i*91).slice(0,4) : "",
+      dateCreation: fin ? "26 septembre 2026" : "", argent: etapes >= 7 ? { argentDeDepart:APPORT, fraisDeCreation:frais, argentEnBanque:APPORT - frais } : null };
+    return { eleve:{ email:`${p.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}.${n.toLowerCase().replace(/ /g,"-").normalize("NFD").replace(/[\u0300-\u036f]/g,"")}@istlm.org`, prenom:p, nom:n, classe:"3e TQ" },
+      entreprise:ent, missions:{ "1":{ statut: fin ? "termine" : "en_cours", etape:{ etapesTerminees:etapes }, xp: etapes*100 + (rnd() < .5 ? 50 : 0),
+        recompenses:{ badges:new Array(etapes).fill("b") }, dureeMinutes: fin ? 38 + Math.floor(rnd()*30) : null, bonus:{ concurrent: rnd() < .5 ? "Un magasin du centre de Mons" : "" } } } };
+  }).map(normaliser);
+}
+
+// ======================================================================
+//  ÉVÉNEMENTS
+// ======================================================================
+let minuterie = null;
+function planifier(){
+  clearInterval(minuterie);
+  if (APP.source === "live" && APP.auto) minuterie = setInterval(() => { if (!document.hidden) charger(true); }, CONFIG.AUTO_REFRESH_S * 1000);
+}
+function ouvrir(email){
+  const L = avecEntreprise(), i = L.findIndex(E => E.email === email);
+  if (i >= 0){ APP.idx = i; APP.vue = "eleve"; render(); window.scrollTo({top:0, behavior:"smooth"}); }
+}
+document.addEventListener("click", (e) => {
+  const o = e.target.closest("[data-open]"); if (o){ ouvrir(o.dataset.open); return; }
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.vue){ APP.vue = b.dataset.vue; render(); window.scrollTo({top:0}); return; }
+  if (b.dataset.nav){ const n = avecEntreprise().length; APP.idx = (APP.idx + (+b.dataset.nav) + n) % n; render(); return; }
+  if (b.dataset.idx !== undefined){ APP.idx = +b.dataset.idx; render(); return; }
+  if (b.dataset.etape !== undefined){ APP.etape = +b.dataset.etape; render(); return; }
+  if (b.dataset.snav){ APP.etape += +b.dataset.snav; render(); window.scrollTo({top:0, behavior:"smooth"}); return; }
+  switch (b.dataset.act){
+    case "login": { const c = $("#cle"); APP.cle = c ? c.value.trim() : APP.cle; charger().then(planifier); break; }
+    case "demo": APP.source = "demo"; APP.err = ""; APP.config = { acces:true, missionsOuvertes:["1"], max:4 }; APP.liste = demo(); render(); planifier(); break;
+    case "refresh": charger().then(planifier); break;
+    case "auto": APP.auto = !APP.auto; planifier(); render(); break;
+    case "nums": APP.cacherNums = !APP.cacherNums; render(); break;
+    case "projo":
+      document.body.classList.toggle("projo");
+      if (document.body.classList.contains("projo") && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+      else if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      break;
+    case "deco":
+      if (APP.source === "live" && !confirm("Se déconnecter et oublier la clé sur cet ordinateur ?")) return;
+      if (APP.source === "live"){ try { localStorage.removeItem(CONFIG.CLE_STOCKAGE); localStorage.removeItem(CLE_CACHE); } catch(x) {} APP.cle = ""; }
+      APP.source = null; APP.liste = []; APP.err = ""; clearInterval(minuterie); render(); break;
+  }
+});
+document.addEventListener("change", (e) => {
+  if (e.target.id === "selEleve"){ APP.idx = +e.target.value; render(); }
+  if (e.target.id === "selEx"){ APP.exemple = e.target.value; APP.exAchat = 0;
+    const E = APP.liste.find(x => x.email === APP.exemple); if (E && E.m2){ const k = (E.m2.achats || []).findIndex(a => a.paiement); APP.exAchat = Math.max(0, k); } render(); }
+  if (e.target.id === "selAchat"){ APP.exAchat = +e.target.value; render(); }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.target.id === "cle" && e.key === "Enter"){ APP.cle = e.target.value.trim(); charger().then(planifier); return; }
+  if (APP.vue === "etapes" && APP.source && !["INPUT","SELECT"].includes(e.target.tagName)){
+    if (e.key === "ArrowRight" && APP.etape < 7){ APP.etape++; render(); }
+    if (e.key === "ArrowLeft" && APP.etape > 0){ APP.etape--; render(); }
+  }
+  if (APP.vue === "eleve" && APP.source && !["INPUT","SELECT"].includes(e.target.tagName)){
+    const n = avecEntreprise().length; if (!n) return;
+    if (e.key === "ArrowRight"){ APP.idx = (APP.idx + 1) % n; render(); }
+    if (e.key === "ArrowLeft"){ APP.idx = (APP.idx - 1 + n) % n; render(); }
+  }
+  if (e.key === "Escape" && document.body.classList.contains("projo")) document.body.classList.remove("projo");
+});
+document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement) document.body.classList.remove("projo"); });
+
+if (APP.cle){
+  try { const c = JSON.parse(localStorage.getItem(CLE_CACHE) || "null"); if (c && c.dossiers) appliquerDonnees(c, new Date(c.maj)); } catch(e) {}
+}
+render();
+if (APP.cle) charger().then(planifier);
+</script>
+</body>
+</html>
