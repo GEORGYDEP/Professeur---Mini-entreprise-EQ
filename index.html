@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Console professeur – Mini-entreprises 3e TQ et 4e EQ Comptabilité</title>
+<title>Console professeur – Mini-entreprises 3e-4e Comptabilité</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,700&family=Fredoka:wght@600&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -342,6 +342,82 @@ body.projo main{padding:22px 40px}
 .snav{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:20px}
 @media (max-width:1200px){ .slide{grid-template-columns:1fr} .stepbar{grid-template-columns:repeat(4,minmax(0,1fr))} .offres3{grid-template-columns:1fr} .circuit{grid-template-columns:1fr} }
 
+
+/* ═══ Missions 2 et 3 : vues de la classe, dossier facture, stratégie, résultat ═══ */
+.sub3{font-family:var(--serif); font-weight:600; font-size:24px; color:#fff; margin:24px 0 12px}
+.dos3{padding:18px; border-radius:var(--r-lg); background:rgba(255,255,255,.04); border:2px dashed rgba(251,191,36,.5); position:relative}
+.clip{display:inline-block; font-weight:700; color:#1D1F33; background:#FFF3C4; border-radius:10px; padding:6px 14px; margin-bottom:14px; box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.docs3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; align-items:start}
+.docs3 .paper{padding:16px 16px; font-size:12.5px}
+.docs3 .paper .from .co{font-size:15px} .docs3 .paper .from .emb{width:36px; height:36px; font-size:18px}
+.docs3 .paper .from p,.docs3 .paper .to{font-size:11px} .docs3 .paper .to{padding:8px 10px}
+.docs3 .paper h3.doc{font-size:16px} .docs3 .paper .ref{font-size:10.5px}
+.docs3 .paper th,.docs3 .paper td{font-size:11px; padding:5px 6px}
+.docs3 .paper .signed{font-size:17px}
+.doclab{font-size:13px; font-weight:700; color:var(--yellow); margin-bottom:6px; text-transform:uppercase; letter-spacing:.05em}
+.paper .dh{flex-wrap:wrap} .paper .from{min-width:0; flex:1 1 200px} .paper .to{min-width:0 !important; flex:0 1 220px; max-width:100%; overflow-wrap:anywhere}
+.paper td:nth-last-child(-n+1){white-space:nowrap}
+.stamp3{display:inline-block; transform:rotate(-8deg); border:3px solid #2E9E5B; color:#2E9E5B; font-weight:800; letter-spacing:2px; padding:2px 12px; border-radius:8px; font-size:18px}
+.match{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+.match span{padding:7px 14px; border-radius:999px; background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.45); color:#9ff0c9; font-weight:600; font-size:14px}
+.match span:last-child{background:rgba(251,191,36,.14); border-color:rgba(251,191,36,.5); color:#ffd97a}
+.why3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.why3 > div{padding:18px 20px; border-radius:var(--r)}
+.why3 .wi{font-size:34px} .why3 > div > b{display:block; font-family:var(--serif); font-size:20px; color:#fff; margin:6px 0}
+.why3 p{color:var(--soft); font-size:15px}
+.tax{padding:20px 22px; border-radius:var(--r); margin-top:16px}
+.tax p{color:var(--soft); font-size:16px}
+.tax2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px}
+.tax2 > div{padding:14px 16px; border-radius:14px; font-family:var(--mono); font-size:14px; display:grid; gap:4px}
+.tax2 b{font-family:var(--ui); font-size:16px}
+.tax2 .ok{background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.45)}
+.tax2 .ko{background:rgba(255,61,139,.1); border:1px solid rgba(255,61,139,.45)}
+.tax2 .t{margin-top:4px; padding-top:6px; border-top:1px dashed rgba(255,255,255,.3); font-weight:700; color:#fff}
+.mini3{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.mini3 div{padding:10px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid var(--border-soft)}
+.mini3 b{display:block; font-family:var(--mono); font-size:18px; color:#fff}
+.mini3 span{font-size:12.5px; color:var(--dim)}
+.calc3{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:8px}
+.calc3 label{display:flex; align-items:center; gap:8px; font-weight:600}
+.calc3 input{width:110px; background:rgba(10,6,24,.6); color:#fff; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font:700 16px var(--mono)}
+.qbar{display:flex; align-items:center; gap:8px; min-width:140px}
+.qbar i{display:block; height:12px; border-radius:6px}
+.qbar b{font-family:var(--mono); white-space:nowrap}
+.vs3{display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:stretch}
+.vs3 > div:not(.vsx){padding:14px 16px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid var(--border)}
+.vs3 > div > b{display:block; font-family:var(--serif); font-size:22px; color:#fff}
+.vs3 small{color:var(--soft)} .vs3 ul{margin:8px 0 0 18px; color:var(--soft); font-size:14.5px}
+.vsx{display:grid; place-items:center; font-weight:800; color:var(--yellow); font-size:20px}
+.pb,.rt{background:#fff; color:#1D1F33; border-radius:16px; overflow:hidden; box-shadow:0 18px 44px rgba(0,0,0,.45)}
+.pb h4,.rt h4{background:linear-gradient(120deg,#8E4EC6,#3E63DD); color:#fff; padding:10px 16px; font-size:16px}
+.rt h4{background:linear-gradient(120deg,#E5484D,#E935C5)}
+.pb-c,.rt-c{display:grid; grid-template-columns:1fr 1fr}
+.pb-c > div,.rt-c > div{padding:12px 14px; display:flex; flex-direction:column}
+.pb-c > div + div,.rt-c > div + div{border-left:2px solid #E3E5EF}
+.pb h5,.rt h5{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#6B6F88; margin-bottom:4px}
+.pb-s{font-size:12px; font-weight:700; color:#8A5BD0; margin:8px 0 2px}
+.pb-l{display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px dashed #E3E5EF; font-size:14px}
+.pb-l small{color:#6B6F88}
+.pb-l span:last-child{font-family:var(--mono); font-weight:700; white-space:nowrap}
+.pb-l.neg span:last-child{color:#C0392B}
+.pb-l.hl{background:#EFFAF3; margin:0 -6px; padding:5px 6px; border-radius:6px}
+.pb-t{margin-top:auto; padding-top:8px; display:flex; justify-content:space-between; font-weight:800; border-top:2px solid #1D1F33}
+.pb-t span:last-child{font-family:var(--mono)}
+.pb-eq{background:#F4F2FB; padding:9px 16px; font-weight:700; font-size:14px}
+.flow3{display:grid; gap:8px}
+.flow3 > div{display:flex; justify-content:space-between; gap:10px; padding:10px 14px; border-radius:12px; font-size:16px}
+.flow3 b{font-family:var(--mono)}
+.flow3 .f0,.flow3 .f1{background:rgba(255,255,255,.08); border:1px solid var(--border)}
+.flow3 .f1{border-color:rgba(52,211,153,.6)} .flow3 .f1 b{color:#9ff0c9}
+.flow3 .fm{background:rgba(255,61,139,.1); color:#ffc4d4} .flow3 .fp{background:rgba(52,211,153,.1); color:#b5f5c8}
+.ba3{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:14px; align-items:center; margin-top:18px}
+.arr3{font-size:36px; color:var(--yellow)}
+.explain3{margin-top:16px; padding:16px 20px; border-radius:var(--r); border:1px solid rgba(52,211,153,.45); background:rgba(52,211,153,.07)}
+.explain3 b{color:#9ff0c9} .explain3 p{color:var(--soft); margin-top:6px}
+.cellf small{display:block; font-family:var(--mono); color:var(--dim)}
+td.mono{font-family:var(--mono); white-space:nowrap}
+@media (max-width:1200px){ .docs3,.why3{grid-template-columns:1fr} .ba3{grid-template-columns:1fr} .arr3{transform:rotate(90deg); text-align:center} .tax2{grid-template-columns:1fr} }
+
 @media (max-width:1200px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} .grid2,.pres{grid-template-columns:1fr} .cards3{grid-template-columns:1fr 1fr} }
 @media (max-width:900px){ .app{grid-template-columns:1fr} .rail{position:static; height:auto; flex-direction:row; flex-wrap:wrap} .rail .foot,.navlab{display:none} .cols{grid-template-columns:1fr !important} .chain{grid-template-columns:1fr} .chain .arr{transform:rotate(90deg)} .defs{grid-template-columns:1fr} .cards3{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation:none !important; transition:none !important} }
@@ -510,7 +586,7 @@ const ETAPES_ACHAT = [["bien","Choisir le bien"],["methode","Chercher"],["offres
 // ======================================================================
 const CONFIG = {
   ENDPOINT_URL: "https://script.google.com/macros/s/AKfycbwliltGZSZ99qaUpQ3MmWlJXINPYIQCua_hwGEGQNmw69CEwr8OA80jWykJ7Vr9268x/exec",
-  CLE_STOCKAGE: "mini-entreprise-3tq4eq-prof-cle",
+  CLE_STOCKAGE: "mini-entreprise-compta-prof-cle",
   AUTO_REFRESH_S: 90
 };
 const STYLES = [["moderne","Moderne"],["elegant","Élégant"],["fun","Fun"],["street","Street"]];
@@ -688,7 +764,7 @@ V.ensemble = () => {
   const parType = TYPES.map(t => [t, L.filter(E => E.typeId === t.id).length]);
   const sCount = STRATEGIES.map(s => ({ s, v:L.filter(E => E.strategie === s.id).length }));
   const scols = { petit:"#a3e635", milieu:"#38bdf8", haut:"#fbbf24" };
-  return head("Mini-entreprises 3e TQ et 4e EQ Comptabilité", "La classe en <span class='grad'>un coup d'œil</span>", "L'avancement de chacun et les grandes tendances de la classe. Clique sur un élève pour découvrir son entreprise.")
+  return head("Mini-entreprises 3e-4e Comptabilité", "La classe en <span class='grad'>un coup d'œil</span>", "L'avancement de chacun et les grandes tendances de la classe. Clique sur un élève pour découvrir son entreprise.")
   + `<div class="kpis fade-in">
       <div class="kpi glass" style="--c:#ff3d8b"><div class="ic">👥</div><div class="n">${n}</div><div class="l">entreprises créées ou en cours</div></div>
       <div class="kpi glass" style="--c:#34d399"><div class="ic">✅</div><div class="n">${fin}</div><div class="l">missions terminées</div></div>
@@ -848,9 +924,9 @@ V.formes = () => {
 //  COQUILLE : menu, barre du haut, connexion
 // ======================================================================
 function rail(){
-  return `<nav class="rail" aria-label="Menu"><div class="brand"><div class="lg">SL</div><div><b>Mini-entreprises</b><small>Console professeur · 3e TQ et 4e EQ Comptabilité</small></div></div>
+  return `<nav class="rail" aria-label="Menu"><div class="brand"><div class="lg">SL</div><div><b>Mini-entreprises</b><small>Console professeur · 3e-4e Comptabilité</small></div></div>
     ${VUES.map(v => v[0] === "sep" ? `<div class="navlab">${v[1]}</div>` : `<button class="nv ${APP.vue === v[0] ? "on" : ""}" data-vue="${v[0]}"><span class="i">${v[1]}</span>${v[2]}</button>`).join("")}
-    <div class="foot">Mission 1 : création de l'entreprise<br>Données : ${APP.source === "demo" ? "démonstration" : "Google Sheet"}</div></nav>`;
+    <div class="foot">Missions 1 à 3<br>Données : ${APP.source === "demo" ? "démonstration" : "Google Sheet"}</div></nav>`;
 }
 function topbar(){
   const quand = APP.maj ? (APP.maj.toDateString() === new Date().toDateString() ? heure(APP.maj) : APP.maj.toLocaleDateString("fr-BE") + " " + heure(APP.maj)) : "";
@@ -891,7 +967,7 @@ const eurC = (n) => (Math.round(n * 100) / 100).toLocaleString("fr-BE", {minimum
 const bceDe = (base8) => { const b = String(base8).padStart(8,"0"), n = b + String(97 - (parseInt(b,10) % 97)).padStart(2,"0"); return `${n.slice(0,4)}.${n.slice(4,7)}.${n.slice(7)}`; };
 
 /** Entreprise et achat fictifs, identiques à ce que les élèves ont vécu. */
-const E_FICTIF = { prenom:"Alex", nomEleve:"Martin", classe:"3e TQ", typeId:"velos", nom:"Roue Libre", denomination:"Roue Libre", slogan:"La liberté sur deux roues",
+const E_FICTIF = { prenom:"Alex", nomEleve:"Martin", classe:"3e-4e Comptabilité", typeId:"velos", nom:"Roue Libre", denomination:"Roue Libre", slogan:"La liberté sur deux roues",
   couleur:"#12A594", couleur2:"#FFFFFF", style:"fun", symbole:"🚲", rue:"Rue de la Gare", numero:"18", cp:"7080", commune:"Frameries", direction:"seul", nbAssocies:1,
   bce:bceDe(10234567), iban:"BE71 0631 2345 6769", email2:"contact@rouelibre.be", enBanque:9850, frais:150 };
 function achatDepuisCatalogue(bienId, methodeId, choix, raisons, E){
@@ -1061,7 +1137,7 @@ V.etapes = () => {
 // ======================================================================
 //  DONNÉES : Google Sheet ou démonstration
 // ======================================================================
-const CLE_CACHE = "mini-entreprise-3tq4eq-prof-cache";
+const CLE_CACHE = "mini-entreprise-compta-prof-cache";
 const attendre = (ms) => new Promise(r => setTimeout(r, ms));
 function appliquerDonnees(r, maj){
   APP.source = "live"; APP.config = r.config || null; APP.maj = maj;
@@ -1113,7 +1189,7 @@ function demo(){
       email:`contact@${nom.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"")}.be`,
       numeroEntreprise: etapes >= 8 ? bce() : "", iban: etapes >= 8 ? "BE" + String(10 + i) + " 0630 " + String(1000 + i*37).slice(0,4) + " " + String(2000 + i*91).slice(0,4) : "",
       dateCreation: fin ? "26 septembre 2026" : "", argent: etapes >= 7 ? { argentDeDepart:APPORT, fraisDeCreation:frais, argentEnBanque:APPORT - frais } : null };
-    return { eleve:{ email:`${p.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}.${n.toLowerCase().replace(/ /g,"-").normalize("NFD").replace(/[\u0300-\u036f]/g,"")}@istlm.org`, prenom:p, nom:n, classe:"3e TQ" },
+    return { eleve:{ email:`${p.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}.${n.toLowerCase().replace(/ /g,"-").normalize("NFD").replace(/[\u0300-\u036f]/g,"")}@istlm.org`, prenom:p, nom:n, classe:"3e-4e Comptabilité" },
       entreprise:ent, missions:{ "1":{ statut: fin ? "termine" : "en_cours", etape:{ etapesTerminees:etapes }, xp: etapes*100 + (rnd() < .5 ? 50 : 0),
         recompenses:{ badges:new Array(etapes).fill("b") }, dureeMinutes: fin ? 38 + Math.floor(rnd()*30) : null, bonus:{ concurrent: rnd() < .5 ? "Un magasin du centre de Mons" : "" } } } };
   }).map(normaliser);
@@ -1182,6 +1258,330 @@ if (APP.cle){
 }
 render();
 if (APP.cle) charger().then(planifier);
+const M3_MARCH = {
+  ferme:{ client:{ nom:"Restaurant « Chez Mamy Lou »", contact:"Louise Delcroix", role:"cheffe et patronne", avatar:"👩‍🍳", rue:"Rue de Mons 45", cp:"7080", ville:"Frameries", pourquoi:"pour son nouveau menu de saison" },
+    fournisseur:{ code:"AGC", nom:"AgriCoop Hainaut", forme:"SC", rue:"Chaussée de Mons 210", cp:"7800", ville:"Ath", tel:"068 28 41 10", site:"pro.agricoop-hainaut.be", desc:"La coopérative des producteurs du Hainaut" },
+    articles:[ { ref:"AGC-POM10", nom:"Cageots de pommes de saison (10 kg)", unite:"cageot", detail:"Pommes de producteurs locaux, calibre moyen", qte:15, prixHT:7, prixVente:14 },
+               { ref:"AGC-PAN-SAI", nom:"Paniers de fruits et légumes de saison", unite:"panier", detail:"Environ 6 kg de fruits et légumes frais", qte:12, prixHT:14, prixVente:28 },
+               { ref:"AGC-GOURM", nom:"Paniers gourmands du terroir", unite:"panier", detail:"Fromages, confitures et jus de pomme artisanaux", qte:8, prixHT:27, prixVente:55 } ] },
+  pepiniere:{ client:{ nom:"Comité des fêtes de Jemappes", contact:"Karim Haddou", role:"président du comité", avatar:"🎪", rue:"Place de Jemappes 3", cp:"7012", ville:"Jemappes", pourquoi:"pour fleurir la place pendant la fête du village" },
+    fournisseur:{ code:"HWA", nom:"Horti Wallonie", forme:"SRL", rue:"Rue des Horticulteurs 9", cp:"1300", ville:"Wavre", tel:"010 24 66 30", site:"pro.horti-wallonie.be", desc:"Le grossiste des jardineries de Wallonie" },
+    articles:[ { ref:"HWA-GER12", nom:"Géraniums en pot", unite:"pot", detail:"Pot de 12 cm, fleurs rouges ou roses", qte:40, prixHT:2, prixVente:4 },
+               { ref:"HWA-ROS3L", nom:"Rosiers en pot (3 litres)", unite:"pot", detail:"Rosiers buissons déjà fleuris", qte:20, prixHT:6.5, prixVente:14 },
+               { ref:"HWA-OLI120", nom:"Oliviers en pot décoratif (1,20 m)", unite:"pièce", detail:"Olivier taillé dans un pot en terre cuite", qte:4, prixHT:55, prixVente:120 } ] },
+  chocolaterie:{ client:{ nom:"Julie et Thomas, futurs mariés", contact:"Julie Moreau", role:"future mariée", avatar:"💒", rue:"Rue des Roses 12", cp:"7340", ville:"Colfontaine", pourquoi:"pour offrir un cadeau à chaque invité de leur mariage" },
+    fournisseur:{ code:"DCO", nom:"Douceurs & Co", forme:"SRL", rue:"Rue des Confiseurs 12", cp:"4000", ville:"Liège", tel:"04 223 18 50", site:"pro.douceurs-co.be", desc:"Le grossiste des chocolatiers et pâtissiers" },
+    articles:[ { ref:"DCO-SACH200", nom:"Sachets de chocolats assortis (200 g)", unite:"sachet", detail:"Chocolats au lait et noirs, sachet transparent", qte:30, prixHT:2.5, prixVente:5 },
+               { ref:"DCO-BAL250", nom:"Ballotins de pralines (250 g)", unite:"ballotin", detail:"Pralines belges assorties, ruban doré", qte:25, prixHT:5.8, prixVente:12 },
+               { ref:"DCO-PREST500", nom:"Coffrets prestige de pralines (500 g)", unite:"coffret", detail:"Grandes pralines fines dans un coffret en bois", qte:12, prixHT:15, prixVente:32 } ] },
+  textile:{ client:{ nom:"Club de foot des Étoiles de Frameries", contact:"Marco Rossi", role:"président du club", avatar:"⚽", rue:"Rue du Stade 1", cp:"7080", ville:"Frameries", pourquoi:"pour les nouvelles tenues des supporters" },
+    fournisseur:{ code:"TXD", nom:"Textiles Delcourt", forme:"SRL", rue:"Rue du Midi 77", cp:"7700", ville:"Mouscron", tel:"056 33 70 12", site:"pro.textiles-delcourt.be", desc:"Le grossiste en vêtements, imprimés ou brodés à la demande" },
+    articles:[ { ref:"TXD-TS-IMP", nom:"T-shirts imprimés au logo du club", unite:"pièce", detail:"Coton, logo imprimé devant, tailles S à XL", qte:30, prixHT:3.5, prixVente:8 },
+               { ref:"TXD-SW-BRO", nom:"Sweats à capuche brodés", unite:"pièce", detail:"Molleton épais, logo brodé sur le cœur", qte:15, prixHT:13, prixVente:28 },
+               { ref:"TXD-SOFT-BRO", nom:"Vestes softshell brodées", unite:"pièce", detail:"Coupe-vent et déperlantes, logo brodé", qte:8, prixHT:31, prixVente:65 } ] },
+  baskets:{ client:{ nom:"École de danse « Hip-Hop Factory »", contact:"Inès Dubois", role:"professeure de danse", avatar:"💃", rue:"Rue de Nimy 120", cp:"7000", ville:"Mons", pourquoi:"pour le spectacle de fin d'année de ses élèves" },
+    fournisseur:{ code:"SPD", nom:"Sport Distribution", forme:"SA", rue:"Boulevard Industriel 60", cp:"1070", ville:"Anderlecht", tel:"02 520 44 80", site:"pro.sport-distribution.be", desc:"Le grossiste en articles de sport" },
+    articles:[ { ref:"SPD-TOILE-B", nom:"Baskets en toile blanches", unite:"paire", detail:"Toile légère, semelle en caoutchouc", qte:12, prixHT:12.5, prixVente:25 },
+               { ref:"SPD-CONF-T", nom:"Baskets confortables tendance", unite:"paire", detail:"Semelle amortissante, plusieurs coloris", qte:10, prixHT:31, prixVente:65 },
+               { ref:"SPD-CUIR-HG", nom:"Baskets en cuir haut de gamme", unite:"paire", detail:"Cuir véritable, finitions soignées", qte:6, prixHT:66, prixVente:140 } ] },
+  gaming:{ client:{ nom:"Maison de jeunes « Le Spot »", contact:"Kevin Lambert", role:"animateur", avatar:"🕹️", rue:"Rue de la Station 30", cp:"7300", ville:"Boussu", pourquoi:"pour équiper sa nouvelle salle de jeux" },
+    fournisseur:{ code:"TCD", nom:"TechDistri", forme:"SA", rue:"Leuvensesteenweg 510", cp:"1930", ville:"Zaventem", tel:"02 725 60 90", site:"pro.techdistri.be", desc:"Le grossiste en électronique et jeux vidéo" },
+    articles:[ { ref:"TCD-MAN-WL", nom:"Manettes sans fil compatibles", unite:"pièce", detail:"Batterie rechargeable, câble fourni", qte:10, prixHT:15, prixVente:29 },
+               { ref:"TCD-CASQ-MIC", nom:"Casques gaming avec micro", unite:"pièce", detail:"Son surround, micro réglable", qte:8, prixHT:29, prixVente:59 },
+               { ref:"TCD-FAUT-PRE", nom:"Fauteuils gaming premium", unite:"pièce", detail:"Dossier inclinable, coussins lombaires", qte:4, prixHT:115, prixVente:249 } ] },
+  velos:{ client:{ nom:"Auberge de jeunesse de Mons", contact:"Sarah Janssens", role:"gérante", avatar:"🏨", rue:"Rampe du Château 2", cp:"7000", ville:"Mons", pourquoi:"pour prêter du matériel aux visiteurs qui découvrent la région" },
+    fournisseur:{ code:"CBX", nom:"Cycles Benelux", forme:"SA", rue:"Kempische Steenweg 300", cp:"3500", ville:"Hasselt", tel:"011 22 85 40", site:"pro.cycles-benelux.be", desc:"Le grossiste en vélos et accessoires" },
+    articles:[ { ref:"CBX-CASQ-U", nom:"Casques de vélo", unite:"pièce", detail:"Taille réglable, éclairage arrière intégré", qte:12, prixHT:10, prixVente:22 },
+               { ref:"CBX-VILLE-EQ", nom:"Vélos de ville équipés", unite:"pièce", detail:"Panier, éclairage et antivol fournis", qte:4, prixHT:215, prixVente:399 },
+               { ref:"CBX-ELEC-HG", nom:"Vélos électriques haut de gamme", unite:"pièce", detail:"Autonomie 100 km, cadre aluminium", qte:2, prixHT:740, prixVente:1490 } ] },
+  animalerie:{ client:{ nom:"Refuge « Les Amis des Bêtes »", contact:"Claire Lefèvre", role:"responsable des bénévoles", avatar:"🐾", rue:"Chemin des Prés 8", cp:"7370", ville:"Dour", pourquoi:"pour accueillir les nouveaux pensionnaires du refuge" },
+    fournisseur:{ code:"ADI", nom:"Animal Distribution", forme:"SA", rue:"Avenue de l'Industrie 40", cp:"6040", ville:"Jumet", tel:"071 35 20 64", site:"pro.animal-distribution.be", desc:"Le grossiste en produits pour animaux" },
+    articles:[ { ref:"ADI-CROQ4", nom:"Sacs de croquettes pour chiens (4 kg)", unite:"sac", detail:"Croquettes complètes pour chiens adultes", qte:20, prixHT:6.5, prixVente:13 },
+               { ref:"ADI-PAN-LAV", nom:"Paniers pour chiens lavables", unite:"pièce", detail:"Coussin amovible, taille moyenne", qte:10, prixHT:18, prixVente:37 },
+               { ref:"ADI-ARBRE-D", nom:"Arbres à chat design", unite:"pièce", detail:"Bois clair, griffoirs et niche", qte:5, prixHT:58, prixVente:119 } ] }
+};
+
+// ======================================================================
+//  MISSIONS 2 ET 3 : DONNÉES (réelles, démonstration ou exemple fictif)
+// ======================================================================
+const M3_COND = { remisePct:5, remiseDes:10, port:15, francoDes:250, tva:21 };
+const M3_MARGES = [
+  { id:"petit", nom:"Petite marge", pct:20, strat:"Petits prix", icone:"💰", c:"#a3e635" },
+  { id:"milieu", nom:"Marge moyenne", pct:50, strat:"Bon rapport qualité-prix", icone:"⚖️", c:"#38bdf8" },
+  { id:"haut", nom:"Grosse marge", pct:100, strat:"Haut de gamme", icone:"💎", c:"#fbbf24" }
+];
+const r2c = (n) => Math.round(n * 100) / 100;
+const iStratE = (E) => Math.max(0, ["petit","milieu","haut"].indexOf(E.strategie || "milieu"));
+const nomBien = (b) => b.nom.replace(/^(Le |La |L')/, "").replace(/^./, c => c.toUpperCase());
+
+/** Mission 2 « comme un élève » (pour la démonstration et l'exemple fictif). */
+function m2Synth(E, choixParBien){
+  const date = "5 octobre 2026", dates = ["9 octobre 2026","10 octobre 2026","12 octobre 2026"];
+  const achats = ["ordinateur","caisse","mobilier"].map((id, k) => {
+    const b = BIENS.find(x => x.id === id), ch = choixParBien[id];
+    const offres = b.fournisseurs.map((f, j) => { const remise = Math.round(f.prix * f.remise) / 100;
+      return { numero:`OP-${f.code}-${3100 + k * 7 + j}`, fournisseur:{ nom:f.nom, forme:f.forme, adresse:`${f.rue}, ${f.cp} ${f.ville}`, numeroTVA:"BE " + bceDe(40000000 + j * 1234567 + k * 77),
+        telephone:f.tel, site:f.web, atout:f.atout }, reference:f.ref, article:f.article, detail:f.detail, niveau:["petit","milieu","haut"][j], prix:f.prix, remisePourcent:f.remise, remise,
+        fraisLivraison:f.livraison, totalAPayer:r2c(f.prix - remise + f.livraison), delaiJours:f.delai, garantieAns:f.garantie, paiement:"à la livraison" }; });
+    const o = offres[ch];
+    return { numero:k + 1, bien:{ id, nom:b.nom }, methode:{ id:"email", nom:"Envoyer des e-mails" }, offresRecues:offres, offreChoisie:o, raisonsDuChoix:["La garantie la plus longue"],
+      bonDeCommande:{ numero:`BC-2026-00${k + 1}`, date, signature:`${E.prenom} ${E.nomEleve}` }, notification:{ livraisonPrevue:dates[k] },
+      bonDeLivraison:{ numero:`BL-${b.fournisseurs[ch].code}-${30400 + k * 13}`, date:dates[k], signature:`${E.prenom} ${E.nomEleve}` },
+      paiement:{ montant:o.totalAPayer, date:dates[k] }, termine:true };
+  });
+  const materiel = ["mobilier","caisse","ordinateur"].map(id => { const a = achats.find(x => x.bien.id === id), b = BIENS.find(x => x.id === id);
+    return { libelle:`${nomBien(b)} (${a.offreChoisie.fournisseur.nom})`, montant:a.paiement.montant }; });
+  const banque = r2c(E.enBanque - materiel.reduce((s, x) => s + x.montant, 0));
+  return { statut:"termine", achats, patrimoine:{ possede:materiel.concat([{ libelle:"Argent en banque", montant:banque }]),
+    origine:[{ libelle:"Argent de départ (apport)", montant:E.enBanque + E.frais }, { libelle:"Déjà dépensé : frais de création", montant:-E.frais }], valeur:E.enBanque, argentEnBanque:banque } };
+}
+/** Mission 3 calculée exactement comme dans l'application élève. */
+function m3Synth(E, m2){
+  const m = M3_MARCH[E.typeId], i = iStratE(E), art = m.articles[i], q = art.qte, mg = M3_MARGES[i];
+  const brut = r2c(q * art.prixHT), remise = q >= M3_COND.remiseDes ? r2c(brut * M3_COND.remisePct / 100) : 0, net = r2c(brut - remise);
+  const port = net >= M3_COND.francoDes ? 0 : M3_COND.port, taxable = r2c(net + port), tva = r2c(taxable * M3_COND.tva / 100), total = r2c(taxable + tva);
+  const cu = r2c(total / q), pv = r2c(cu * (1 + mg.pct / 100)), vente = r2c(q * pv), ben = r2c(vente - total);
+  const avant = m2.patrimoine, banque = r2c(avant.argentEnBanque - total + vente);
+  return { statut:"termine",
+    commandeClient:{ client:{ nom:m.client.nom, contact:m.client.contact, role:m.client.role, adresse:`${m.client.rue}, ${m.client.cp} ${m.client.ville}`, raison:m.client.pourquoi, avatar:m.client.avatar },
+      reference:art.ref, article:art.nom, quantite:q, prixUnitaire:pv, montant:vente },
+    achatMarchandises:{ fournisseur:{ nom:m.fournisseur.nom, forme:m.fournisseur.forme, adresse:`${m.fournisseur.rue}, ${m.fournisseur.cp} ${m.fournisseur.ville}`, site:m.fournisseur.site },
+      reference:art.ref, article:art.nom, quantite:q, prixUnitaireHTVA:art.prixHT, brutHTVA:brut, remise, fraisDePortHTVA:port, montantHTVA:taxable, tva, totalTVAC:total },
+    prixDeVente:{ strategie:E.strategie, marge:mg.nom, margePourcent:mg.pct, prixAchatUnitaire:cu, margeUnitaire:r2c(pv - cu), prixVenteUnitaire:pv, quantite:q, montantVente:vente },
+    resultat:{ depenses:[{ libelle:"Achat des marchandises", montant:total }], ventes:[{ libelle:"Vente au client", montant:vente }], benefice:ben },
+    patrimoine:{ possede:avant.possede.slice(0, -1).concat([{ libelle:"Argent en banque", montant:banque }]),
+      origine:avant.origine.concat([{ libelle:"Bénéfice de la première vente", montant:ben }]), valeur:r2c(avant.valeur + ben), argentEnBanque:banque },
+    classementFactures:{ facturesClassees:m2.achats.map((a, k) => ({ numero:`FA-${(a.offreChoisie.numero.split("-")[1] || "FRN")}-${2200 + k * 311}`, fournisseur:`${a.offreChoisie.fournisseur.nom} ${a.offreChoisie.fournisseur.forme}`,
+      article:a.offreChoisie.article, montant:a.paiement.montant, classee:true })) } };
+}
+// Les fiches élèves gardent aussi la mission 3
+const _normaliserBase = normaliser;
+normaliser = function(d){ const E = _normaliserBase(d); if (E) E.m3 = (d.missions || {})["3"] || null; return E; };
+// Démonstration : les élèves qui ont fini la mission 1 ont aussi fait les missions 2 et 3
+const _demoBase = demo;
+demo = function(){
+  return _demoBase().map((E, i) => {
+    if (E.statut !== "termine" || E.enBanque == null) return E;
+    const k = iStratE(E), ch = { ordinateur:[k, 1, 2][i % 3], caisse:k, mobilier:[k, 0, 1][i % 3] };
+    E.m2 = m2Synth(E, ch);
+    if (i < 11) E.m3 = m3Synth(E, E.m2);
+    return E;
+  });
+};
+const E_FICTIF3 = Object.assign({}, E_FICTIF, { strategie:"milieu", email:"fictif" });
+E_FICTIF3.m2 = m2Synth(E_FICTIF3, { ordinateur:1, caisse:1, mobilier:1 }); E_FICTIF3.m3 = m3Synth(E_FICTIF3, E_FICTIF3.m2);
+const avecM2 = () => APP.liste.filter(E => E.m2 && (E.m2.achats || []).some(a => a.paiement));
+const avecM3 = () => APP.liste.filter(E => E.m3 && E.m3.statut === "termine" && E.m3.resultat);
+const benef3 = (m3) => m3.resultat ? (m3.resultat.benefice != null ? m3.resultat.benefice : 0) : 0;
+const somme = (l) => r2c((Array.isArray(l) ? l : [{ montant:l }]).reduce((s, x) => s + (+x.montant || 0), 0));
+const depenses3 = (m3) => Array.isArray(m3.resultat.depenses) ? somme(m3.resultat.depenses) : +m3.resultat.depenses;
+const ventes3 = (m3) => Array.isArray(m3.resultat.ventes) ? somme(m3.resultat.ventes) : +m3.resultat.ventes;
+
+/** Prix d'achat, marge et prix de vente d'une mission 3. Les missions faites avec la version 1.0
+ *  (avant l'étape « Le prix de vente ») n'envoyaient pas ces informations : on les recalcule. */
+function pdv3(m){
+  if (m.prixDeVente && m.prixDeVente.prixVenteUnitaire != null) return m.prixDeVente;
+  const q = +(m.commandeClient && m.commandeClient.quantite) || +(m.achatMarchandises && m.achatMarchandises.quantite) || 0;
+  const achat = m.achatMarchandises && m.achatMarchandises.totalTVAC != null ? +m.achatMarchandises.totalTVAC : depenses3(m);
+  const vente = ventes3(m), pv = m.commandeClient && m.commandeClient.prixUnitaire != null ? +m.commandeClient.prixUnitaire : (q ? r2c(vente / q) : 0);
+  if (!q || !achat) return {};
+  const pa = r2c(achat / q);
+  return { prixAchatUnitaire:pa, prixVenteUnitaire:pv, margeUnitaire:r2c(pv - pa), margePourcent:Math.round((pv - pa) / pa * 100), calcule:true };
+}
+APP.ex3 = "fictif"; APP.exAchat3 = 0;
+function choixEx(liste){ const E = APP.ex3 !== "fictif" ? liste.find(x => x.email === APP.ex3) : null; return E || E_FICTIF3; }
+function barreExemple(liste, avecAchat){
+  const E = choixEx(liste), fictif = E === E_FICTIF3;
+  return `<div class="ex-bar"><span class="chip">📁 Exemple utilisé :</span>
+    <select id="selEx3" aria-label="Exemple"><option value="fictif" ${fictif ? "selected" : ""}>Exemple fictif : ${esc(E_FICTIF3.denomination)}</option>
+      ${liste.map(x => `<option value="${esc(x.email)}" ${!fictif && x.email === E.email ? "selected" : ""}>${esc(x.prenom)} ${esc(x.nomEleve)} – ${esc(x.denomination)}</option>`).join("")}</select>
+    ${avecAchat ? `<select id="selAchat3" aria-label="Achat">${(E.m2.achats || []).map((a, k) => a.paiement ? `<option value="${k}" ${k === APP.exAchat3 ? "selected" : ""}>${BIENS.find(b => b.id === a.bien.id).icone} ${esc(a.bien.nom)}</option>` : "").join("")}</select>` : ""}
+    ${liste.length ? "" : `<span class="help">Les exemples des élèves apparaîtront ici dès qu'ils auront terminé la mission.</span>`}</div>`;
+}
+
+// ======================================================================
+//  DOCUMENTS ET TABLEAUX
+// ======================================================================
+/** La facture du fournisseur, reconstituée à partir du montant payé (TVA 21 % comprise), mention « PAYÉE ». */
+function docFacture(E, A, numero){
+  const o = A.offres[A.choix], total = A.paiement.montant, taxable = r2c(total / 1.21), tva = r2c(total - taxable);
+  let pHT = r2c(o.prix / 1.21), remHT = 0, portHT = 0;
+  if (o.livraison > 0){ remHT = o.remise ? r2c(pHT * o.remisePct / 100) : 0; portHT = r2c(taxable - (pHT - remHT)); }
+  else if (o.remise){ remHT = r2c(pHT - taxable); } else pHT = taxable;
+  return `<div class="paper"><div class="dh"><div class="from"><div class="emb" style="background:#1E2A5A;color:#fff">🧾</div><div><div class="co">${esc(o.fNom)} ${esc(o.fForme)}</div><p>${esc(o.fRue)}<br>${esc(o.fVille)}</p><p class="ids">TVA ${esc(o.fTva)}</p></div></div>
+      <div class="to"><div class="lbl">Client</div><b>${esc(E.denomination || E.nom)}</b><br>${esc(E.rue)} ${esc(E.numero)}<br>${esc(E.cp)} ${esc(E.commune)}<br><span style="font-family:var(--mono);font-size:11.5px">TVA BE ${esc(E.bce)}</span></div></div>
+    <div class="place">Le ${esc(A.paiement.date)}</div><h3 class="doc">FACTURE</h3><div class="ref">N° ${esc(numero)} · Votre commande ${esc(A.bc.numero)} · Livraison ${esc(A.bl.numero)}</div>
+    <table><thead><tr><th>Réf.</th><th>Désignation</th><th>Qté</th><th>Total HTVA</th></tr></thead><tbody>
+      <tr><td style="font-family:var(--mono)">${esc(o.ref)}</td><td>${esc(o.article)}</td><td>1</td><td>${eurC(pHT)}</td></tr>
+      ${remHT ? `<tr><td></td><td>Remise ${o.remisePct} %</td><td></td><td>− ${eurC(remHT)}</td></tr>` : ""}${portHT ? `<tr><td></td><td>Frais de livraison</td><td></td><td>${eurC(portHT)}</td></tr>` : ""}
+      <tr><td></td><td>Montant hors TVA</td><td></td><td>${eurC(taxable)}</td></tr><tr><td></td><td>TVA 21 %</td><td></td><td>${eurC(tva)}</td></tr>
+      <tr><td></td><td><b>Total TVA comprise</b></td><td></td><td><b>${eurC(total)}</b></td></tr></tbody></table>
+    <p style="font-size:13px"><b>Garantie :</b> ${o.garantie} an${o.garantie > 1 ? "s" : ""} à partir de la date de la facture.</p>
+    <p style="text-align:right"><span class="stamp3">PAYÉE</span><br><small style="color:#6B6F88">le ${esc(A.paiement.date)}, par carte bancaire, à la livraison</small></p>
+    <div class="foot">Document fictif – projet pédagogique, Institut Saint-Luc de Frameries</div></div>`;
+}
+/** Patrimoine présenté comme un bilan (matériel en haut, argent en bas, totaux des deux colonnes). */
+function patriBilan(titre, P, marque){
+  const mat = P.possede.filter(x => x.libelle !== "Argent en banque"), cash = P.possede.filter(x => x.libelle === "Argent en banque");
+  const ico = (l) => /Mobilier/.test(l) ? "🪑" : /Caisse/.test(l) ? "🧾" : /Ordinateur/.test(l) ? "💻" : /Argent en banque/.test(l) ? "💶" : /apport/.test(l) ? "💼" : /frais/.test(l) ? "📝" : /Bénéfice/.test(l) ? "💰" : "•";
+  const ligne = (x) => `<div class="pb-l ${marque && marque.indexOf(x.libelle) >= 0 ? "hl" : ""} ${x.montant < 0 ? "neg" : ""}"><span>${ico(x.libelle)} ${esc(x.libelle)}</span><span>${x.montant < 0 ? "− " + eurC(-x.montant) : eurC(x.montant)}</span></div>`;
+  const tg = somme(P.possede), td = somme(P.origine);
+  const apports = P.origine.filter(x => !/Bénéfice/.test(x.libelle)), gagne = P.origine.filter(x => /Bénéfice/.test(x.libelle));
+  return `<div class="pb"><h4>${titre}</h4><div class="pb-c">
+      <div><h5>Ce que l'entreprise possède</h5><div class="pb-s">Le matériel</div>${mat.map(ligne).join("")}<div class="pb-s">L'argent disponible</div>${cash.map(ligne).join("")}
+        <div class="pb-t"><span>Total</span><span>${eurC(tg)}</span></div></div>
+      <div><h5>D'où vient l'argent</h5><div class="pb-s">Ce que les créateurs ont apporté</div>${apports.map(ligne).join("")}
+        ${gagne.length ? `<div class="pb-s">Ce que l'entreprise a gagné</div>${gagne.map(ligne).join("")}` : ""}<div class="pb-t"><span>Total</span><span>${eurC(td)}</span></div></div></div>
+    <div class="pb-eq">✔ Les deux totaux sont égaux : ${eurC(tg)}</div></div>`;
+}
+function resultatT(m3){
+  const d = depenses3(m3), v = ventes3(m3), b = benef3(m3), f = m3.achatMarchandises.fournisseur, cl = m3.commandeClient.client;
+  return `<div class="rt"><h4>📊 Le résultat de la première vente</h4><div class="rt-c">
+      <div><h5>Ce qu'on a dépensé</h5><div class="pb-l"><span>🛒 Achat des marchandises <small>(${esc(f.nom)})</small></span><span>${eurC(d)}</span></div>
+        <div class="pb-l hl"><span>💰 Bénéfice</span><span>${eurC(b)}</span></div><div class="pb-t"><span>Total</span><span>${eurC(v)}</span></div></div>
+      <div><h5>Ce qu'on a vendu</h5><div class="pb-l"><span>🤝 Vente au client <small>(${esc(cl.nom)})</small></span><span>${eurC(v)}</span></div><div class="pb-t"><span>Total</span><span>${eurC(v)}</span></div></div></div>
+    <div class="pb-eq">Ventes − dépenses = bénéfice : ${eurC(v)} − ${eurC(d)} = <b>${eurC(b)}</b></div></div>`;
+}
+
+// ======================================================================
+//  VUES
+// ======================================================================
+V.achats = () => {
+  const L = avecM2(), n = L.length;
+  const parBien = BIENS.map(b => ({ b, compte:b.fournisseurs.map(f => L.filter(E => (E.m2.achats || []).some(a => a.bien.id === b.id && a.paiement && a.offreChoisie.fournisseur.nom === f.nom)).length) }));
+  const invest = (E) => somme((E.m2.achats || []).filter(a => a.paiement).map(a => ({ montant:a.paiement.montant })));
+  const moyInv = n ? r2c(L.reduce((s, E) => s + invest(E), 0) / n) : 0, moyBq = n ? r2c(L.reduce((s, E) => s + (E.m2.patrimoine ? E.m2.patrimoine.argentEnBanque : 0), 0) / n) : 0;
+  return head("Mission 2 · Équipe ton entreprise", "Les achats <span class='grad'>de la classe</span>", "Quel matériel chaque entreprise a-t-elle acheté, chez quel fournisseur, et combien reste-t-il en banque ?")
+  + `<div class="kpis fade-in" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="kpi glass" style="--c:#34d399"><div class="ic">✅</div><div class="n">${n}</div><div class="l">entreprises équipées</div></div>
+      <div class="kpi glass" style="--c:#fbbf24"><div class="ic">🛒</div><div class="n">${n ? eurC(moyInv) : "–"}</div><div class="l">investis en moyenne dans le matériel</div></div>
+      <div class="kpi glass" style="--c:#38bdf8"><div class="ic">🏦</div><div class="n">${n ? eurC(moyBq) : "–"}</div><div class="l">restent en banque en moyenne</div></div></div>
+    <div class="cols fade-in" style="grid-template-columns:repeat(3,minmax(0,1fr))">${parBien.map(({ b, compte }) => `<div class="col glass" style="--c1:#22d3ee;--c2:#9d4edd"><h3>${b.icone} ${esc(b.nom)}</h3>
+      ${b.fournisseurs.map((f, j) => `<div class="bar" style="grid-template-columns:minmax(0,1fr) 110px 34px"><span class="t">${esc(f.nom)} <small style="color:var(--dim)">${esc(f.atout)}</small></span>
+        <span class="track"><span class="fill" style="display:block;width:${pct(compte[j], n)}%"></span></span><span class="v">${compte[j]}</span></div>`).join("")}</div>`).join("")}</div>
+    <div class="panel glass fade-in" style="margin-top:18px"><h3>Le matériel de chaque entreprise</h3>
+      <table class="list"><thead><tr><th>Entreprise</th><th>🪑 Mobilier</th><th>🧾 Caisse</th><th>💻 Ordinateur</th><th>Investi</th><th>En banque</th></tr></thead><tbody>
+      ${L.map(E => { const c = (id) => { const a = (E.m2.achats || []).find(x => x.bien.id === id && x.paiement); return a ? `${esc(a.offreChoisie.fournisseur.nom)}<small>${eurC(a.paiement.montant)}</small>` : "–"; };
+        return `<tr><td><div class="who">${logoMark(E, 34)}<div><b>${esc(E.denomination)}</b><small>${esc(E.prenom)} ${esc(E.nomEleve)}</small></div></div></td><td class="cellf">${c("mobilier")}</td><td class="cellf">${c("caisse")}</td><td class="cellf">${c("ordinateur")}</td>
+          <td style="font-family:var(--mono)">${eurC(invest(E))}</td><td style="font-family:var(--mono)">${E.m2.patrimoine ? eurC(E.m2.patrimoine.argentEnBanque) : "–"}</td></tr>`; }).join("") || `<tr><td colspan="6"><div class="empty">Aucune mission 2 terminée pour l'instant.</div></td></tr>`}
+      </tbody></table></div>`
+  + ask("Qui a dépensé le plus ? Le moins ? Le matériel le plus cher était-il toujours le meilleur choix pour la stratégie de l'entreprise ?");
+};
+
+V.dossier = () => {
+  const L = avecM2(), E = choixEx(L), achats = (E.m2.achats || []).filter(a => a.paiement);
+  APP.exAchat3 = Math.max(0, Math.min(APP.exAchat3, (E.m2.achats || []).length - 1));
+  let k = APP.exAchat3; if (!(E.m2.achats[k] && E.m2.achats[k].paiement)) k = (E.m2.achats || []).findIndex(a => a.paiement);
+  const A = achatDepuisEleve(E, k), x = E.m2.achats[k], o = A.offres[A.choix];
+  const fc = E.m3 && E.m3.classementFactures ? (E.m3.classementFactures.facturesClassees || []).find(f => f.article === o.article) : null;
+  const numero = fc ? fc.numero : `FA-${o.numero.split("-")[1] || "FRN"}-${2200 + k * 311}`;
+  const soc = E.direction === "plusieurs", impot = soc ? "l'ISoc (impôt des sociétés)" : "l'IPP (impôt des personnes physiques)";
+  const ex = E.m3 && E.m3.resultat ? { v:ventes3(E.m3), d:depenses3(E.m3) } : { v:1000, d:600 };
+  return head("Mission 3 · Partie 1", "Le dossier <span class='grad'>facture</span>", "Bon de commande, bon de livraison et facture : trois documents qui racontent la même histoire. Agrafés ensemble, ils forment un dossier qu'on classe.")
+  + barreExemple(L, true)
+  + `<div class="dos3 fade-in"><div class="clip">📎 Dossier n° ${esc(numero)} · ${esc(o.fNom)} · ${esc(x.bien.nom)}</div>
+      <div class="docs3"><div><div class="doclab">1. Le bon de commande</div>${docBC(E, A)}</div><div><div class="doclab">2. Le bon de livraison</div>${docBL(E, A)}</div><div><div class="doclab">3. La facture (payée)</div>${docFacture(E, A, numero)}</div></div>
+      <div class="match"><span>✔ Même article : ${esc(o.ref)}</span><span>✔ Même quantité : 1</span><span>✔ Même montant : ${eurC(A.paiement.montant)}</span><span>➜ Dossier complet : on le classe</span></div></div>
+    <h3 class="sub3">Pourquoi garder chaque dossier facture ?</h3>
+    <div class="why3 fade-in">
+      <div class="glass"><div class="wi">🛠️</div><b>Pour la garantie</b><p>Si ${esc(x.bien.nom.toLowerCase())} tombe en panne, ${esc(o.fNom)} demandera le <b>numéro de facture</b> (${esc(numero)}) pour vérifier qu'il a bien été acheté chez lui, et à quelle date. Ici : garantie de <b>${o.garantie} an${o.garantie > 1 ? "s" : ""}</b> à partir du ${esc(A.paiement.date)}.</p></div>
+      <div class="glass"><div class="wi">📚</div><b>Pour la comptabilité</b><p>Chaque achat doit être prouvé par une facture. En Belgique, l'entreprise doit garder ses factures et ses documents comptables pendant <b>10 ans</b>.</p></div>
+      <div class="glass"><div class="wi">🏛️</div><b>Pour le fisc</b><p>Le fisc, c'est l'administration des impôts (le SPF Finances : Service public fédéral Finances). Il peut <b>contrôler</b> l'entreprise et demander la preuve de chaque dépense.</p></div>
+    </div>
+    <div class="tax glass fade-in"><h3 class="sub3" style="margin-top:0">💡 Les dépenses font payer moins d'impôt… si on peut les prouver</h3>
+      <p>L'entreprise paie un impôt sur son <b>bénéfice</b>. Pour ${esc(E.denomination)}, ${soc ? "une société" : "une entreprise individuelle"}, c'est ${impot}. Or <b>bénéfice = ventes − dépenses</b> : chaque dépense prouvée par une facture diminue le bénéfice sur lequel on paie l'impôt.</p>
+      <p class="help">${E.m3 && E.m3.resultat ? `Exemple : la première vente de ${esc(E.denomination)} (mission 3).` : "Exemple : 1 000 € de ventes et 600 € de marchandises achetées."}</p>
+      <div class="tax2"><div class="ok"><b>✅ Avec la facture des marchandises</b><div>Ventes ${eurC(ex.v)}</div><div>− Dépenses prouvées ${eurC(ex.d)}</div><div class="t">Bénéfice imposé : ${eurC(r2c(ex.v - ex.d))}</div></div>
+        <div class="ko"><b>❌ Facture des marchandises perdue</b><div>Ventes ${eurC(ex.v)}</div><div>− Dépense refusée par le fisc 0 €</div><div class="t">Bénéfice imposé : ${eurC(ex.v)}</div></div></div>
+      <p class="help" style="margin-top:10px">Sans facture, le fisc refuse la dépense : l'entreprise paie l'impôt sur ${eurC(ex.d)} de trop, et parfois une amende. Pour le matériel (meubles, caisse, ordinateur), la dépense est étalée sur plusieurs années : c'est l'amortissement, on en reparlera.</p></div>`
+  + ask("Que se passe-t-il si l'ordinateur tombe en panne dans un an et qu'on a perdu la facture ? Et si le fisc contrôle l'entreprise ?");
+};
+
+V.strategie = () => {
+  const L = avecM3(), parS = M3_MARGES.map((mg, i) => { const l = L.filter(E => iStratE(E) === i);
+    const moy = (f) => l.length ? r2c(l.reduce((s, E) => s + f(E.m3), 0) / l.length) : null;
+    return { mg, n:l.length, pa:moy(m => pdv3(m).prixAchatUnitaire || 0), pv:moy(m => pdv3(m).prixVenteUnitaire || 0), ben:moy(benef3), q:moy(m => m.commandeClient.quantite) }; });
+  const c = APP.calc3 || (APP.calc3 = { cout:20, objectif:200 }), cout = Math.max(.01, +c.cout || 0), obj = Math.max(0, +c.objectif || 0);
+  const besoin = M3_MARGES.map(mg => { const g = r2c(cout * mg.pct / 100); return { mg, g, pv:r2c(cout + g), n:g > 0 ? Math.ceil(obj / g) : 0 }; }), nMax = Math.max(1, ...besoin.map(b => b.n));
+  return head("Mission 3 · Partie 2", "Stratégie et <span class='grad'>prix de vente</span>", "Prix d'achat + marge = prix de vente. La marge dépend de la stratégie choisie à la création de l'entreprise.")
+  + `<div class="cols fade-in" style="grid-template-columns:repeat(3,minmax(0,1fr))">${parS.map(({ mg, n, pa, pv, ben, q }) => `<div class="col glass" style="--c1:${mg.c};--c2:#9d4edd">
+      <h3>${mg.icone} ${esc(mg.strat)}</h3><div class="count"><b>${mg.pct} %</b><span>${esc(mg.nom.toLowerCase())}</span></div>
+      <p class="def">${n ? `${n} entreprise${n > 1 ? "s" : ""} de la classe` : "Aucune entreprise de la classe (pour l'instant)"}</p>
+      ${n ? `<div class="mini3"><div><b>${eurC(pa)}</b><span>prix d'achat moyen d'un article</span></div><div><b>${eurC(pv)}</b><span>prix de vente moyen</span></div>
+        <div><b>${Math.round(q)}</b><span>articles vendus en moyenne</span></div><div><b style="color:#9ff0c9">${eurC(ben)}</b><span>bénéfice moyen</span></div></div>` : ""}</div>`).join("")}</div>
+    <div class="grid2 fade-in" style="margin-top:18px">
+      <div class="panel glass"><h3>🧮 Vendre moins cher… c'est vendre plus !</h3>
+        <div class="calc3"><label>Prix d'achat d'un article <input id="c3cout" type="number" min="1" step="1" value="${esc(c.cout)}"> €</label>
+          <label>Bénéfice à atteindre <input id="c3obj" type="number" min="0" step="10" value="${esc(c.objectif)}"> €</label></div>
+        <table class="cmp"><thead><tr><th>Marge</th><th>Prix de vente</th><th>Gain par article</th><th>Articles à vendre</th></tr></thead><tbody>
+          ${besoin.map(b => `<tr><td>${b.mg.icone} ${esc(b.mg.nom)} <small>(${b.mg.pct} %)</small></td><td>${eurC(b.pv)}</td><td>${eurC(b.g)}</td>
+            <td><div class="qbar"><i style="width:${Math.max(4, pct(b.n, nMax))}%;background:${b.mg.c}"></i><b>${b.n}</b></div></td></tr>`).join("")}</tbody></table>
+        <p class="help" style="margin-top:10px">Pour gagner ${eurC(obj)}, il faut vendre <b>${besoin[0].n}</b> articles avec une petite marge, mais seulement <b>${besoin[2].n}</b> avec une grosse marge : ${besoin[2].n ? Math.round(besoin[0].n / besoin[2].n) : "–"} fois moins !</p></div>
+      <div class="panel glass"><h3>🍫 Il ne suffit pas de vendre plus cher</h3>
+        <div class="vs3"><div><b>Leonidas</b><small>Pralines belges à prix accessibles</small><ul><li>beaucoup de magasins</li><li>prix doux pour tous les jours</li><li>on vend <b>beaucoup</b></li></ul></div>
+          <div class="vsx">VS</div><div><b>Neuhaus</b><small>Pralines belges haut de gamme</small><ul><li>inventeur de la praline (1912)</li><li>boîtes élégantes, boutiques soignées</li><li>service personnalisé, image de prestige</li></ul></div></div>
+        <p style="margin-top:12px">Pour vendre plus cher, le client doit recevoir <b>plus</b> :</p>
+        <div class="chips" style="margin-top:6px">${["🏅 une qualité supérieure","🎁 un bel emballage","🤝 un service VIP (conseil, personnalisation, livraison)","⭐ une image de marque","🛠️ une garantie et un service après-vente"].map(t => `<span class="chip">${t}</span>`).join("")}</div></div>
+    </div>`
+  + ask("Votre entreprise a choisi quelle stratégie ? Que proposez-vous en plus à vos clients pour justifier votre prix ? Avec des petits prix, comment faire pour vendre beaucoup ?");
+};
+
+V.resultat = () => {
+  const L = avecM3(), E = choixEx(L), m3 = E.m3, b = benef3(m3), d = depenses3(m3), v = ventes3(m3);
+  const avant = E.m2.patrimoine, apres = m3.patrimoine, bqAv = avant.argentEnBanque, bqAp = apres.argentEnBanque;
+  return head("Mission 3 · Partie 3", "Le résultat et <span class='grad'>le patrimoine</span>", "La vente laisse un bénéfice. Ce bénéfice apparaît dans le résultat… et il fait grandir le patrimoine de l'entreprise.")
+  + barreExemple(L, false)
+  + `<div class="grid2 fade-in" style="align-items:start">${resultatT(m3)}
+      <div class="panel glass"><h3>🏦 Ce qui s'est passé sur le compte en banque</h3>
+        <div class="flow3"><div class="f0"><span>Avant</span><b>${eurC(bqAv)}</b></div>
+          <div class="fm"><span>🛒 Achat des marchandises</span><b>− ${eurC(d)}</b></div><div class="fp"><span>🤝 Le client paie</span><b>+ ${eurC(v)}</b></div>
+          <div class="f1"><span>Après</span><b>${eurC(bqAp)}</b></div></div>
+        <p class="help" style="margin-top:10px">${eurC(bqAp)} − ${eurC(bqAv)} = <b style="color:#9ff0c9">+ ${eurC(r2c(bqAp - bqAv))}</b> : l'argent en banque a augmenté exactement du bénéfice.</p></div></div>
+    <div class="ba3 fade-in">${patriBilan("Avant la vente", avant)}<div class="arr3">➜</div>${patriBilan("Après la vente", apres, ["Argent en banque", "Bénéfice de la première vente"])}</div>
+    <div class="explain3 fade-in"><b>💡 Le bénéfice apparaît deux fois</b>
+      <p>Dans le <b>résultat</b>, il montre ce que la vente a rapporté : ventes − dépenses = ${eurC(b)}.</p>
+      <p>Dans le <b>patrimoine</b>, il apparaît des deux côtés : à gauche, dans l'<b>argent en banque</b> (+ ${eurC(b)}) ; à droite, dans ce que l'entreprise <b>a gagné</b>. Ce bénéfice appartient aux propriétaires de l'entreprise : il augmente ses ressources (en comptabilité, on parle de capitaux propres). Les deux totaux restent égaux : ${eurC(somme(apres.possede))}.</p></div>`
+  + ask("Pourquoi le matériel n'apparaît-il pas dans les dépenses du résultat ? Que deviendra le bénéfice si l'entreprise vend encore ?");
+};
+
+V.ventes = () => {
+  const L = avecM3().slice().sort((a, b) => benef3(b.m3) - benef3(a.m3)), n = L.length;
+  const tot = r2c(L.reduce((s, E) => s + ventes3(E.m3), 0)), tb = r2c(L.reduce((s, E) => s + benef3(E.m3), 0)), bmax = Math.max(1, ...L.map(E => benef3(E.m3)));
+  return head("Mission 3 · Ma première vente", "Les ventes <span class='grad'>de la classe</span>", "Le premier client de chaque entreprise : ce qu'elle a acheté, à quel prix elle a vendu et ce qu'elle a gagné.")
+  + `<div class="kpis fade-in" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      <div class="kpi glass" style="--c:#34d399"><div class="ic">🤝</div><div class="n">${n}</div><div class="l">premières ventes</div></div>
+      <div class="kpi glass" style="--c:#fbbf24"><div class="ic">💶</div><div class="n">${eurC(tot)}</div><div class="l">vendus par toute la classe</div></div>
+      <div class="kpi glass" style="--c:#ff3d8b"><div class="ic">💰</div><div class="n">${eurC(tb)}</div><div class="l">de bénéfice au total</div></div>
+      <div class="kpi glass" style="--c:#38bdf8"><div class="ic">📊</div><div class="n">${n ? eurC(r2c(tb / n)) : "–"}</div><div class="l">de bénéfice en moyenne</div></div></div>
+    <div class="panel glass fade-in"><table class="list"><thead><tr><th>Entreprise</th><th>Stratégie</th><th>Client</th><th>Commande</th><th>Prix d'achat</th><th>Marge</th><th>Prix de vente</th><th>Vente</th><th>Bénéfice</th></tr></thead><tbody>
+      ${L.map(E => { const m = E.m3, p = pdv3(m), s = strat(E), ben = benef3(m);
+        return `<tr><td><div class="who">${logoMark(E, 34)}<div><b>${esc(E.denomination)}</b><small>${esc(E.prenom)} ${esc(E.nomEleve)}</small></div></div></td><td>${s ? s.icone + " " + esc(s.nom) : "–"}</td>
+          <td>${esc(m.commandeClient.client.nom)}</td><td>${m.commandeClient.quantite} × ${esc(m.commandeClient.article)}</td><td class="mono">${p.prixAchatUnitaire != null ? eurC(p.prixAchatUnitaire) : "–"}</td>
+          <td class="mono">${p.margePourcent != null ? p.margePourcent + " %" + (p.calcule ? " *" : "") : "–"}</td><td class="mono">${p.prixVenteUnitaire != null ? eurC(p.prixVenteUnitaire) : "–"}</td><td class="mono">${eurC(ventes3(m))}</td>
+          <td><div class="qbar"><i style="width:${Math.max(4, pct(ben, bmax))}%;background:var(--grad)"></i><b>${eurC(ben)}</b></div></td></tr>`; }).join("") || `<tr><td colspan="9"><div class="empty">Aucune mission 3 terminée pour l'instant.</div></td></tr>`}
+      </tbody></table>
+      ${L.some(E => pdv3(E.m3).calcule) ? `<p class="help" style="margin-top:10px">* Mission faite avec la première version de l'application, avant l'étape « Le prix de vente » : le prix était fixé d'avance. Prix d'achat et marge recalculés à partir de l'achat et de la vente.</p>` : ""}</div>`
+  + ask("Qui a le plus gros bénéfice ? Est-ce l'entreprise qui a vendu le plus d'articles ? Qu'est-ce qui explique les écarts ?");
+};
+
+// Menu : la mission 2 s'enrichit, la mission 3 arrive
+(function(){
+  const i = VUES.findIndex(v => v[0] === "etapes");
+  VUES.splice(i + 1, 0, ["achats","🛒","Les achats de la classe"], ["sep","Mission 3"], ["dossier","🗂️","Le dossier facture"], ["strategie","🎯","Stratégie et prix"], ["resultat","📈","Résultat et patrimoine"], ["ventes","🤝","Les ventes de la classe"]);
+})();
+document.addEventListener("change", (e) => {
+  if (e.target.id === "selEx3"){ APP.ex3 = e.target.value; APP.exAchat3 = 0; render(); }
+  if (e.target.id === "selAchat3"){ APP.exAchat3 = +e.target.value; render(); }
+});
+document.addEventListener("input", (e) => {
+  if (e.target.id === "c3cout" || e.target.id === "c3obj"){
+    APP.calc3 = { cout:$("#c3cout").value, objectif:$("#c3obj").value };
+    const id = e.target.id, pos = e.target.selectionStart; render();
+    const el = $("#" + id); if (el){ el.focus(); try { el.setSelectionRange(pos, pos); } catch(x) {} }
+  }
+});
+
+render();
 </script>
 </body>
 </html>
