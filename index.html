@@ -57,7 +57,7 @@ main{padding:18px 28px 70px;min-width:0}
 .kick{font-size:13px;color:var(--muted);margin-bottom:6px} .kick b{color:var(--gold);font-weight:500}
 .h{font-size:clamp(28px,3.2vw,40px);margin-bottom:8px}
 .lead{color:var(--muted);max-width:76ch;font-size:16px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px;overflow-x:auto}
 .panel h3{font-size:17px;margin-bottom:12px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px}
 .card.tight{padding:16px 18px}
@@ -272,6 +272,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .biz .band{position:absolute;left:0;top:0;right:0;height:10px;background:linear-gradient(90deg,var(--brand),color-mix(in srgb,var(--brand) 35%,#fff))}
 .biz .wm{position:absolute;right:-6px;bottom:-14px;font-size:84px;opacity:.09;pointer-events:none;line-height:1}
 
+.cr{border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;background:var(--panel2)} .cr .sect{padding:8px 14px;font-size:11.5px;color:var(--dim);font-weight:600;background:rgba(255,255,255,.04)} .cr .l{display:flex;justify-content:space-between;gap:10px;padding:8px 14px;border-bottom:1px dashed var(--line);font-size:14px} .cr .l span:last-child{font-family:var(--mono)} .cr .t{display:flex;justify-content:space-between;padding:12px 14px;font-weight:700;font-family:var(--mono);font-size:17px} .cr .t.pos{background:rgba(52,211,153,.12);color:var(--mint)} .cr .t.neg{background:rgba(251,113,133,.12);color:var(--coral)}
 .rail{background:rgba(10,6,24,.55)}
 .bar{grid-template-columns:26px minmax(0,1fr) minmax(0,1.4fr) auto} .bar .v{min-width:44px;text-align:right}
 </style>
@@ -592,7 +593,7 @@ function vitrine(uid){
     <text x="218" y="${85 + fs*0.35}" font-size="${fs.toFixed(1)}" text-anchor="middle" fill="${texteSurMarque()}" style="font-family:${fontFam}; font-weight:${S.style === "street" ? 400 : 700}; ${S.style === "elegant" ? "font-style:italic;" : ""}">${esc(nom)}</text>
     <rect x="44" y="124" width="206" height="124" fill="${cadre}"/><rect x="50" y="130" width="194" height="112" fill="url(#amb-${uid})"/>
     <rect x="50" y="130" width="194" height="60" fill="url(#spot-${uid})"/>
-    ${etagere(176, [items[0], items[1], items[2]])}${etagere(222, [items[3] || items[0], items[0], items[1]])}
+    ${etagere(176, [items[0], items[1], items[2]])}${etagere(222, (typeof EQUIPEMENT_VITRINE === "function" && EQUIPEMENT_VITRINE().length) ? EQUIPEMENT_VITRINE().concat([items[3] || items[0], items[0]]).slice(0, 3) : [items[3] || items[0], items[0], items[1]])}
     <rect x="50" y="130" width="194" height="112" fill="url(#gl-${uid})"/><path d="M60 132 L100 132 L72 242 L52 242Z" fill="#fff" opacity=".12"/>
     ${auvent}
     <rect x="40" y="246" width="214" height="7" rx="1" fill="#d9d4c7"/><rect x="40" y="253" width="214" height="3" fill="rgba(0,0,0,.3)"/>
@@ -736,7 +737,7 @@ function normaliser(d){
     ids: (ent.numeroEntreprise || (et.ids || {}).bce) ? { bce: ent.numeroEntreprise || et.ids.bce, iban: ent.iban || (et.ids || {}).iban || "" } : null,
     dateCreation: ent.dateCreation || et.dateCreation || "", signature: (m.declaration || {}).signature || "",
     concurrent: ((m.bonus || {}).concurrent) || ((et.bonus || {}).concurrent) || "", quiz: et.quiz || {}, defis: m.defisEclair || [],
-    ancien, legacy: ancien ? ent.argent || null : null
+    ancien, legacy: ancien ? ent.argent || null : null, m2: lireM2(d), m3: lireM3(d)
   };
   if (ancien && ent.argent){ E.apport = ent.argent.argentDeDepart || 10000; E.nbAssocies = 1; E.emprunt = 0; }
   return E;
@@ -771,8 +772,8 @@ const VUES = [
   ["identites","📇","Cartes d'identité"], ["biens","🧺","Biens ou services"], ["familles","🏭","Que font-elles ?"], ["secteurs","🌍","Secteurs d'activité"], ["formes","🏛️","Individuelle ou société"],
   ["sep","Le cours · fiche 2 : financer et comptabiliser"],
   ["financement","🏦","Capital et emprunt"], ["bilan","📘","Le bilan d'ouverture"],
-  ["sep","Missions suivantes"],
-  ["missions","🧰","Missions 2 et 3"]
+  ["sep","Missions 2 et 3"],
+  ["achats","🧰","Mission 2 · les achats"], ["ventes","🛍️","Mission 3 · le premier mois"]
 ];
 const avecEntreprise = () => APP.liste.filter(E => E.typeId);
 const avecFinancement = () => avecEntreprise().filter(E => pretE(E) && E.emplacement);
@@ -795,7 +796,7 @@ const barre = (emoji, label, v, max, color) => `<div class="bar"><span class="e"
 const V = {};
 
 V.ensemble = () => {
-  const L = APP.liste, n = L.length, fin = L.filter(E => E.statut === "termine").length, enc = L.filter(E => E.statut === "en_cours" || E.statut === "reinitialise").length;
+  const L = APP.liste, n = L.length, fin = L.filter(E => E.statut === "termine").length, enc = L.filter(E => E.statut === "en_cours" || E.statut === "reinitialise").length, fin2 = L.filter(E => E.m2 && E.m2.fini).length, fin3 = L.filter(E => E.m3 && E.m3.fini).length;
   const F = avecFinancement();
   const capM = moy(F.map(capE)), empN = F.filter(E => empE(E) > 0).length, tresoM = moy(F.map(tresoE)), autoM = moy(F.map(autoE).filter(a => a != null));
   const max = APP.config && APP.config.max ? APP.config.max : 4;
@@ -807,8 +808,8 @@ V.ensemble = () => {
   return head("Mini-entreprises · Technicien en comptabilité", "La classe en <span class='grad'>un coup d'œil</span>", "L'avancement de chacun et les grandes tendances. Clique sur un élève pour projeter son entreprise.")
   + `<div class="kpis fade-in">
       <div class="kpi" style="--c:var(--gold)"><div class="n">${n}</div><div class="l">entreprises créées ou en cours</div></div>
-      <div class="kpi" style="--c:var(--mint)"><div class="n">${fin}</div><div class="l">missions terminées</div></div>
-      <div class="kpi" style="--c:var(--amber)"><div class="n">${enc}</div><div class="l">en cours</div></div>
+      <div class="kpi" style="--c:var(--mint)"><div class="n">${fin} · ${fin2} · ${fin3}</div><div class="l">missions 1 · 2 · 3 terminées</div></div>
+      <div class="kpi" style="--c:var(--amber)"><div class="n">${enc}</div><div class="l">mission 1 en cours</div></div>
       <div class="kpi" style="--c:var(--steel)"><div class="n">${F.length ? euro0(capM) : "–"}</div><div class="l">capital moyen</div></div>
       <div class="kpi" style="--c:var(--violet)"><div class="n">${F.length ? empN + "/" + F.length : "–"}</div><div class="l">ont emprunté à la banque</div></div>
       <div class="kpi" style="--c:var(--mint)"><div class="n">${F.length ? euro0(tresoM) : "–"}</div><div class="l">trésorerie moyenne au départ</div></div>
@@ -832,13 +833,13 @@ V.ensemble = () => {
         <h3 style="margin-top:18px">Pour la discussion</h3><p class="help" style="margin:0">Qui a pris le plus de risques ? Qui tient le plus longtemps sans vendre ? Les vues « Comparer les bilans » et « Marché et positionnement » répondent avec les chiffres de la classe.</p></div>
     </div>
     <div class="panel fade-in" style="margin-top:18px"><h3>Les élèves</h3>
-      <table class="list"><thead><tr><th>Élève</th><th>Entreprise</th><th>Avancement</th><th>Statut</th><th class="n">Trésorerie</th><th class="n">Autonomie</th><th class="n">XP</th><th></th></tr></thead><tbody>
+      <table class="list"><thead><tr><th>Élève</th><th>Entreprise</th><th>Avancement</th><th>Mission 1</th><th>Mission 2</th><th>Mission 3</th><th class="n">Trésorerie</th><th class="n">Autonomie</th><th class="n">XP</th><th></th></tr></thead><tbody>
       ${L.map(E => { const t = typeE(E), ok = pretE(E) && E.emplacement; return `<tr><td><div class="who"><div><b>${esc(E.prenom)} ${esc(E.nomEleve)}</b><small>${esc(E.email)}</small></div></div></td>
         <td><div class="who">${logoE(E, 34)}<div><span class="${styleCls(E)}" style="font-size:16px">${esc(denoE(E) || "–")}</span><small>${t ? t.emoji + " " + esc(t.nom) : ""}</small></div></div></td>
         <td><div class="prog"><i style="width:${pct(E.etape, E.total)}%"></i></div><small style="color:var(--dim)">${E.etape}/${E.total} décisions</small></td>
-        <td><span class="st ${E.statut}">${esc(STATUTS[E.statut] || E.statut)}</span></td>
-        <td class="n">${ok ? euro0(tresoE(E)) : "–"}</td><td class="n">${ok && autoE(E) != null ? autoE(E) + " mois" : "–"}</td><td class="n">${E.xp}</td>
-        <td><button class="link" data-open="${esc(E.email)}">Voir</button></td></tr>`; }).join("") || `<tr><td colspan="8"><div class="empty">Aucune donnée pour le moment. Les entreprises apparaissent dès que les élèves commencent la mission 1.</div></td></tr>`}
+        <td><span class="st ${E.statut}">${esc(STATUTS[E.statut] || E.statut)}</span></td><td>${stM(E.m2)}</td><td>${stM(E.m3)}</td>
+        <td class="n">${E.m3 && E.m3.tresorerie != null ? euro0(E.m3.tresorerie) : E.m2 && E.m2.tresorerie != null ? euro0(E.m2.tresorerie) : ok ? euro0(tresoE(E)) : "–"}</td><td class="n">${ok && autoE(E) != null ? autoE(E) + " mois" : "–"}</td><td class="n">${E.xp}</td>
+        <td><button class="link" data-open="${esc(E.email)}">Voir</button></td></tr>`; }).join("") || `<tr><td colspan="10"><div class="empty">Aucune donnée pour le moment. Les entreprises apparaissent dès que les élèves commencent la mission 1.</div></td></tr>`}
       </tbody></table></div>`;
 };
 
@@ -886,7 +887,7 @@ V.eleve = () => {
         <div style="margin-top:10px;display:grid;gap:6px">${defis.map(q => `<div style="font-size:13.5px;display:flex;gap:8px"><span>${q.reussi === true ? "✅" : q.reussi === false ? "❌" : "⬜"}</span><span>${esc(q.question)}${q.reussi === false ? ` <span style="color:var(--dim)">(réponse : ${esc(q.reponse)})</span>` : ""}</span></div>`).join("")}</div></div>
       <div class="card tight"><h3>🏅 Progression</h3><div class="kpi-row" style="grid-template-columns:repeat(2,1fr);margin:0"><div class="k"><span>Décisions</span><b>${E.etape}/${E.total}</b></div><div class="k"><span>XP</span><b>${E.xp}</b></div><div class="k"><span>Niveau</span><b style="font-family:var(--display);font-size:15px">${esc(E.niveau || niveau())}</b></div><div class="k"><span>Badges</span><b>${E.badges.length}</b></div></div>
         <div class="chips" style="margin-top:10px">${E.badges.map(b => `<span class="chip">${esc(b)}</span>`).join("")}</div>${E.signature ? `<p class="help">Acte signé : <i style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold2)">${esc(E.signature)}</i> le ${esc(E.dateCreation)}</p>` : ""}</div>
-    </div>`;
+    </div>${sectionsM23(E)}`;
 };
 
 V.bilans = () => {
@@ -996,8 +997,101 @@ V.bilan = () => { const L = avecFinancement();
     + ask("Si l'entreprise achète demain un ordinateur à 900 € en payant par virement, que se passe-t-il au bilan ? (Banque −900, Matériel +900 : le total ne change pas.) Et si elle paie son premier loyer ? (Banque −, et une charge apparaît : le résultat diminue.)");
 };
 
-V.missions = () => head("Missions suivantes", "Missions 2 et 3", "Les vues de projection des missions 2 (équiper l'entreprise) et 3 (première commande client) seront ajoutées avec leur nouvelle version, construite sur le même modèle financier : trésorerie, charges fixes, bilan.")
-  + `<div class="notice fade-in">En attendant, l'ancienne console reste utilisable pour projeter les missions 2 et 3 existantes. Les données de la mission 1 nouvelle version (capital, emprunt, local, bilan) seront reprises telles quelles par les missions redessinées.</div>`;
+// ======================================================================
+//  MISSIONS 2 ET 3 : lecture des dossiers et vues
+// ======================================================================
+const M2_BADGES_LIB = ["Budget fixé","Comparateur","Bon de commande","Réception validée","Contrôle facture","Œil de lynx","Payeur","Crédit fournisseur","Bilan équilibré","Dans le budget"];
+function lireM2(d){
+  const m = (d.missions || {})["2"]; if (!m || !m.entreprise) return null;
+  const e = m.entreprise, achats = (m.achats || []).filter(a => a && a.bien);
+  const erreur = achats.find(a => a.facture && a.facture.erreur);
+  return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes,
+    budget:(m.budget || {}).montant, engage:(m.budget || {}).engage || 0, respecte:(m.budget || {}).respecte, achats,
+    equipements:e.equipements || [], tresorerie:e.tresorerie, dettes:e.dettesFournisseurs || 0, tva:e.tvaARecuperer || 0, resultat:e.resultatPeriode || 0, autonomie:e.autonomieMois,
+    bilan:m.bilan || null, journal:m.journalAchats || [], defis:m.defisEclair || [],
+    piege: erreur ? { achat:erreur.bien.nom, type:erreur.facture.erreur.type, texte:erreur.facture.erreur.texte, surcout:erreur.facture.erreur.surcoutTTC, trouve:!!erreur.facture.erreurTrouvee, decision:erreur.facture.decision } : null,
+    credit:achats.filter(a => a.conditionPaiement === "30j").length, premium:achats.filter(a => a.offreChoisie && a.offreChoisie.niveau === "haut").length, eco:achats.filter(a => a.offreChoisie && a.offreChoisie.niveau === "petit").length };
+}
+function lireM3(d){
+  const m = (d.missions || {})["3"]; if (!m || !m.entreprise) return null;
+  const e = m.entreprise, cr = m.compteResultats || null, v = e.ventesDuMois || {};
+  return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes,
+    prix:e.prixDeVente || [], stockInitial:e.stockInitial || [], grossiste:e.grossiste || "", budgetStock:(m.decisions || {}).budgetStock,
+    ca:v.chiffreAffairesHT != null ? v.chiffreAffairesHT : (cr ? cr.ventesHT : null), resultat:cr ? cr.resultat : (v.resultatMois != null ? v.resultatMois : null), unites:v.unitesVendues, cogs:cr ? cr.coutMarchandisesVendues : null,
+    cr, tresorerie:e.tresorerie, stockFinal:e.stockFinal, tvaNette:e.tvaNette, resultatCumule:e.resultatCumule, creances:e.creancesClients || 0, dettes:e.dettesFournisseurs || 0,
+    devis:m.devis || null, decisions:m.decisions || {}, factureVente:m.factureVente || null, exercice:m.exerciceFacture || null, semaines:m.semaines || [], bilan:m.bilan || null, defis:m.defisEclair || [] };
+}
+/** Bilan rendu à partir des données enregistrées (missions 2 et 3). */
+function bilanDoc(b, court){
+  if (!b || !b.actif) return `<div class="empty">Pas de bilan enregistré.</div>`;
+  const col = (titre, sous, lignes) => { let rub = null; return `<div class="col"><h5>${titre}<small>${sous}</small></h5>${lignes.map(l => { const h = l.rubrique !== rub ? `<div class="sect">${esc(l.rubrique || "")}</div>` : ""; rub = l.rubrique; return h + `<div class="l"><span class="k"><b>${esc(court && l.court ? l.court : l.libelle)}</b></span><span class="v">${euro(l.montant)}</span></div>`; }).join("")}<div class="t"><span>Total</span><span>${euro(lignes.reduce((s, l) => s + l.montant, 0))}</span></div></div>`; };
+  return `<div class="bilan">${col("ACTIF", "ce que l'entreprise possède", b.actif)}${col("PASSIF", "d'où vient l'argent", b.passif)}</div>`;
+}
+function chartBanque(sem, debut){
+  const pts = [debut].concat(sem.map(s => s.banqueFin)); if (pts.some(p => p == null)) return "";
+  const min = Math.min(0, ...pts), max = Math.max(...pts) * 1.08 || 1, W = 520, H = 150, L = 54, R_ = 14, T = 16, Bt = 26, x = (i) => L + i * (W - L - R_) / (pts.length - 1), y = (v) => T + (H - T - Bt) * (1 - (v - min) / (max - min));
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block"><path d="${pts.map((v, i) => `${i ? "L" : "M"}${x(i)} ${y(v)}`).join(" ")}" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>${pts.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#34d399"/><text x="${x(i)}" y="${y(v) - 9}" font-size="10.5" text-anchor="middle" fill="#fff" style="font-family:'IBM Plex Mono',monospace">${euro0(v)}</text><text x="${x(i)}" y="${H - 8}" font-size="11" text-anchor="middle" fill="rgba(255,255,255,.6)">${i ? "S" + i : "Début"}</text>`).join("")}</svg>`;
+}
+const stM = (m) => m ? `<span class="st ${m.statut}">${m.fini ? "Terminée" : esc(STATUTS[m.statut] || m.statut)}</span>` : `<span class="st" style="color:var(--dim)">–</span>`;
+
+V.achats = () => {
+  const L = avecEntreprise().filter(E => E.m2 && E.m2.achats.length);
+  if (!L.length) return head("Mission 2 · équiper l'entreprise", "Les <span class='grad'>achats</span> de la classe", "Les données apparaîtront dès que les élèves auront commencé la mission 2.") + `<div class="empty">Aucun achat enregistré pour l'instant.</div>`;
+  const F = L.filter(E => E.m2.fini), lynx = L.filter(E => E.m2.piege && E.m2.piege.trouve).length, pieges = L.filter(E => E.m2.piege).length;
+  const eco = F.slice().sort((a, b) => a.m2.engage - b.m2.engage)[0], lux = F.slice().sort((a, b) => b.m2.engage - a.m2.engage)[0], credit = F.filter(E => E.m2.credit > 0).length;
+  const hl = (c, lab, E, val) => E ? `<div class="hl" style="--c:${c}"><span>${lab}</span><b>${esc(denoE(E))}</b><small>${val}</small></div>` : "";
+  return head("Mission 2 · équiper l'entreprise", "Les <span class='grad'>achats</span> de la classe", "Même catalogue, mêmes fournisseurs, même piège dans une facture : qui a dépensé quoi, qui a payé comptant ou à crédit, qui a repéré l'erreur ?")
+    + `<div class="kpis fade-in"><div class="kpi" style="--c:var(--gold)"><div class="n">${F.length}/${L.length}</div><div class="l">missions 2 terminées</div></div><div class="kpi" style="--c:var(--mint)"><div class="n">${F.length ? euro0(moy(F.map(E => E.m2.engage))) : "–"}</div><div class="l">dépense moyenne (TTC engagé)</div></div><div class="kpi" style="--c:var(--steel)"><div class="n">${credit}/${F.length}</div><div class="l">ont utilisé le crédit fournisseur</div></div><div class="kpi" style="--c:var(--coral)"><div class="n">${lynx}/${pieges}</div><div class="l">ont repéré la facture erronée</div></div><div class="kpi" style="--c:var(--violet)"><div class="n">${F.filter(E => E.m2.respecte).length}/${F.length}</div><div class="l">ont respecté leur budget</div></div></div>
+    <div class="grid3 fade-in" style="margin-bottom:18px">${hl("var(--mint)", "Le plus économe", eco, eco ? euro0(eco.m2.engage) + " pour les trois achats" : "")}${hl("var(--gold)", "Le plus exigeant", lux, lux ? euro0(lux.m2.engage) + " · " + lux.m2.premium + " offre(s) premium" : "")}<div class="hl" style="--c:var(--steel)"><span>Pour la discussion</span><b>Qui a eu raison ?</b><small>économe ou exigeant ?</small><div class="help" style="margin-top:2px">Comparez avec leur positionnement de mission 1.</div></div></div>
+    <div class="panel fade-in"><table class="list"><thead><tr><th>Entreprise</th><th>Budget</th><th class="n">Engagé TTC</th><th>Achats (niveau · paiement)</th><th>Facture piégée</th><th class="n">Trésorerie après</th><th class="n">Dettes fourn.</th><th class="n">Résultat</th><th></th></tr></thead><tbody>
+    ${L.map(E => { const m = E.m2; return `<tr><td><div class="who">${logoE(E, 30)}<div><span class="${styleCls(E)}" style="font-size:15px">${esc(denoE(E))}</span><small>${esc(E.prenom)} ${esc(E.nomEleve)} · ${stM(m)}</small></div></div></td>
+      <td>${m.budget ? euro0(m.budget) : "–"} ${m.respecte === false ? '<span class="coh warn">dépassé</span>' : m.respecte ? '<span class="coh ok">tenu</span>' : ""}</td><td class="n">${euro0(m.engage)}</td>
+      <td>${m.achats.map(a => { const o = a.offreChoisie; if (!o) return `<span class="chip" style="font-size:12px;padding:3px 8px;margin:2px;display:inline-block">${esc(a.bien.nom)} · en cours</span>`; const s = STRATEGIES.find(x => x.id === o.niveau); return `<span class="chip" style="font-size:12px;padding:3px 8px;margin:2px;display:inline-block;border-color:${SCOLS[o.niveau]}">${esc(a.bien.nom.replace(/^(Le |La |L')/, ""))} · ${s ? s.icone : ""} ${euro0(o.totalTTC)} · ${a.conditionPaiement === "30j" ? "30 j" : "comptant"}</span>`; }).join("")}</td>
+      <td>${m.piege ? (m.piege.trouve ? `<span class="coh ok">🦅 repérée</span>` : m.piege.decision === "acceptee" ? `<span class="coh warn">acceptée : ${euro(m.piege.surcout)} trop payés</span>` : m.piege.decision ? `<span class="coh warn">contestée, mauvaise ligne</span>` : `<span class="coh" style="color:var(--dim)">pas encore reçue</span>`) : "–"}</td>
+      <td class="n" style="color:var(--mint)">${m.tresorerie != null ? euro0(m.tresorerie) : "–"}</td><td class="n">${euro0(m.dettes)}</td><td class="n" style="color:${m.resultat >= 0 ? "var(--mint)" : "var(--coral)"}">${euro(m.resultat)}</td><td><button class="link" data-open="${esc(E.email)}">Voir</button></td></tr>`; }).join("")}</tbody></table></div>`
+    + ask("Payer comptant avec 2 % d'escompte ou à 30 jours : qu'est-ce qui est le plus intelligent quand la trésorerie est serrée ? Ceux qui ont accepté la facture erronée : combien cela leur a-t-il coûté, et où le retrouve-t-on au bilan ?");
+};
+
+V.ventes = () => {
+  const L = avecEntreprise().filter(E => E.m3);
+  if (!L.length) return head("Mission 3 · le premier mois", "Les <span class='grad'>ventes</span> de la classe", "Les données apparaîtront dès que les élèves auront commencé la mission 3.") + `<div class="empty">Aucune donnée de mission 3 pour l'instant.</div>`;
+  const F = L.filter(E => E.m3.fini && E.m3.resultat != null), maxCA = Math.max(1, ...F.map(E => E.m3.ca || 0));
+  const best = F.slice().sort((a, b) => b.m3.resultat - a.m3.resultat)[0], ca = F.slice().sort((a, b) => b.m3.ca - a.m3.ca)[0], dormant = F.slice().sort((a, b) => (b.m3.stockFinal || 0) - (a.m3.stockFinal || 0))[0], nego = F.filter(E => E.m3.devis && E.m3.devis.etat === "accepte" && E.m3.devis.tentatives === 1).length;
+  const hl = (c, lab, E, val) => E ? `<div class="hl" style="--c:${c}"><span>${lab}</span><b>${esc(denoE(E))}</b><small>${val}</small></div>` : "";
+  const coefMoy = (E) => E.m3.prix.length ? (E.m3.prix.reduce((s, p) => s + (p.coefficient || 0), 0) / E.m3.prix.length).toFixed(2) : "–";
+  return head("Mission 3 · le premier mois", "Les <span class='grad'>ventes</span> de la classe", "Même marché pour tous ceux qui ont la même activité, mais des prix, des stocks, des devis et des décisions différents : d'où viennent les écarts de résultat ?")
+    + `<div class="kpis fade-in"><div class="kpi" style="--c:var(--gold)"><div class="n">${F.length}/${L.length}</div><div class="l">missions 3 terminées</div></div><div class="kpi" style="--c:var(--mint)"><div class="n">${F.length ? euro0(moy(F.map(E => E.m3.ca))) : "–"}</div><div class="l">chiffre d'affaires moyen (HT)</div></div><div class="kpi" style="--c:var(--steel)"><div class="n">${F.length ? euro0(moy(F.map(E => E.m3.resultat))) : "–"}</div><div class="l">résultat moyen du mois</div></div><div class="kpi" style="--c:var(--coral)"><div class="n">${F.filter(E => E.m3.resultat < 0).length}</div><div class="l">en perte ce mois-ci</div></div><div class="kpi" style="--c:var(--violet)"><div class="n">${nego}/${F.length}</div><div class="l">devis accepté du premier coup</div></div></div>
+    <div class="grid3 fade-in" style="margin-bottom:18px">${hl("var(--mint)", "Meilleur résultat", best, best ? euro0(best.m3.resultat) + " de bénéfice" : "")}${hl("var(--gold)", "Plus gros chiffre d'affaires", ca, ca ? euro0(ca.m3.ca) + " HT" : "")}${hl("var(--amber)", "Plus gros stock dormant", dormant, dormant ? euro0(dormant.m3.stockFinal || 0) + " de marchandises invendues" : "")}</div>
+    ${F.length ? `<div class="panel fade-in" style="margin-bottom:18px"><h3>Résultat du mois, entreprise par entreprise</h3>${F.slice().sort((a, b) => b.m3.resultat - a.m3.resultat).map(E => { const r = E.m3.resultat, w = Math.min(100, Math.abs(r) / maxCA * 100 * 3); return `<div class="stack"><span>${esc(denoE(E))}</span><span class="bars2" style="background:rgba(255,255,255,.07)"><i style="width:${w}%;background:${r >= 0 ? "var(--mint)" : "var(--coral)"}"></i></span><span class="v">${euro0(r)} · CA ${euro0(E.m3.ca)}</span></div>`; }).join("")}</div>` : ""}
+    <div class="panel fade-in"><table class="list"><thead><tr><th>Entreprise</th><th class="n">Coef. moyen</th><th class="n">CA HT</th><th class="n">Résultat</th><th>Devis</th><th>Client mécontent</th><th>Promo</th><th>Facture de vente</th><th class="n">Banque fin</th><th class="n">Stock restant</th><th></th></tr></thead><tbody>
+    ${L.map(E => { const m = E.m3, dv = m.devis, dec = m.decisions, ex = m.exercice; return `<tr><td><div class="who">${logoE(E, 30)}<div><span class="${styleCls(E)}" style="font-size:15px">${esc(denoE(E))}</span><small>${esc(E.prenom)} ${esc(E.nomEleve)} · ${stM(m)}</small></div></div></td>
+      <td class="n">×${coefMoy(E)}</td><td class="n">${m.ca != null ? euro0(m.ca) : "–"}</td><td class="n" style="color:${m.resultat == null ? "" : m.resultat >= 0 ? "var(--mint)" : "var(--coral)"}">${m.resultat != null ? euro0(m.resultat) : "–"}</td>
+      <td>${dv && dv.etat ? (dv.etat === "accepte" ? `<span class="coh ok">accepté · ${euro(dv.netUnitaireHT)} HT · ${dv.tentatives} essai${dv.tentatives > 1 ? "s" : ""}</span>` : `<span class="coh warn">client perdu</span>`) : "–"}</td>
+      <td>${dec.retourClient ? ({ rembourser:"💶 remboursé", echanger:"🔁 échangé", refuser:"🚫 refusé" })[dec.retourClient] : "–"}</td><td>${dec.promotion == null ? "–" : dec.promotion ? "🔥 oui" : "non"}</td>
+      <td>${ex && ex.reussi != null ? (ex.duPremierCoup ? `<span class="coh ok">juste du 1er coup</span>` : ex.reussi ? `<span class="coh ok">juste au 2e</span>` : `<span class="coh warn">complétée</span>`) : "–"}</td>
+      <td class="n" style="color:var(--mint)">${m.tresorerie != null ? euro0(m.tresorerie) : "–"}</td><td class="n">${m.stockFinal != null ? euro0(m.stockFinal) : "–"}</td><td><button class="link" data-open="${esc(E.email)}">Voir</button></td></tr>`; }).join("")}</tbody></table></div>`
+    + ask("Deux élèves avec la même activité et des résultats différents : prix, stock, devis ou décisions ? Un stock restant est-il une perte ? (Non : il est à l'actif.) Pourquoi la banque a-t-elle moins bougé que le résultat ?");
+};
+
+/** Sections missions 2 et 3 dans la vue « Élève par élève ». */
+function sectionsM23(E){
+  let html = "";
+  if (E.m2){ const m = E.m2;
+    html += `<div class="card fade-in" style="margin-top:22px"><h3>🧰 Mission 2 · équipement ${stM(m)}</h3>
+      <div class="kpi-row"><div class="k"><span>Budget</span><b>${m.budget ? euro0(m.budget) : "–"}</b></div><div class="k"><span>Engagé TTC</span><b style="color:${m.respecte === false ? "var(--coral)" : "var(--text)"}">${euro0(m.engage)}</b></div><div class="k"><span>Trésorerie après</span><b style="color:var(--mint)">${m.tresorerie != null ? euro0(m.tresorerie) : "–"}</b></div><div class="k"><span>Dettes fournisseurs</span><b>${euro0(m.dettes)}</b></div><div class="k"><span>Facture piégée</span><b style="font-size:14px">${m.piege ? (m.piege.trouve ? "🦅 repérée" : m.piege.decision === "acceptee" ? "💸 acceptée" : m.piege.decision ? "⚠ mauvaise ligne" : "en attente") : "–"}</b></div></div>
+      ${m.journal.length ? `<table class="led"><thead><tr><th>Pièce</th><th>Fournisseur</th><th class="n">HT</th><th class="n">TVA</th><th class="n">TTC</th><th>Paiement</th></tr></thead><tbody>${m.journal.map(j => `<tr><td class="money">${esc(j.piece)}</td><td>${esc(j.fournisseur)}</td><td class="n">${euro(j.ht)}</td><td class="n">${euro(j.tva)}</td><td class="n">${euro(j.ttc)}</td><td>${j.paye ? "✓ payé" : "📅 à 30 jours"}</td></tr>`).join("")}</tbody></table>` : `<p class="help">Achats en cours : ${m.achats.filter(a => a.termine).length}/3 terminés.</p>`}
+      ${m.fini && m.bilan ? `<h3 class="sub">Bilan après équipement</h3>${bilanDoc(m.bilan)}` : ""}</div>`;
+  }
+  if (E.m3){ const m = E.m3, dv = m.devis, cr = m.cr;
+    html += `<div class="card fade-in" style="margin-top:22px"><h3>🛍️ Mission 3 · premier mois ${stM(m)}</h3>
+      ${m.prix.length ? `<table class="led"><thead><tr><th>Article</th><th class="n">Marché TTC</th><th class="n">Prix choisi TTC</th><th class="n">Marge / unité</th><th class="n">Coef.</th><th class="n">Prévision</th></tr></thead><tbody>${m.prix.map(p => `<tr><td>${esc(p.article)}</td><td class="n">${euro(p.prixMarcheTTC)}</td><td class="n" style="color:${p.prixVenteTTC > p.prixMarcheTTC * 1.15 ? "var(--amber)" : p.prixVenteTTC < p.prixMarcheTTC * 0.9 ? "var(--steel)" : "var(--text)"}">${euro(p.prixVenteTTC)}</td><td class="n">${euro(p.margeUnitaire)}</td><td class="n">×${p.coefficient}</td><td class="n">${p.previsionMois}</td></tr>`).join("")}</tbody></table>` : ""}
+      <div class="kpi-row"><div class="k"><span>Devis client</span><b style="font-size:14px">${dv && dv.etat ? (dv.etat === "accepte" ? `accepté · ${euro(dv.netUnitaireHT)} HT` : "client perdu") : "–"}</b></div><div class="k"><span>Client mécontent</span><b style="font-size:14px">${({ rembourser:"remboursé", echanger:"échangé", refuser:"refusé" })[m.decisions.retourClient] || "–"}</b></div><div class="k"><span>Promotion</span><b style="font-size:14px">${m.decisions.promotion == null ? "–" : m.decisions.promotion ? "oui" : "non"}</b></div><div class="k"><span>Facture de vente</span><b style="font-size:14px">${m.exercice && m.exercice.reussi != null ? (m.exercice.duPremierCoup ? "juste du 1er coup" : m.exercice.reussi ? "juste au 2e essai" : "complétée") : "–"}</b></div><div class="k"><span>Résultat du mois</span><b style="color:${m.resultat == null ? "" : m.resultat >= 0 ? "var(--mint)" : "var(--coral)"}">${m.resultat != null ? euro0(m.resultat) : "–"}</b></div></div>
+      ${m.semaines.length ? `<div class="chart" style="border:1px solid var(--line);border-radius:var(--r);padding:8px 10px 2px;background:var(--panel2)">${chartBanque(m.semaines, m.semaines[0].banqueDebut)}</div>` : ""}
+      ${cr ? `<div class="grid2" style="margin-top:14px;align-items:start"><div class="cr"><div class="sect">PRODUITS</div><div class="l"><span>Ventes de marchandises HT</span><span>${euro(cr.ventesHT)}</span></div><div class="sect">CHARGES</div><div class="l"><span>Coût des marchandises vendues</span><span>− ${euro(cr.coutMarchandisesVendues)}</span></div><div class="l"><span>Loyer</span><span>− ${euro(cr.loyer)}</span></div><div class="l"><span>Assurances, énergie, abonnements</span><span>− ${euro(cr.autresCharges)}</span></div>${cr.interets ? `<div class="l"><span>Intérêts de l'emprunt</span><span>− ${euro(cr.interets)}</span></div>` : ""}<div class="t ${cr.resultat >= 0 ? "pos" : "neg"}"><span>${cr.resultat >= 0 ? "Bénéfice" : "Perte"} du mois</span><span>${euro(cr.resultat)}</span></div></div>
+        <div>${m.bilan ? bilanDoc(m.bilan, true) : ""}</div></div>` : ""}</div>`;
+  }
+  return html;
+}
 
 // ======================================================================
 //  COQUILLE : menu, barre du haut, connexion
@@ -1095,6 +1189,21 @@ function demo(){
       ids: etape >= 9 ? { bce:bce(), iban:iban(i) } : null, dateCreation: etape >= 9 ? "9 octobre 2026" : "", signature: fin ? p + " " + n : "",
       concurrent: rnd() < .6 ? "Un commerce du centre de " + c[0] : "", quiz:{ forme:{ ok: rnd() < .7 }, financement:{ ok: rnd() < .6 }, officiel:{ ok: rnd() < .8 } }, defis:[], ancien:false, legacy:null };
     if (etape >= 8 && calc(E, tresorerie) < TRESO_MIN){ E.emprunt = Math.min(empMax, E.emprunt + 5000); }
+    if (fin && i < 11){ const treso = calc(E, tresorerie), niveaux = ["petit","milieu","haut"], prixN = { mobilier:[725,1121,1890], caisse:[315,655.5,1290], ordinateur:[519,854.05,1490] }, noms = { mobilier:["MeubloPrix","Bureau & Co","Design Intérieur"], caisse:["CaissePlus","Encaiss'Tech","Belgo Caisse Premium"], ordinateur:["PC Discount","InfoMons","Digital Expert"] };
+      const choix = ["mobilier","caisse","ordinateur"].map(b => { const k = rnd() < .5 ? niveaux.indexOf(s) : Math.floor(rnd() * 3); const ht = prixN[b][k], ttc = r2(ht * 1.21), cond = rnd() < .4 ? "30j" : "comptant"; return { b, k, ht, ttc, cond, f:noms[b][k] }; });
+      const engage = r2(choix.reduce((a, c) => a + c.ttc, 0)), budget = pick([1500, 2500, 4000, 6000].filter(x => x <= treso - 500)) || 1500, dettes = r2(choix.filter(c => c.cond === "30j").reduce((a, c) => a + c.ttc, 0)), paye = r2(choix.filter(c => c.cond === "comptant").reduce((a, c) => a + c.ttc * .98, 0));
+      const trouve = rnd() < .6, piegeIdx = i % 3, esc_ = r2(choix.filter(c => c.cond === "comptant").reduce((a, c) => a + c.ttc * .02, 0)), trop = trouve ? 0 : 71.39;
+      E.m2 = { statut:"termine", fini:true, etape:{}, xp:900 + Math.floor(rnd() * 300), badges:[], duree:50, budget, engage, respecte:engage <= budget, credit:choix.filter(c => c.cond === "30j").length, premium:choix.filter(c => c.k === 2).length, eco:choix.filter(c => c.k === 0).length,
+        achats:choix.map((c, k) => ({ bien:{ id:c.b, nom:{ mobilier:"Le mobilier", caisse:"La caisse enregistreuse", ordinateur:"L'ordinateur" }[c.b] }, offreChoisie:{ niveau:niveaux[c.k], totalTTC:c.ttc, fournisseur:{ nom:c.f } }, conditionPaiement:c.cond, termine:true, facture:k === piegeIdx ? { erreur:{ type:"remise", surcoutTTC:71.39 }, decision:trouve ? "contestee" : "acceptee", erreurTrouvee:trouve } : { erreur:null, decision:"acceptee" } })),
+        equipements:choix.map(c => ({ rubrique:{ mobilier:"Mobilier", caisse:"Matériel de bureau", ordinateur:"Matériel informatique" }[c.b], valeur:c.ht })), tresorerie:r2(treso - paye - trop), dettes, tva:r2(engage - engage / 1.21), resultat:r2(esc_ - trop), autonomie:null, bilan:null, defis:[],
+        journal:choix.map(c => ({ piece:"F-" + c.f.slice(0, 3).toUpperCase() + "-2026-" + (100 + i * 7), fournisseur:c.f, ht:c.ht, tva:r2(c.ht * .21), ttc:c.ttc, paye:c.cond === "comptant" })), piege:{ achat:"", type:"remise", texte:"La remise promise n'a pas été déduite", surcout:71.39, trouve, decision:trouve ? "contestee" : "acceptee" } };
+      if (i < 8){ const ca = 2500 + Math.floor(rnd() * 5000), cogs = r2(ca * (0.45 + rnd() * .15)), loyer = (EMPLACEMENTS.find(x => x.id === E.emplacement) || {loyer:750}).loyer, res = r2(ca - cogs - loyer - 180 - 33), accepte = rnd() < .75, b0 = E.m2.tresorerie;
+        const sem = [0.22, 0.26, 0.24, 0.28].map((f, k) => ({ semaine:k + 1, chiffreAffairesHT:r2(ca * f), banqueDebut:0, banqueFin:0 })); let bk = b0; sem.forEach((x, k) => { x.banqueDebut = bk; bk = r2(bk + x.chiffreAffairesHT * 1.21 - (k === 1 ? loyer + 180 + dettes : 0) - (k === 2 ? 220 : 0) + (k === 3 && accepte ? 600 : 0)); x.banqueFin = bk; });
+        E.m3 = { statut:"termine", fini:true, etape:{}, xp:1000 + Math.floor(rnd() * 250), badges:[], duree:55, grossiste:"", stockInitial:[], budgetStock:2000,
+          prix:[["Article économique", 25, r2(25 * (0.9 + rnd() * .4))], ["Article milieu de gamme", 65, r2(65 * (0.9 + rnd() * .4))], ["Article premium", 140, r2(140 * (0.9 + rnd() * .4))]].map(a => ({ article:a[0], prixMarcheTTC:a[1], prixVenteTTC:a[2], prixVenteHT:r2(a[2] / 1.21), margeUnitaire:r2(a[2] / 1.21 - a[1] / 2.1), coefficient:r2(a[2] / 1.21 / (a[1] / 2.1)), previsionMois:10 + Math.floor(rnd() * 40) })),
+          ca, resultat:res, unites:60 + Math.floor(rnd() * 80), cogs, cr:{ ventesHT:ca, coutMarchandisesVendues:cogs, loyer, autresCharges:180, interets:33, resultat:res }, tresorerie:bk, stockFinal:Math.floor(rnd() * 900), tvaNette:r2(ca * .21 * .4), resultatCumule:r2(res + E.m2.resultat), creances:0, dettes:0,
+          devis:{ etat:accepte ? "accepte" : "refuse", tentatives:1 + Math.floor(rnd() * 2), netUnitaireHT:r2(20 + rnd() * 10) }, decisions:{ retourClient:pick(["rembourser","echanger","refuser"]), promotion:rnd() < .5 }, factureVente:null, exercice:{ essais:1 + Math.floor(rnd() * 2), reussi:rnd() < .85, duPremierCoup:rnd() < .5 }, semaines:sem, bilan:null, defis:[] }; }
+    }
     return E;
   });
 }
