@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@700&family=Playfair+Display:ital,wght@1,700&family=Fredoka:wght@600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link id="polices-decor" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#0B1220; --panel:#121B2C; --panel2:#182438; --panel3:#213150;
@@ -275,11 +276,503 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .cr{border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;background:var(--panel2)} .cr .sect{padding:8px 14px;font-size:11.5px;color:var(--dim);font-weight:600;background:rgba(255,255,255,.04)} .cr .l{display:flex;justify-content:space-between;gap:10px;padding:8px 14px;border-bottom:1px dashed var(--line);font-size:14px} .cr .l span:last-child{font-family:var(--mono)} .cr .t{display:flex;justify-content:space-between;padding:12px 14px;font-weight:700;font-family:var(--mono);font-size:17px} .cr .t.pos{background:rgba(52,211,153,.12);color:var(--mint)} .cr .t.neg{background:rgba(251,113,133,.12);color:var(--coral)}
 .rail{background:rgba(10,6,24,.55)}
 .bar{grid-template-columns:26px minmax(0,1fr) minmax(0,1.4fr) auto} .bar .v{min-width:44px;text-align:right}
+
+/* ====================================================================== PILOTAGE (base Supabase) */
+.acces-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid rgba(251,113,133,.5);background:rgba(251,113,133,.1);color:var(--text);font:600 13px var(--ui);cursor:pointer}
+.acces-chip.on{border-color:rgba(52,211,153,.55);background:rgba(52,211,153,.12)}
+.sel-classe{width:auto;padding:7px 12px;font-size:13px;border-radius:999px}
+.sel-classe option{background:#1b1430;color:#fff}
+.pilot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px}
+.acces .etat{display:flex;align-items:center;gap:14px} .acces .etat b{font-family:var(--display);font-size:26px;display:block;line-height:1.1}
+.lampe{width:22px;height:22px;border-radius:50%;background:var(--coral);box-shadow:0 0 16px var(--coral);flex:none}
+.acces.ouvert .lampe{background:var(--mint);box-shadow:0 0 18px var(--mint)} .acces.ouvert{border-color:rgba(52,211,153,.45)}
+.quand{color:var(--muted);font-size:14px}
+.durees{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.dur{padding:7px 13px;border-radius:999px;border:1px solid var(--line2);background:none;color:var(--text);font:600 13.5px var(--ui);cursor:pointer}
+.dur.on{background:var(--text);color:#1b1430;border-color:var(--text)}
+.bigbtn{padding:12px 20px;font-size:15px;border:0} .btn-vert{background:linear-gradient(135deg,#10b981,#34d399);color:#062b1d} .btn-rouge{background:linear-gradient(135deg,#e11d48,#fb7185);color:#fff}
+.mtogs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.mtog{position:relative;text-align:left;padding:14px;border-radius:var(--r);border:1.5px solid var(--line2);background:var(--panel2);color:var(--text);cursor:pointer;font:inherit}
+.mtog.on{border-color:rgba(52,211,153,.7);background:rgba(52,211,153,.1)} .mtog .mi{font-size:24px;display:block} .mtog b{display:block;margin-top:4px} .mtog small{display:block;color:var(--muted);font-size:12.5px}
+.mtog .mstat{display:block;margin-top:8px;font-size:12px;color:var(--dim)} .mtog .mcoche{position:absolute;top:10px;right:10px;font-size:11.5px;font-weight:700;color:var(--dim)} .mtog.on .mcoche{color:var(--mint)}
+.reglage{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid var(--line)} .reglage small{display:block;color:var(--muted);font-size:12.5px;max-width:52ch}
+.maxbox{display:flex;gap:8px;align-items:center} .maxbox .inp{width:76px;padding:8px 10px}
+.switch{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;border:1px solid var(--line2);background:none;color:var(--text);font:600 13px var(--ui);cursor:pointer}
+.switch span{width:34px;height:20px;border-radius:999px;background:rgba(255,255,255,.18);position:relative} .switch span::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
+.switch.on span{background:var(--mint)} .switch.on span::after{left:17px}
+.ptitre{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px} .ptitre h3{margin:0}
+.tscroll{overflow-x:auto}
+.ptab td{vertical-align:middle}
+.mpill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--line2);background:none;color:var(--text);font:600 12px var(--ui);cursor:pointer;white-space:nowrap}
+.mpill.termine{border-color:rgba(52,211,153,.55);color:var(--mint)} .mpill.en_cours{border-color:rgba(251,191,36,.55);color:var(--amber)} .mpill.reinitialise{border-color:rgba(124,176,255,.6);color:var(--steel)}
+.mpill.vide{cursor:default;color:var(--dim);border-style:dashed}
+.hors{margin-left:6px;font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid rgba(251,191,36,.5);color:var(--amber)}
+.pact{white-space:nowrap;text-align:right} .pact .link{text-decoration:none;font-size:16px;margin-left:6px} .link.danger{color:var(--coral)}
+.gsheet{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)} .gsheet h4{font-size:15px;margin-bottom:6px}
+.gs-etat{font-size:13.5px;color:var(--muted);margin-bottom:10px} .gs-etat.attente{color:var(--amber)} .gs-etat.ko{color:var(--coral)}
+.jeton{margin-top:12px;padding:12px 14px;border-radius:var(--r);border:1px dashed var(--amber);font-size:13.5px} .jeton code{display:block;margin:8px 0;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.35);font-family:var(--mono);font-size:12px;word-break:break-all;user-select:all}
+.jeton ol{margin:8px 0 0 20px}
+#notes{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;flex-direction:column;gap:8px;max-width:min(420px,calc(100vw - 32px))}
+.note-prof{padding:12px 16px;border-radius:12px;background:#1b1430;border:1px solid rgba(52,211,153,.5);box-shadow:0 12px 30px rgba(0,0,0,.45);font-size:14px;animation:fi .3s ease both}
+.note-prof.ko{border-color:rgba(251,113,133,.6)}
+@media (max-width:1180px){ .pilot{grid-template-columns:1fr} }
+@media (max-width:620px){ .mtogs{grid-template-columns:1fr} .reglage{flex-direction:column;align-items:flex-start} }
+</style>
+<style id="kit-realiste">
+/* ═══ KIT RÉALISTE COMMUN v1, version EQ — début (identique dans les missions 1, 2 et 3 : ne pas modifier ici, modifier outils/kit-realiste-eq) ═══ */
+:root{
+  --papier:#fffdf8; --papier-2:#f6f2e8; --encre:#1f2433; --encre-douce:#4a5068; --encre-bleue:#1d3b8f;
+  --ombre-papier:0 1px 1px rgba(0,0,0,.05), 0 2px 4px rgba(0,0,0,.07), 0 12px 24px rgba(0,0,0,.22), 0 32px 64px rgba(0,0,0,.30);
+  --ombre-objet:0 2px 3px rgba(0,0,0,.25), 0 18px 40px rgba(0,0,0,.45);
+  --doc:'Inter','Segoe UI',Arial,sans-serif; --main:'Caveat','Segoe Script','Bradley Hand',cursive;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .3  0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --encre-usee:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 1.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23t)'/%3E%3C/svg%3E");
+}
+
+/* ─── Ambiance : la ville le soir (remplace les taches de couleur) ─── */
+body{background:radial-gradient(130% 85% at 50% -10%, #241a52 0%, #120d2c 45%, #08070f 100%) fixed var(--bg-deep)}
+.mesh .blob{filter:blur(120px); opacity:.22}
+.mesh::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 8% 78%, rgba(255,196,110,.30) 0 5px, transparent 34px),
+    radial-gradient(circle at 17% 64%, rgba(255,140,90,.22) 0 7px, transparent 46px),
+    radial-gradient(circle at 29% 83%, rgba(120,190,255,.20) 0 4px, transparent 30px),
+    radial-gradient(circle at 46% 72%, rgba(255,214,140,.22) 0 6px, transparent 40px),
+    radial-gradient(circle at 61% 86%, rgba(255,120,170,.18) 0 5px, transparent 36px),
+    radial-gradient(circle at 74% 69%, rgba(140,220,255,.18) 0 8px, transparent 52px),
+    radial-gradient(circle at 88% 80%, rgba(255,200,120,.26) 0 6px, transparent 42px),
+    radial-gradient(circle at 95% 62%, rgba(200,160,255,.16) 0 4px, transparent 28px);
+  filter:blur(1.5px); animation:kit-bokeh 26s ease-in-out infinite alternate}
+@keyframes kit-bokeh{to{transform:translate3d(-18px,-10px,0) scale(1.03); opacity:.85}}
+.kit-skyline{position:absolute; left:0; right:0; bottom:0; width:100%; height:34vh; min-height:180px; opacity:.9; pointer-events:none}
+
+/* ─── Papier : feuille réelle (grain, ombre portée, arrivée sur le bureau) ─── */
+.paper,.decl,.idcard,.patri,.offre,.resu,.mail,.receipt{background-color:var(--papier)}
+.paper,.decl{background-image:var(--grain); color:var(--encre); font-family:var(--doc); box-shadow:var(--ombre-papier); border-radius:3px; position:relative}
+.paper::after,.decl::after{content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  background:linear-gradient(180deg, rgba(255,255,255,.16), transparent 18%), linear-gradient(180deg, transparent 33%, rgba(0,0,0,.035) 33.2%, transparent 33.6%, transparent 66.4%, rgba(0,0,0,.035) 66.6%, transparent 67%)}
+.paper th{font-family:var(--doc)}
+.paper.agrafe::before,.agrafe::before{content:""; position:absolute; top:14px; left:18px; width:34px; height:6px; border-radius:3px; z-index:3;
+  background:linear-gradient(180deg,#e9ecf2,#9aa1b1 55%,#cfd4de); box-shadow:0 1px 1px rgba(0,0,0,.35); transform:rotate(-24deg)}
+.perfore{padding-left:56px !important}
+.perfore::before{content:""; position:absolute; left:16px; top:50%; width:14px; height:14px; margin-top:-70px; border-radius:50%; background:#2a2440;
+  box-shadow:0 126px 0 #2a2440, inset 0 1px 2px rgba(0,0,0,.6); z-index:3}
+.trombone::before{content:""; position:absolute; top:-14px; right:42px; width:16px; height:52px; z-index:3; border:3px solid #a9b0bf; border-radius:10px;
+  box-shadow:inset 0 0 0 3px transparent; border-bottom-color:#8d94a5; transform:rotate(8deg)}
+.bureau{position:relative; border-radius:24px; padding:30px; overflow:hidden;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 1px, transparent 1px 19px, rgba(0,0,0,.04) 19px 20px, transparent 20px 37px),
+    linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.25)),
+    linear-gradient(90deg,#5b3a22,#6d4528 18%,#5f3c23 37%,#77502f 58%,#64412a 79%,#573823);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -14px 34px rgba(0,0,0,.4), 0 24px 60px rgba(0,0,0,.45)}
+.bureau::before{content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(70% 60% at 30% 0%, rgba(255,220,160,.20), transparent 70%)}
+.bureau > *{position:relative}
+
+/* ─── Signature manuscrite (stylo bleu) ─── */
+.signed,.paper .sig .signed,.decl .signed,.decl .sigl .signed{font-family:var(--main) !important; font-style:normal !important; font-weight:700 !important; color:var(--encre-bleue) !important;
+  font-size:36px !important; line-height:1 !important; display:inline-block; transform:rotate(-3deg); letter-spacing:.01em}
+.paper .sig input,.decl .sigl input,.sigrow input,input.signature{font-family:var(--main) !important; font-style:normal !important; font-weight:700 !important; color:var(--encre-bleue) !important;
+  font-size:34px !important; background:linear-gradient(180deg, transparent 62%, rgba(255,226,120,.38) 62%) !important; border:0 !important; border-bottom:2px dotted #8f96ad !important; border-radius:0 !important}
+.paper .sig input::placeholder,.decl .sigl input::placeholder,.sigrow input::placeholder{font-family:var(--doc); font-size:15px; font-weight:500; color:#9aa0b6}
+.ecrit{animation:kit-ecrire 1.1s steps(18,end) both}
+@keyframes kit-ecrire{from{clip-path:inset(-20% 100% -20% 0)} to{clip-path:inset(-20% -5% -20% 0)}}
+
+/* ─── Tampon encreur ─── */
+.tampon,.stamp,.stamp-paid{display:inline-block; color:var(--tampon,#c62828); border:4px double currentColor; border-radius:9px; padding:5px 14px 4px; background:transparent;
+  font:800 19px/1.1 var(--doc); letter-spacing:.16em; text-transform:uppercase; mix-blend-mode:multiply;
+  -webkit-mask-image:var(--encre-usee); mask-image:var(--encre-usee); -webkit-mask-size:220px; mask-size:220px}
+.tampon{transform:rotate(-9deg); opacity:.86}
+.tampon.vert,.stamp{--tampon:#1f7a45}
+.tampon.bleu{--tampon:#1d3b8f}
+.stamp-paid{--tampon:#c62828}
+.tampon.frappe,.stamp.show{animation:kit-tampon .5s cubic-bezier(.3,1.5,.5,1) both}
+.tampon.frappe{animation-delay:var(--delai,.15s)}
+.stamp.show{animation-delay:.9s}
+@keyframes kit-tampon{0%{opacity:0; transform:rotate(-9deg) scale(2.6)} 55%{opacity:.95; transform:rotate(-9deg) scale(.9)} 75%{transform:rotate(-9deg) scale(1.04)} 100%{opacity:.86; transform:rotate(-9deg) scale(1)}}
+.secoue{animation:kit-secoue .35s ease-out}
+@keyframes kit-secoue{20%{transform:translate(2px,1px)} 40%{transform:translate(-2px,-1px)} 60%{transform:translate(1px,-1px)} 80%{transform:translate(-1px,1px)}}
+
+/* ─── Coach Max (avatar dessiné) ─── */
+.coach .av{overflow:hidden; padding:0; background:linear-gradient(160deg,#ffd79e,#ff9f6b) !important; box-shadow:0 0 0 3px rgba(255,255,255,.18), 0 0 18px rgba(251,146,60,.4) !important}
+.coach .av svg{width:100%; height:100%; display:block}
+.coach .av.parle{animation:kit-parle 2.6s ease-in-out infinite}
+@keyframes kit-parle{0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)}}
+
+/* ─── Bouton son ─── */
+.kit-son{font:700 15px var(--ui); padding:7px 12px; border-radius:999px; color:#fff; background:var(--glass); border:1px solid var(--border); cursor:pointer; line-height:1}
+.kit-son:hover{background:var(--glass-hover)}
+.kit-son[aria-pressed="false"]{opacity:.6}
+
+/* ─── Smartphone ─── */
+.phone{width:296px; margin:0 auto; position:relative; border:0 !important; border-radius:50px !important; padding:58px 16px 30px !important;
+  background:radial-gradient(120% 70% at 20% 0%, #5b3fd1 0%, transparent 60%), radial-gradient(90% 60% at 100% 100%, #e2457f 0%, transparent 60%), linear-gradient(160deg,#1a1440,#0d0b1e) !important;
+  box-shadow:inset 0 0 0 11px #0b0c10, inset 0 0 0 13px #3d414b, inset 0 0 0 14px #101114, 0 32px 70px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06) !important}
+.phone::before{content:""; position:absolute !important; top:22px; left:50%; width:96px !important; height:28px !important; margin:0 !important; transform:translateX(-50%); border-radius:20px !important; background:#050506 !important; box-shadow:inset -18px 0 0 -12px #1b2a44}
+.phone::after{content:""; position:absolute; right:-3px; top:140px; width:4px; height:64px; border-radius:2px; background:#2b2e36; box-shadow:-299px -40px 0 #2b2e36, -299px 30px 0 #2b2e36}
+.phone .tel-barre{position:absolute; top:24px; left:34px; right:34px; display:flex; justify-content:space-between; font:600 13px var(--doc); color:#fff}
+.phone .clock{font-family:var(--doc) !important; font-weight:300; font-size:64px !important; letter-spacing:-.02em; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.25); line-height:1.05}
+.phone .date{color:rgba(255,255,255,.85) !important; font:500 15px var(--doc) !important; margin-bottom:22px !important}
+.notif{background:rgba(246,246,250,.86) !important; -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border-radius:22px !important; padding:11px 13px !important; color:#111 !important; font:400 14px/1.35 var(--doc) !important; box-shadow:0 10px 26px rgba(0,0,0,.28)}
+.notif .nh{display:flex; align-items:center; gap:7px; font-size:12.5px !important; color:#5d6070 !important; margin-bottom:3px}
+.notif .nh span:last-child{margin-left:auto}
+.notif b{display:block; font-weight:700; color:#111}
+.app-ico{display:inline-grid; place-items:center; width:20px; height:20px; border-radius:6px; font-size:12px; color:#fff; flex:none; background:linear-gradient(160deg,#5eb5ff,#1d6fe5)}
+.app-ico.sms{background:linear-gradient(160deg,#6fe67c,#20b037)}
+.app-ico.banque{background:linear-gradient(160deg,#ffd36b,#e8942a)}
+.app-ico.colis{background:linear-gradient(160deg,#c9a06a,#8b5e34)}
+
+/* ─── Terminal de paiement ─── */
+.terminal{width:268px !important; margin:0 auto; position:relative; border:0 !important; border-radius:28px 28px 44px 44px !important; padding:24px 20px 28px !important;
+  background:linear-gradient(165deg,#434957 0%,#262a33 45%,#15171d 100%) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18), inset 0 -6px 14px rgba(0,0,0,.55), 0 26px 60px rgba(0,0,0,.6) !important}
+.terminal::before{content:""; position:absolute; top:-7px; left:50%; width:126px; height:12px; transform:translateX(-50%); background:linear-gradient(#0a0b0e,#22252d); border-radius:8px 8px 3px 3px; box-shadow:inset 0 2px 3px rgba(0,0,0,.8)}
+.terminal::after{content:"TerrilPay"; position:absolute; bottom:9px; left:0; right:0; text-align:center; font:700 10px var(--doc); letter-spacing:.3em; color:rgba(255,255,255,.28)}
+.terminal .scr{background:linear-gradient(180deg,#0e2a3b,#071a25) !important; color:#c9f3ff !important; font-family:var(--doc) !important; border-radius:12px !important; min-height:132px !important;
+  box-shadow:inset 0 0 0 2px #04111a, inset 0 0 40px rgba(0,170,255,.16) !important; text-shadow:0 0 8px rgba(120,220,255,.45); position:relative}
+.terminal .scr .amt{font-family:var(--mono) !important; font-size:30px !important; color:#fff !important}
+.terminal .keys span{background:linear-gradient(#f0f2f6,#c7cbd4) !important; color:#1c1f27 !important; border-radius:10px !important; font-weight:800; box-shadow:0 2px 0 #7f8492, 0 4px 8px rgba(0,0,0,.45); transition:transform .08s}
+.terminal .keys span:nth-child(10){background:linear-gradient(#ff7a7a,#d22f2f) !important; color:#fff !important}
+.terminal .keys span:nth-child(12){background:linear-gradient(#5ff0b4,#0fa86b) !important; color:#fff !important}
+.terminal .keys span.appuie{transform:translateY(2px); box-shadow:0 0 0 #7f8492, 0 1px 3px rgba(0,0,0,.45)}
+.sans-contact{display:inline-block; width:26px; height:26px; vertical-align:middle;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9f3ff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M8.5 7.5a6 6 0 0 1 0 9M12 5a10 10 0 0 1 0 14M15.5 2.5a14 14 0 0 1 0 19M5 10a2.5 2.5 0 0 1 0 4'/%3E%3C/svg%3E") center/contain no-repeat}
+
+/* ─── Ticket de caisse (papier thermique) ─── */
+.receipt{background:linear-gradient(180deg,#f6f6f3,#ffffff 12%) !important; color:#222 !important; box-shadow:0 2px 3px rgba(0,0,0,.18), 0 16px 34px rgba(0,0,0,.4) !important; border-radius:2px 2px 0 0 !important}
+.receipt.imprime{animation:kit-ticket 1.4s steps(14,end) both}
+@keyframes kit-ticket{from{clip-path:inset(0 0 100% 0)} to{clip-path:inset(0 0 -12px 0)}}
+
+/* ─── Carte bancaire de l'entreprise (fictive) ─── */
+.carte-bq{width:min(330px,100%); aspect-ratio:85.6/54; perspective:1000px; cursor:pointer; margin:0 auto; display:block; background:none; border:0; padding:0; font:inherit; color:inherit}
+.carte-bq .cb-in{display:block; position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .8s cubic-bezier(.3,.8,.3,1)}
+.carte-bq.retournee .cb-in{transform:rotateY(180deg)}
+.carte-bq .cb-face{position:absolute; inset:0; border-radius:16px; overflow:hidden; backface-visibility:hidden; -webkit-backface-visibility:hidden; color:#fff; text-align:left;
+  background:radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--c1,#3e63dd) 85%, #fff) 0%, var(--c1,#3e63dd) 35%, var(--c2,#1e2a5a) 100%);
+  box-shadow:0 2px 4px rgba(0,0,0,.3), 0 22px 44px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.35)}
+.carte-bq .cb-face::after{content:""; position:absolute; inset:-40%; background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.28) 48%, rgba(255,255,255,0) 56%); animation:kit-reflet 5s ease-in-out infinite}
+@keyframes kit-reflet{0%,60%{transform:translateX(-35%)} 100%{transform:translateX(35%)}}
+.carte-bq .cb-verso{transform:rotateY(180deg)}
+.cb-banque{position:absolute; top:16px; left:20px; font:800 15px var(--doc); letter-spacing:.02em}
+.cb-banque small{display:block; font-weight:500; font-size:10px; opacity:.8; letter-spacing:.14em; text-transform:uppercase}
+.cb-puce{position:absolute; top:58px; left:22px; width:46px; height:35px; border-radius:7px;
+  background:linear-gradient(135deg,#f6dd8f,#c9a24a 55%,#f0d58a); box-shadow:inset 0 0 0 1px rgba(90,60,10,.45)}
+.cb-puce::before{content:""; position:absolute; inset:7px 10px; border:1px solid rgba(90,60,10,.5); border-radius:4px}
+.cb-sc{position:absolute; top:62px; left:80px; width:26px; height:26px; opacity:.9;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M8.5 7.5a6 6 0 0 1 0 9M12 5a10 10 0 0 1 0 14M15.5 2.5a14 14 0 0 1 0 19'/%3E%3C/svg%3E") center/contain no-repeat}
+.cb-num{position:absolute; left:22px; right:16px; top:108px; font:600 19px var(--mono); letter-spacing:.11em; text-shadow:0 1px 1px rgba(0,0,0,.45)}
+.cb-bas{position:absolute; left:22px; right:20px; bottom:16px; display:flex; justify-content:space-between; align-items:flex-end; gap:10px; font:600 13px var(--doc); text-transform:uppercase; letter-spacing:.06em}
+.cb-bas small{display:block; font-size:8.5px; opacity:.75; letter-spacing:.14em}
+.cb-bas .nm{max-width:190px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.cb-marque{position:absolute; top:16px; right:18px; font:800 italic 15px var(--doc); opacity:.92}
+.cb-piste{position:absolute; top:22px; left:0; right:0; height:40px; background:#14161c}
+.cb-verso .cb-sig{position:absolute; top:76px; left:20px; right:80px; height:32px; background:repeating-linear-gradient(135deg,#f3efe3 0 6px,#e8e2d0 6px 12px); border-radius:3px;
+  font:700 22px var(--main); color:var(--encre-bleue); padding:2px 10px; white-space:nowrap; overflow:hidden}
+.cb-verso .cb-iban{position:absolute; left:20px; right:16px; bottom:40px; font:600 13.5px var(--mono); letter-spacing:.05em}
+.cb-verso .cb-iban small{display:block; font:600 9px var(--doc); letter-spacing:.14em; opacity:.75}
+.cb-verso .cb-mention{position:absolute; left:20px; right:16px; bottom:14px; font:500 9.5px var(--doc); opacity:.75}
+.cb-astuce{text-align:center; font-size:13px; color:var(--dim); margin-top:8px}
+
+/* ─── Camion de livraison ─── */
+.kit-route{position:relative; height:170px; border-radius:var(--r); overflow:hidden; margin-bottom:18px; border:1px solid var(--border);
+  background:linear-gradient(180deg,#26335c 0%,#3b3f6b 48%,#4a4552 48.5%,#55505c 62%,#2d2c33 62.5%,#2a2930 100%)}
+.kit-route::before{content:""; position:absolute; left:0; right:0; bottom:30px; height:4px; background:repeating-linear-gradient(90deg,#f2f2f2 0 34px,transparent 34px 70px); opacity:.7}
+.kit-route .kit-boutique{position:absolute; right:18px; bottom:64px; font-size:58px; filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))}
+.kit-route .kit-camion{position:absolute; bottom:16px; left:max(8px, calc(100% - 400px)); width:270px; animation:kit-camion 2.8s cubic-bezier(.15,.75,.25,1) both}
+@keyframes kit-camion{from{transform:translateX(-110vw)} to{transform:none}}
+.kit-camion .roue{transform-box:fill-box; transform-origin:center; animation:kit-roue .5s linear 5.6}
+@keyframes kit-roue{to{transform:rotate(360deg)}}
+.kit-camion .fumee{animation:kit-fumee 1.4s ease-out 4 both; transform-box:fill-box; transform-origin:center}
+@keyframes kit-fumee{from{opacity:.55; transform:translate(0,0) scale(.6)} to{opacity:0; transform:translate(-26px,-10px) scale(1.6)}}
+
+/* ─── Colis en carton ─── */
+.colis{position:relative; width:230px; height:168px; margin:30px auto 0; border-radius:6px; color:#3b2a18; font-family:var(--doc);
+  background:linear-gradient(180deg,#d9a86c,#c48f52 60%,#b27f45); box-shadow:inset 0 -8px 16px rgba(0,0,0,.18), 0 18px 34px rgba(0,0,0,.45)}
+.colis::before{content:""; position:absolute; left:50%; top:0; bottom:0; width:42px; transform:translateX(-50%); background:linear-gradient(90deg,rgba(255,255,255,.18),rgba(255,255,255,.32),rgba(255,255,255,.18)); border-left:1px solid rgba(0,0,0,.08); border-right:1px solid rgba(0,0,0,.08)}
+.colis .rabat{position:absolute; top:-22px; width:50%; height:26px; background:linear-gradient(180deg,#e3b77d,#cf9a5b); border:1px solid rgba(0,0,0,.08); transform-origin:bottom center; transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
+.colis .rabat.g{left:0; border-radius:4px 0 0 0; transform:rotateX(0)}
+.colis .rabat.d{right:0; border-radius:0 4px 0 0}
+.colis.ouvert .rabat.g{transform:perspective(400px) rotateX(-150deg) rotateZ(-8deg)}
+.colis.ouvert .rabat.d{transform:perspective(400px) rotateX(-150deg) rotateZ(8deg)}
+.colis .etiquette{position:absolute; right:12px; bottom:12px; width:118px; background:#fff; border-radius:3px; padding:6px 7px; font-size:8.5px; line-height:1.25; box-shadow:0 1px 2px rgba(0,0,0,.25); transform:rotate(-2deg)}
+.colis .etiquette b{display:block; font-size:9.5px}
+.colis .etiquette svg{display:block; width:100%; height:22px; margin-top:4px}
+.colis .fragile{position:absolute; left:12px; top:14px; background:#d93636; color:#fff; font:800 10px var(--doc); letter-spacing:.12em; padding:3px 7px; border-radius:2px; transform:rotate(-6deg)}
+.colis .fleches{position:absolute; left:16px; bottom:14px; font:900 18px var(--doc); color:rgba(60,40,20,.55); letter-spacing:-2px}
+.colis .contenu{position:absolute; left:50%; top:10px; font-size:58px; transform:translate(-50%,40px) scale(.4); opacity:0; transition:transform .7s .35s cubic-bezier(.3,1.6,.5,1), opacity .4s .35s; filter:drop-shadow(0 8px 12px rgba(0,0,0,.35))}
+.colis.ouvert .contenu{transform:translate(-50%,-78px) scale(1); opacity:1}
+.colis .nb{position:absolute; left:12px; bottom:40px; font:800 12px var(--doc); color:rgba(60,40,20,.7)}
+
+/* ─── Animations à la première apparition seulement (pas à chaque clic) ─── */
+.kit-anim{animation:kit-pose .6s cubic-bezier(.2,.9,.25,1) both}
+.kit-anim.d1{animation-delay:.08s} .kit-anim.d2{animation-delay:.16s} .kit-anim.d3{animation-delay:.24s}
+@keyframes kit-pose{from{opacity:0; transform:translateY(24px) rotate(-1deg) scale(.985)} to{opacity:1; transform:none}}
+.kit-deja-vu,.kit-deja-vu *{animation:none !important}
+.kit-deja-vu .spin{animation:sp .8s linear infinite !important}   /* les roues de chargement tournent toujours */
+.kit-deja-vu .receipt.imprime,.kit-deja-vu.receipt.imprime{clip-path:none}
+
+/* ─── Boutons : un vrai bouton qu'on enfonce ─── */
+.btn:active:not(:disabled){transform:translateY(1px) scale(.99)}
+
+@media (max-width:640px){
+  .bureau{padding:16px; border-radius:16px}
+  .phone{width:270px}
+  .kit-route .kit-camion{width:220px}
+  .colis{transform:scale(.9)}
+}
+@media (prefers-reduced-motion:reduce){
+  .mesh::after,.kit-route .kit-camion,.carte-bq .cb-face::after{animation:none !important}
+  .kit-route .kit-camion{transform:none}
+}
+@media print{ .kit-skyline,.kit-son{display:none !important} .paper::after,.decl::after{display:none} }
+/* ═══ KIT RÉALISTE COMMUN v1, version EQ — fin ═══ */
+</style>
+<style id="kit-compta">
+/* ═══ KIT COMPTA EQ v1 — début (identique dans les missions 1, 2 et 3 : ne pas modifier ici, modifier outils/kit-compta-eq) ═══ */
+/* Le cabinet comptable, dessiné en CSS et SVG (aucune image) : Nadia, Borinage Banque, calculatrice TerrilCalc, balance du bilan,
+   livre-journal, classeur, liège et post-it, étiquette de prix, documents officiels fictifs. Affichage seulement.
+   v1.1 (26/10/2026, retours des décors des missions) : agrafe visible sur le papier des EQ, logo de la banque toujours dans sa police,
+   registres plus souples sur téléphone, étiquette du classeur, niveau XP raccourci sur téléphone pour garder le bouton 🔊 visible,
+   ville du soir atténuée derrière les panneaux (lisibilité au vidéoprojecteur et au téléphone).
+   v1.2 (26/10/2026, accord du professeur) : photos de matières libres CC0 (bois, liège, carton, cuir) dans images/, par-dessus le dessin. */
+:root{
+  --glass:rgba(255,255,255,.06); --glass-hover:rgba(255,255,255,.12); --border:rgba(255,255,255,.16);
+  --cpt-marine:#14284b; --cpt-or:#e3b85c; --cpt-or-fonce:#a77f2e; --cpt-ligne:#b9cde6; --cpt-marge:#d9534f;
+  --cpt-papier:#fffdf6; --cpt-encre:#1f2433; --cpt-encre-douce:#4a5068;
+}
+
+/* ─── Nadia, l'expert-comptable (avatar dessiné à la place de l'émoji) ─── */
+.coach .av.cpt-nadia{background:linear-gradient(160deg,#fdebcf,#e3b85c) !important; box-shadow:0 0 0 3px rgba(255,255,255,.16), 0 0 18px rgba(227,184,92,.45) !important}
+
+/* ─── Mention « document fictif » ─── */
+.cpt-fictif{display:block; margin-top:10px; font:500 11px/1.3 var(--doc); letter-spacing:.06em; text-transform:uppercase; color:#6b7186; opacity:.85}
+.cpt-fictif.clair{color:rgba(255,255,255,.62)}
+
+/* ─── Logo fictif de la Borinage Banque ─── */
+.cpt-banque{display:inline-flex; align-items:center; gap:8px; font:800 14px/1 var(--doc); color:var(--cpt-marine); letter-spacing:.01em; white-space:nowrap}
+.cpt-banque svg{width:28px; height:28px; flex:none; display:block}
+.cpt-banque b{font-weight:800; color:var(--cpt-or-fonce); font-family:var(--doc); letter-spacing:normal}
+
+/* ─── Agrafe du kit sur le papier des EQ : le calque de grain d'origine (.paper::before) la rendait presque invisible ─── */
+.paper.agrafe::before,.agrafe::before{opacity:1; mix-blend-mode:normal; right:auto; bottom:auto}
+.cpt-banque.clair{color:#fff} .cpt-banque.clair b{color:var(--cpt-or)}
+
+/* ─── En-tête de document (papier à lettres) ─── */
+.cpt-entete{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; padding-bottom:10px; margin-bottom:12px; border-bottom:2px solid var(--cpt-marine); color:var(--cpt-encre); font-family:var(--doc)}
+.cpt-entete .cpt-ent-titre{font:800 15px/1.2 var(--doc); text-transform:uppercase; letter-spacing:.08em; color:var(--cpt-marine)}
+.cpt-entete small{display:block; font:500 12px/1.35 var(--doc); color:var(--cpt-encre-douce)}
+
+/* ─── Livre-journal et registres : papier ligné, marge rouge, colonnes Débit / Crédit ─── */
+.cpt-registre{background-color:var(--cpt-papier) !important; color:var(--cpt-encre) !important; border-radius:4px; box-shadow:var(--ombre-papier); position:relative;
+  background-image:linear-gradient(90deg, transparent 38px, rgba(217,83,79,.55) 38px 39px, transparent 39px 42px, rgba(217,83,79,.55) 42px 43px, transparent 43px),
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(120,160,210,.38) 27px 28px) !important}
+.cpt-registre th{color:var(--cpt-marine) !important; font:700 12px var(--doc) !important; text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--cpt-marine) !important; background:transparent !important}
+.cpt-registre td{color:var(--cpt-encre) !important; border-color:rgba(120,160,210,.45) !important; background:transparent !important}
+.cpt-registre .num,.cpt-registre td.n,.cpt-registre .mono{font-family:var(--mono) !important; white-space:nowrap}
+
+/* ─── Livre ouvert (deux pages, reliure au milieu) ─── */
+.cpt-livre{position:relative; padding:22px 22px 26px; border-radius:6px 6px 10px 10px; color:var(--cpt-encre);
+  background:linear-gradient(90deg, #f4efe2 0%, #fffdf6 6%, #fffdf6 47%, #e6dfcc 49.6%, #cfc6b0 50%, #e6dfcc 50.4%, #fffdf6 53%, #fffdf6 94%, #f4efe2 100%);
+  box-shadow:0 0 0 6px #6b2b2b, 0 0 0 8px #4a1d1d, 0 26px 50px rgba(0,0,0,.5)}
+
+/* ─── Relevé bancaire (Borinage Banque) ─── */
+.cpt-releve{position:relative; background:var(--cpt-papier) !important; color:var(--cpt-encre) !important; border-radius:3px; box-shadow:var(--ombre-papier);
+  border-top:6px solid var(--cpt-marine) !important; background-image:repeating-linear-gradient(180deg, rgba(20,40,75,.035) 0 26px, transparent 26px 52px) !important}
+.cpt-releve::after{content:""; position:absolute; left:0; right:0; bottom:-7px; height:8px; pointer-events:none;
+  background:radial-gradient(circle at 6px 0, transparent 5px, var(--cpt-papier) 5.5px) 0 0/12px 8px repeat-x}
+
+/* ─── Document officiel : cadre guilloché, filigrane « spécimen » ─── */
+.cpt-officiel{position:relative; padding:18px; border-radius:6px; background:#fbfcff !important; color:var(--cpt-encre) !important;
+  border:8px solid transparent; border-image:repeating-linear-gradient(45deg, #9fb6d6 0 2px, #eef3fa 2px 5px, #c7a75a 5px 6px, #eef3fa 6px 9px) 8;
+  box-shadow:inset 0 0 0 1px #9fb6d6, var(--ombre-papier)}
+.cpt-filigrane{position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; overflow:hidden; z-index:0}
+.cpt-filigrane span{font:900 clamp(26px,6vw,64px)/1 var(--doc); letter-spacing:.18em; color:rgba(20,40,75,.05); transform:rotate(-24deg); white-space:nowrap; text-transform:uppercase}
+.cpt-officiel > :not(.cpt-filigrane){position:relative; z-index:1}
+
+/* ─── Calculatrice TerrilCalc (décorative : les vrais chiffres restent dans la page) ─── */
+.cpt-calc{width:236px; max-width:100%; margin:0 auto; position:relative; font-family:var(--doc)}
+.cpt-calc-corps{position:relative; z-index:1; border-radius:22px 22px 26px 26px; padding:15px 15px 17px;
+  background:linear-gradient(160deg,#3b4150,#22262f 55%,#16181e); box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 -6px 12px rgba(0,0,0,.5), 0 22px 50px rgba(0,0,0,.55)}
+.cpt-calc-haut{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px}
+.cpt-calc-marque{font:800 10px var(--doc); letter-spacing:.32em; color:rgba(255,255,255,.55)}
+.cpt-solaire{width:58px; height:14px; border-radius:3px; background:repeating-linear-gradient(90deg,#2a2a33 0 13px,#3c3c4a 13px 14px); box-shadow:inset 0 0 0 1px #0d0d12}
+.cpt-ecran{position:relative; height:58px; border-radius:9px; padding:8px 12px; display:flex; justify-content:flex-end; align-items:center; overflow:hidden;
+  background:linear-gradient(180deg,#b6c6a0,#cfdcb8); box-shadow:inset 0 2px 6px rgba(0,0,0,.45), 0 0 0 3px #101217; font:600 29px/1 var(--mono); color:#1d2617}
+.cpt-ecran .cpt-fantome{position:absolute; right:12px; color:rgba(29,38,23,.08)}
+.cpt-ecran .cpt-val{position:relative; white-space:nowrap}
+.cpt-touches{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:13px}
+.cpt-touches span{height:36px; border-radius:9px; display:grid; place-items:center; font:700 16px var(--doc); color:#1c1f27; background:linear-gradient(#f2f3f6,#cfd2da);
+  box-shadow:0 2px 0 #7d818d, 0 4px 8px rgba(0,0,0,.45); transition:transform .08s, box-shadow .08s}
+.cpt-touches span.op{background:linear-gradient(#636a7a,#464c5a); color:#fff; box-shadow:0 2px 0 #23262e, 0 4px 8px rgba(0,0,0,.45)}
+.cpt-touches span.c{background:linear-gradient(#ff7b6e,#d63b2f); color:#fff}
+.cpt-touches span.eg{grid-row:span 2; height:auto; background:linear-gradient(#ffc06b,#f08a1d); color:#fff}
+.cpt-touches span.zero{grid-column:span 2}
+.cpt-touches span.appuie{transform:translateY(2px); box-shadow:0 0 0 #7d818d, 0 1px 3px rgba(0,0,0,.45)}
+.cpt-ruban{width:82%; margin:0 auto -8px; padding:12px 12px 16px; position:relative; z-index:0; border-radius:2px 2px 0 0; background:#fbfbf7; color:#262626;
+  font:500 12px/1.55 var(--mono); box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.cpt-ruban::before{content:""; position:absolute; left:0; right:0; top:-6px; height:7px; background:linear-gradient(135deg, transparent 50%, #fbfbf7 50%) 0 0/8px 7px repeat-x, linear-gradient(225deg, transparent 50%, #fbfbf7 50%) 0 0/8px 7px repeat-x}
+.cpt-ruban div{display:flex; justify-content:space-between; gap:10px; white-space:nowrap}
+.cpt-ruban div b{font-weight:700}
+
+/* ─── Balance du bilan : actif = passif ─── */
+.cpt-balance{display:block; width:132px; height:auto; margin:0 auto; overflow:visible}
+.cpt-balance text{font:800 8px var(--doc); letter-spacing:.08em}
+
+/* ─── Classeur à anneaux (factures, banque…) ─── */
+.cpt-classeur{position:relative; width:220px; max-width:100%; aspect-ratio:220/280; margin:0 auto; display:flex}
+.cpt-cl-couv{flex:0 0 46%; border-radius:10px 4px 4px 10px; position:relative; background-color:var(--c,#1e3a6e);
+  background-image:linear-gradient(90deg, rgba(0,0,0,.28), rgba(255,255,255,.07) 12%, transparent 30%), repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 2px, transparent 2px 5px);
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.25), 0 18px 34px rgba(0,0,0,.45)}
+.cpt-cl-etiq{position:absolute; left:8%; right:8%; top:14%; padding:8px 5px; background:var(--cpt-papier); color:var(--cpt-encre); border-radius:3px; text-align:center; font:700 10px/1.25 var(--doc); box-shadow:inset 0 0 0 1px rgba(0,0,0,.12); overflow-wrap:anywhere; hyphens:auto}
+.cpt-cl-etiq b{display:block; font:800 10.5px/1.15 var(--doc); color:var(--cpt-marine); margin-bottom:3px}
+.cpt-cl-trou{position:absolute; left:50%; bottom:9%; width:24px; height:24px; margin-left:-12px; border-radius:50%; background:#11131a; box-shadow:inset 0 0 0 4px rgba(255,255,255,.35)}
+.cpt-cl-int{flex:1; position:relative; margin-left:-4px; border-radius:4px 10px 10px 4px; background:#e9e4d6; box-shadow:inset 6px 0 10px rgba(0,0,0,.18), 0 18px 34px rgba(0,0,0,.4)}
+.cpt-cl-anneau{position:absolute; left:-9px; width:30px; height:15px; border:4px solid #c6cbd6; border-radius:10px; border-right-color:#8e95a5; box-shadow:0 2px 3px rgba(0,0,0,.35); z-index:2}
+.cpt-cl-feuille{position:absolute; left:14px; right:9px; top:9px; bottom:9px; border-radius:2px; background:var(--cpt-papier); box-shadow:0 1px 2px rgba(0,0,0,.2);
+  background-image:repeating-linear-gradient(180deg, transparent 0 13px, rgba(120,160,210,.35) 13px 14px)}
+.cpt-cl-feuille:nth-child(2){transform:translate(3px,3px) rotate(1deg)} .cpt-cl-feuille:nth-child(3){transform:translate(6px,5px) rotate(2deg)}
+.cpt-cl-feuille .tampon{position:absolute; right:8px; bottom:16px; font-size:10px; padding:2px 6px; border-width:2px}
+
+/* ─── Tableau de liège, punaises et post-it ─── */
+.cpt-liege{position:relative; border-radius:10px; padding:26px 22px; color:#2a2016;
+  background-color:#b98450;
+  background-image:radial-gradient(circle at 30% 40%, rgba(70,40,15,.35) 0 1px, transparent 1.6px), radial-gradient(circle at 70% 70%, rgba(255,230,190,.28) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 50% 20%, rgba(70,40,15,.25) 0 .8px, transparent 1.4px), radial-gradient(120% 90% at 50% 0%, rgba(255,220,170,.22), transparent 70%);
+  background-size:7px 7px, 9px 9px, 5px 5px, 100% 100%;
+  box-shadow:inset 0 0 0 10px #6b4426, inset 0 0 0 12px rgba(0,0,0,.35), inset 0 0 30px rgba(60,30,10,.45), 0 22px 44px rgba(0,0,0,.45)}
+.cpt-postit{position:relative; padding:18px 14px 14px; min-height:90px; color:#2b2618; font:700 19px/1.15 var(--main); transform:rotate(var(--rot,-2deg));
+  background:linear-gradient(180deg, rgba(255,255,255,.18), transparent 30%), var(--pi,#ffe873); box-shadow:0 1px 1px rgba(0,0,0,.12), 0 10px 18px rgba(0,0,0,.28)}
+.cpt-postit::after{content:""; position:absolute; right:0; bottom:0; width:22px; height:22px; background:linear-gradient(135deg, rgba(0,0,0,.12), rgba(0,0,0,.02) 50%, transparent 50%)}
+.cpt-postit.rose{--pi:#ffbfd2} .cpt-postit.bleu{--pi:#b4e0ff} .cpt-postit.vert{--pi:#c4f1b6}
+.cpt-postit small{display:block; font:600 12px/1.3 var(--doc); color:#5a5240; margin-top:6px}
+.cpt-punaise{position:absolute; top:-7px; left:50%; width:16px; height:16px; margin-left:-8px; border-radius:50%; z-index:3; pointer-events:none;
+  background:radial-gradient(circle at 35% 30%, #fff 0 2px, var(--p,#e04848) 3px, color-mix(in srgb, var(--p,#e04848) 60%, #000) 100%); box-shadow:2px 4px 4px rgba(0,0,0,.35)}
+
+/* ─── Étiquette de prix (avec sa ficelle) ─── */
+.cpt-etiquette{position:relative; display:inline-block; padding:8px 14px 8px 26px; color:#1d1d1d; font:800 18px/1 var(--mono); transform:rotate(var(--rot,-4deg));
+  background:#fff7df; clip-path:polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%); filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.cpt-etiquette::before{content:""; position:absolute; left:9px; top:50%; width:7px; height:7px; margin-top:-3.5px; border-radius:50%; background:#3a3a3a; box-shadow:inset 0 0 0 2px #fff7df}
+.cpt-etiquette small{display:block; font:600 10px var(--doc); letter-spacing:.08em; text-transform:uppercase; color:#6b6050; margin-bottom:3px}
+
+/* ─── Textures dessinées : carton et cuir ─── */
+.cpt-carton{background-color:#c79a62; background-image:repeating-linear-gradient(90deg, rgba(90,60,25,.10) 0 2px, transparent 2px 6px), linear-gradient(180deg, rgba(255,255,255,.14), rgba(0,0,0,.12))}
+.cpt-cuir{background-color:#5a3220; background-image:radial-gradient(circle at 30% 30%, rgba(255,255,255,.06) 0 1px, transparent 1.5px), radial-gradient(circle at 70% 60%, rgba(0,0,0,.18) 0 1px, transparent 1.6px), linear-gradient(160deg, rgba(255,255,255,.08), transparent 40%, rgba(0,0,0,.25));
+  background-size:5px 5px, 7px 7px, 100% 100%}
+
+/* ─── Photos de matières libres (CC0, voir images/CREDITS.md) posées sur les matières dessinées ───
+   Chaque photo est une couche de plus : si le fichier manque (dossier images/ pas encore déposé), le dessin d'origine reste. */
+:root{ --cpt-img-bois:url("images/bois-bureau.webp"); --cpt-img-liege:url("images/liege.webp"); --cpt-img-carton:url("images/carton.webp"); --cpt-img-cuir:url("images/cuir-classeur.webp") }
+.bureau{background:
+  radial-gradient(70% 60% at 30% 0%, rgba(255,220,160,.14), transparent 70%),
+  linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.32)),
+  var(--cpt-img-bois) center / 520px repeat,
+  linear-gradient(90deg,#5b3a22,#6d4528 18%,#5f3c23 37%,#77502f 58%,#64412a 79%,#573823)}
+.cpt-liege{background-image:radial-gradient(120% 90% at 50% 0%, rgba(255,220,170,.18), transparent 70%), var(--cpt-img-liege),
+    radial-gradient(circle at 30% 40%, rgba(70,40,15,.35) 0 1px, transparent 1.6px), radial-gradient(circle at 70% 70%, rgba(255,230,190,.28) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 50% 20%, rgba(70,40,15,.25) 0 .8px, transparent 1.4px);
+  background-size:100% 100%, 360px 360px, 7px 7px, 9px 9px, 5px 5px}
+.cpt-carton{background-image:linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.14)), var(--cpt-img-carton), repeating-linear-gradient(90deg, rgba(90,60,25,.10) 0 2px, transparent 2px 6px);
+  background-size:100% 100%, 220px 220px, auto}
+.colis{background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.18)), var(--cpt-img-carton) center / 240px, linear-gradient(180deg,#d9a86c,#c48f52 60%,#b27f45)}
+.colis .rabat{background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(0,0,0,.04)), var(--cpt-img-carton) center / 240px, linear-gradient(180deg,#e3b77d,#cf9a5b)}
+.cpt-cuir{background-image:linear-gradient(160deg, rgba(255,255,255,.08), transparent 40%, rgba(0,0,0,.25)), var(--cpt-img-cuir),
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06) 0 1px, transparent 1.5px), radial-gradient(circle at 70% 60%, rgba(0,0,0,.18) 0 1px, transparent 1.6px);
+  background-size:100% 100%, 180px 180px, 5px 5px, 7px 7px}
+.cpt-cl-couv{background-image:linear-gradient(90deg, rgba(0,0,0,.28), rgba(255,255,255,.07) 12%, transparent 30%), var(--cpt-img-cuir), repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 2px, transparent 2px 5px);
+  background-size:auto, 180px 180px, auto; background-blend-mode:normal, overlay, normal}
+
+/* ─── Crédits des photos, au bas de chaque mission (COMPTA.creditsImages) ─── */
+.cpt-credits{position:relative; z-index:2; max-width:1480px; margin:0 auto; padding:6px 22px 28px; font:400 12.5px/1.5 var(--ui); color:#a6b0c4}
+.cpt-credits summary{cursor:pointer; display:inline-block}
+.cpt-credits summary:hover{color:#eef2f8}
+.cpt-credits ul{margin:8px 0 6px 18px}
+.cpt-credits a{color:inherit; text-decoration:underline}
+.cpt-credits p{margin:0}
+
+/* ─── Petites scènes (bandeaux décoratifs en tête d'écran) ─── */
+.cpt-scene{position:relative; overflow:hidden; border-radius:var(--r-lg,22px); margin:0 0 18px; min-height:120px; border:1px solid var(--border); box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.cpt-scene > svg{display:block; width:100%; height:auto}
+.cpt-etagere{display:block; width:100%; max-width:420px; height:auto}
+.cpt-objet{display:block; pointer-events:none}
+
+/* ─── Apparitions (une seule fois, grâce au kit : data-anim + kit-deja-vu) ─── */
+.cpt-pose{animation:cpt-pose .7s cubic-bezier(.2,.9,.25,1) both}
+@keyframes cpt-pose{from{opacity:0; transform:translateY(-26px) rotate(-3deg)} to{opacity:1; transform:none}}
+.cpt-glisse{animation:cpt-glisse .8s cubic-bezier(.2,.9,.25,1) both}
+@keyframes cpt-glisse{from{opacity:0; transform:translateX(40px)} to{opacity:1; transform:none}}
+
+/* ─── Bouton 🔊 du kit dans la barre du haut des EQ ─── */
+#top .kit-son{flex:none}
+
+/* ─── La ville du soir reste derrière : un peu atténuée, pour que les chiffres des panneaux en verre restent nets ─── */
+.kit-skyline{opacity:.6}
+
+@media (max-width:640px){
+  .top-in{gap:10px !important; padding-left:14px !important; padding-right:14px !important}
+  .top-in > .xp{min-width:0; flex:0 1 auto; overflow:hidden; text-overflow:ellipsis}   /* un long niveau (« 1125 XP · … ») se raccourcit au lieu de pousser 🔊 hors de l'écran */
+  .kit-skyline{opacity:.35}
+  .cpt-registre .num,.cpt-registre td.n,.cpt-registre .mono{white-space:normal}
+  .cpt-registre th{letter-spacing:.02em}
+  #top .kit-son{padding:6px 8px; font-size:13px}
+  /* Documents sur téléphone : marges réduites, et un tableau trop large défile au lieu d'être coupé */
+  .paper{padding:18px 14px !important; overflow-x:auto !important}
+  .paper table{font-size:13px}
+  .cpt-cache-mobile{display:none !important}
+  .cpt-calc{width:210px}
+  .cpt-touches span{height:32px}
+  .cpt-liege{padding:20px 14px}
+  .cpt-scene{min-height:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .cpt-pose,.cpt-glisse{animation:none !important}
+}
+@media print{ .cpt-scene,.cpt-calc,.cpt-objet,.cpt-credits{display:none !important} }
+/* ═══ KIT COMPTA EQ v1 — fin ═══ */
+</style>
+<style id="decor-prof">
+/* ═══ DÉCOR CONSOLE — début (graphisme seulement ; voir outils/DECOR_REGLES.md) ═══ */
+/* Étiquettes « cohérent / à discuter » : un peu plus claires, pour rester lisibles sur le fond de la ville le soir */
+.coh.ok{color:#8ff5c9} .coh.warn{color:#ffd08f}
+/* La console est un outil de travail : la ville du soir reste discrète derrière les panneaux en verre */
+body .kit-skyline{opacity:.5}
+
+/* Écran de connexion : la rue des boutiques de la classe, le soir */
+.pf-rue{max-width:880px; margin:26px auto 0; display:flex; gap:14px; justify-content:center; align-items:flex-end; pointer-events:none}
+.pf-rue figure{flex:1 1 0; min-width:0; margin:0; border-radius:14px; overflow:hidden; box-shadow:0 18px 40px rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.08)}
+.pf-rue svg{display:block; width:100%; height:auto}
+.pf-rue figure:nth-child(2){transform:translateY(-10px)}
+.pf-rue-sol{max-width:880px; margin:0 auto; height:10px; border-radius:0 0 12px 12px; background:linear-gradient(180deg,#3a3646,#25222e); opacity:.8}
+
+/* Pilotage : la pancarte de la porte (OUVERT / FERMÉ), comme sur une vraie boutique */
+.pf-pancarte{float:right; width:104px; margin:-10px -6px 6px 14px; pointer-events:none; transform-origin:50% 0}
+.pf-pancarte svg{display:block; width:100%; height:auto; filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}
+.pf-pancarte.pf-bouge{animation:pf-balance 2.4s ease-in-out 1}
+@keyframes pf-balance{0%{transform:rotate(-7deg)} 30%{transform:rotate(5deg)} 60%{transform:rotate(-2deg)} 100%{transform:rotate(0)}}
+
+/* Menu : l'étagère de classeurs du cabinet, au pied du menu */
+.pf-etagere{margin:16px 6px 4px; opacity:.85; pointer-events:none}
+
+/* Élève par élève : balance du bilan d'ouverture */
+.pf-balance{float:right; width:84px; margin:-6px 0 4px 12px; pointer-events:none}
+.pf-balance .cpt-balance{width:84px}
+
+@media (max-width:900px){
+  .pf-etagere{display:none}
+  .pf-rue figure:not(:nth-child(2)){display:none}
+  .pf-rue figure:nth-child(2){transform:none; max-width:360px}
+  .pf-pancarte{width:84px}
+  .pf-balance{display:none}
+}
+@media (prefers-reduced-motion:reduce){ .pf-pancarte.pf-bouge{animation:none} }
+@media print{ .pf-rue,.pf-rue-sol,.pf-pancarte,.pf-etagere,.pf-balance{display:none !important} }
+/* ═══ DÉCOR CONSOLE — fin ═══ */
 </style>
 </head>
 <body>
 <div class="mesh" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><div class="blob b5"></div></div>
 <div id="app"></div>
+<div id="notes" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script>
 // ======================================================================
 //  CATALOGUE — 8 entreprises fictives (mêmes identifiants que les missions suivantes)
@@ -480,8 +973,9 @@ const today = () => new Date().toLocaleDateString("fr-BE", {day:"numeric", month
 const emailOk = (e) => new RegExp("^[a-z0-9-]+(\\.[a-z0-9-]+)+@" + CONFIG.DOMAINE.replace(".","\\.") + "$").test(e);
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 const r2 = (n) => Math.round(n * 100) / 100;
-const euro = (n) => (Math.round(n) === n ? n.toLocaleString("fr-BE") : n.toLocaleString("fr-BE", {minimumFractionDigits:2, maximumFractionDigits:2})) + " €";
-const euro0 = (n) => Math.round(n).toLocaleString("fr-BE") + " €";
+// Un montant absent (ou illisible) s'affiche « – » au lieu de faire planter la vue (console uniquement).
+const euro = (n) => n == null || n === "" || isNaN(n) ? "–" : (n = +n, (Math.round(n) === n ? n.toLocaleString("fr-BE") : n.toLocaleString("fr-BE", {minimumFractionDigits:2, maximumFractionDigits:2})) + " €");
+const euro0 = (n) => n == null || n === "" || isNaN(n) ? "–" : Math.round(+n).toLocaleString("fr-BE") + " €";
 const fonction = () => S.direction === "plusieurs" ? (S.nbAssocies > 1 ? "Gérant(e) et associé(e)" : "Gérant(e) et associé(e) unique") : "Indépendant(e)";
 const nbFondateurs = () => S.direction === "plusieurs" ? S.nbAssocies : 1;
 // — argent —
@@ -672,9 +1166,13 @@ function jaugeAutonomie(){
 //  CONFIGURATION DE LA CONSOLE
 // ======================================================================
 const CONFIG = {
-  ENDPOINT_URL: "https://script.google.com/macros/s/AKfycbwliltGZSZ99qaUpQ3MmWlJXINPYIQCua_hwGEGQNmw69CEwr8OA80jWykJ7Vr9268x/exec",
-  CLE_STOCKAGE: "mini-entreprise-compta-prof-cle",
-  AUTO_REFRESH_S: 90
+  SUPABASE_URL: "https://ecewwrefhgxqvmmykhio.supabase.co",           // base de données de l'école (même projet que la JPO et les 3P)
+  SUPABASE_CLE: "sb_publishable_f5Gc6ezEciyzfSYz9wGzgw_IxZqpB_W",     // clé publique : faite pour être dans la page
+  EMAIL_STOCKAGE: "mini-entreprise-compta-prof-email",                 // adresse du compte professeur, retenue sur cet ordinateur
+  CLASSE_STOCKAGE: "mini-entreprise-compta-prof-classe",               // classe choisie dans le filtre
+  AUTO_REFRESH_S: 20,
+  // Application Web du Google Sheet des EQ (même adresse qu'avant) : elle recopie la base dans ses onglets « 💾 »
+  GOOGLE_SHEET_URL: "https://script.google.com/macros/s/AKfycbwliltGZSZ99qaUpQ3MmWlJXINPYIQCua_hwGEGQNmw69CEwr8OA80jWykJ7Vr9268x/exec"
 };
 const STATUTS = { termine:"Terminée", en_cours:"En cours", reinitialise:"Réinitialisée", ancien:"Ancienne version" };
 const SECTEURS_FICHE = {
@@ -699,18 +1197,30 @@ const use = (E) => { S = E; return E; };
 const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
 const moy = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
 const heure = (d) => d.toLocaleTimeString("fr-BE", {hour:"2-digit", minute:"2-digit"});
-function jsonp(params, timeout = 40000){
-  return new Promise((resolve, reject) => {
-    const cb = "cbJ" + Date.now() + Math.floor(Math.random()*1e6);
-    const s = document.createElement("script");
-    let fini = false;
-    const fin = () => { fini = true; clearTimeout(t); s.remove(); window[cb] = function(){}; setTimeout(() => { try { delete window[cb]; } catch(e) {} }, 120000); };
-    const t = setTimeout(() => { if (!fini){ fin(); reject(new Error("timeout")); } }, timeout);
-    window[cb] = (d) => { if (fini) return; fin(); resolve(d); };
-    s.onerror = () => { if (!fini){ fin(); reject(new Error("reseau")); } };
-    s.src = CONFIG.ENDPOINT_URL + "?" + new URLSearchParams(Object.assign({}, params, {callback:cb, _:Date.now()})).toString();
-    document.body.appendChild(s);
-  });
+
+// ======================================================================
+//  BASE DE DONNÉES (Supabase) : compte professeur de la JPO, fonctions « mc_prof_… »
+// ======================================================================
+const sb = window.supabase && window.supabase.createClient ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_CLE) : null;
+/** Appelle une fonction réservée au professeur. Erreur : e.reserve (compte non autorisé), e.absent (base pas installée) ou e.session (reconnexion nécessaire). */
+async function rpcProf(nom, args){
+  if (!sb) throw new Error("La bibliothèque Supabase n'a pas pu se charger (connexion internet ?).");
+  const { data, error } = await sb.rpc(nom, args || {});
+  if (error){
+    const e = new Error(error.message || "Erreur de la base de données");
+    e.reserve = /réservé/i.test(error.message || "");
+    e.absent = error.code === "PGRST202" || /could not find the function/i.test(error.message || "");
+    e.session = /jwt|session|permission denied/i.test(error.message || "") && !e.reserve;
+    throw e;
+  }
+  return data;
+}
+/** Petit message en bas de l'écran. */
+function noter(html, type){
+  const box = $("#notes"), n = document.createElement("div");
+  n.className = "note-prof " + (type || "ok"); n.innerHTML = html; box.appendChild(n);
+  while (box.children.length > 3) box.firstChild.remove();
+  setTimeout(() => n.remove(), type === "ko" ? 7000 : 4000);
 }
 
 // ======================================================================
@@ -742,6 +1252,30 @@ function normaliser(d){
   if (ancien && ent.argent){ E.apport = ent.argent.argentDeDepart || 10000; E.nbAssocies = 1; E.emprunt = 0; }
   return E;
 }
+/** Les valeurs venues des élèves qui s'affichent sans échappement (couleurs, symbole, choix de boutique, statuts,
+ *  nombres) sont contrôlées : une valeur inattendue est remplacée par une valeur neutre (sécurité de la console). */
+const HEX = /^#[0-9a-f]{3,8}$/i, STATUTS_OK = ["termine", "en_cours", "reinitialise", "ancien"];
+const dansListe = (v, liste) => liste.some(x => (Array.isArray(x) ? x[0] : x) === v) ? v : null;
+const nombre = (v, defaut) => v == null || v === "" || isNaN(v) ? defaut : +v;
+function nettoyer(E){
+  if (!E || !TYPES.some(t => t.id === E.typeId)) return null;          // activité inconnue : pas de fiche (le pilotage la montre quand même)
+  if (!HEX.test(E.couleur || "")) E.couleur = null;
+  if (!HEX.test(E.couleur2 || "")) E.couleur2 = null;
+  if (E.symbole != null && (typeof E.symbole !== "string" || /[<>"'&]/.test(E.symbole) || E.symbole.length > 12)) E.symbole = null;
+  E.style = dansListe(E.style, STYLES) || "moderne";
+  E.facade = dansListe(E.facade, FACADES); E.auvent = dansListe(E.auvent, AUVENTS); E.ambiance = dansListe(E.ambiance, AMBIANCES);
+  E.clientele = dansListe(E.clientele, CLIENTELES.map(c => c.id)); E.strategie = dansListe(E.strategie, STRATEGIES.map(s => s.id));
+  E.emplacement = dansListe(E.emplacement, EMPLACEMENTS.map(x => x.id)); E.direction = dansListe(E.direction, ["seul", "plusieurs"]);
+  if (!STATUTS_OK.includes(E.statut)) E.statut = "en_cours";
+  E.etape = nombre(E.etape, 0); E.total = nombre(E.total, N_STEPS) || N_STEPS; E.xp = nombre(E.xp, 0); E.duree = nombre(E.duree, null);
+  E.nbAssocies = nombre(E.nbAssocies, 1); E.apport = nombre(E.apport, null); E.emprunt = nombre(E.emprunt, null);
+  [E.m2, E.m3].forEach(m => { if (m && !STATUTS_OK.includes(m.statut)) m.statut = "en_cours"; });
+  if (E.m3){
+    E.m3.prix = (E.m3.prix || []).map(p => Object.assign({}, p, { coefficient:nombre(p.coefficient, 0), previsionMois:nombre(p.previsionMois, 0) }));
+    if (E.m3.devis) E.m3.devis = Object.assign({}, E.m3.devis, { tentatives:nombre(E.m3.devis.tentatives, 0) });
+  }
+  return E;
+}
 // Les fonctions dérivées (capital(), tresorerie()…) lisent S : on l'y place avant de calculer.
 const calc = (E, fn) => { const prev = S; S = E; try { return fn(); } finally { S = prev; } };
 const pretE = (E) => calc(E, () => !!S.direction && !!S.apport && S.emprunt != null && empruntAccepte());
@@ -764,9 +1298,15 @@ const logoE = (E, size) => calc(E, () => logoMark(size));
 // ======================================================================
 //  ÉTAT DE LA CONSOLE
 // ======================================================================
-const APP = { vue:"ensemble", source:null, cle:"", liste:[], config:null, maj:null, idx:0, auto:true, busy:false, err:"", tri:"treso", sens:-1, exBilan:0 };
-try { APP.cle = localStorage.getItem(CONFIG.CLE_STOCKAGE) || ""; } catch(e) {}
+// liste = les fiches de la classe choisie dans le filtre (toutes les vues s'en servent) ; tous = toutes les classes ;
+// brut = dossiers reçus de la base ; inscrits = liste de la classe.
+const APP = { vue:"pilotage", source:null, email:"", liste:[], tous:[], brut:null, inscrits:[], classe:"", config:null, maj:null, idx:0, auto:true, busy:false, err:"", tri:"treso", sens:-1, exBilan:0,
+  duree:null, action:false, sauvegarde:null, sauvEnCours:false, jetonNouveau:"", brouillon:"", renduEnAttente:false };
+try { APP.email = localStorage.getItem(CONFIG.EMAIL_STOCKAGE) || ""; APP.classe = localStorage.getItem(CONFIG.CLASSE_STOCKAGE) || ""; } catch(e) {}
+// L'ancienne console gardait la clé du Google Sheet en clair : on l'efface de cet ordinateur.
+try { localStorage.removeItem("mini-entreprise-compta-prof-cle"); localStorage.removeItem("mini-entreprise-compta-prof-cache-v4"); } catch(e) {}
 const VUES = [
+  ["pilotage","⚙️","Pilotage de la classe"],
   ["ensemble","🏠","Vue d'ensemble"], ["eleve","👤","Élève par élève"], ["bilans","⚖️","Comparer les bilans"], ["marche","🎯","Marché et positionnement"],
   ["sep","Le cours · fiche 1 : l'entreprise"],
   ["identites","📇","Cartes d'identité"], ["biens","🧺","Biens ou services"], ["familles","🏭","Que font-elles ?"], ["secteurs","🌍","Secteurs d'activité"], ["formes","🏛️","Individuelle ou société"],
@@ -829,7 +1369,7 @@ V.ensemble = () => {
       </div>
       <div class="panel"><h3>Accès des élèves</h3>
         ${APP.config ? `<div class="chips"><span class="chip" style="${APP.config.acces ? "color:var(--mint);border-color:rgba(79,214,156,.5)" : "color:var(--coral);border-color:rgba(255,111,111,.5)"}">${APP.config.acces ? "🟢 Accès ouvert" : "🔴 Accès fermé"}${APP.config.acces && APP.config.expiration ? " jusqu'à " + heure(new Date(APP.config.expiration)) : ""}</span><span class="chip">Missions ouvertes : ${(APP.config.missionsOuvertes || []).join(", ") || "aucune"}</span><span class="chip">Max. ${max} élèves par activité</span></div>
-        <p class="help">Tu ouvres et fermes l'accès depuis le menu 🏪 Mini-entreprise de ton Google Sheet.</p>` : `<p class="help">Données de démonstration : l'état réel de l'accès s'affiche une fois connecté au Google Sheet.</p>`}
+        <p class="help">Tu ouvres et fermes l'accès dans la vue <button class="link" data-vue="pilotage">⚙️ Pilotage de la classe</button>.</p>` : `<p class="help">Données de démonstration : l'état réel de l'accès s'affiche une fois connecté avec le compte professeur.</p>`}
         <h3 style="margin-top:18px">Pour la discussion</h3><p class="help" style="margin:0">Qui a pris le plus de risques ? Qui tient le plus longtemps sans vendre ? Les vues « Comparer les bilans » et « Marché et positionnement » répondent avec les chiffres de la classe.</p></div>
     </div>
     <div class="panel fade-in" style="margin-top:18px"><h3>Les élèves</h3>
@@ -1094,20 +1634,326 @@ function sectionsM23(E){
 }
 
 // ======================================================================
+//  ⚙️ PILOTAGE DE LA CLASSE (remplace le menu « 🏪 Mini-entreprise » du Google Sheet)
+//  Ouvrir / fermer l'accès, missions ouvertes, places par activité, liste de la classe,
+//  rouvrir une mission pour un élève, supprimer un dossier de test, sauvegardes.
+// ======================================================================
+const DUREES = [["30min","30 min"],["1h","1 h"],["2h","2 h"],["3h","3 h"],["4h","4 h"],["illimité","Sans limite"]];
+const MISSIONS_APPLI = [["1","🏗️","Fonde ton entreprise"],["2","🧰","Équipe ton entreprise"],["3","🛍️","Ton premier mois de ventes"]];
+const LIB_STATUT = { termine:["✅","terminée"], en_cours:["⏳","en cours"], reinitialise:["🔄","rouverte"] };
+const capitaliser = (s) => s.split("-").map(w => w ? w[0].toUpperCase() + w.slice(1) : w).join("-");
+const dateFichier = () => new Date().toISOString().slice(0, 10);
+function telecharger(contenu, nom, type){
+  const url = URL.createObjectURL(new Blob([contenu], { type })), a = document.createElement("a");
+  a.href = url; a.download = nom; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+/** Une ligne par élève : la liste de la classe et tous les dossiers (même hors liste), filtrés par classe. */
+function lignesPilotage(){
+  const parEmail = {};
+  (APP.inscrits || []).forEach(i => { parEmail[i.email] = { email:i.email, prenom:i.prenom, nom:i.nom, classe:i.classe, inscrit:true, dossier:null }; });
+  const dossiers = APP.brut || APP.tous.map(E => ({ eleve:{ email:E.email, prenom:E.prenom, nom:E.nomEleve, classe:E.classe }, entreprise:{ typeId:E.typeId, denomination:denoE(E) },
+    missions:Object.assign({ "1":{ statut:E.statut, xp:E.xp } }, E.m2 ? { "2":E.m2 } : {}, E.m3 ? { "3":E.m3 } : {}) }));
+  dossiers.forEach(d => { const el = d.eleve || {}, em = el.email; if (!em) return;
+    const l = parEmail[em] || (parEmail[em] = { email:em, prenom:el.prenom || "", nom:el.nom || "", classe:el.classe || "", inscrit:false });
+    l.dossier = d; if (!l.prenom) l.prenom = el.prenom || ""; if (!l.nom) l.nom = el.nom || ""; if (!l.classe) l.classe = el.classe || ""; });
+  return Object.values(parEmail).filter(l => !APP.classe || l.classe === APP.classe).sort((a, b) => (a.nom + a.prenom).localeCompare(b.nom + b.prenom, "fr"));
+}
+const missionDe = (l, m) => l.dossier && l.dossier.missions ? l.dossier.missions[m] : null;
+
+V.pilotage = () => {
+  const c = APP.config || {}, a = etatAcces(), demo = APP.source === "demo", lignes = lignesPilotage();
+  const duree = APP.duree || c.duree || "2h", ouvertes = c.missionsOuvertes || [], nbInscrits = (APP.inscrits || []).length;
+  const compte = (m, s) => lignes.filter(l => (missionDe(l, m) || {}).statut === s).length;
+  const pill = (l, m) => { const x = missionDe(l, m); if (!x) return `<span class="mpill vide">–</span>`;
+    const s = LIB_STATUT[x.statut] || ["•", x.statut || "?"];
+    return `<button class="mpill ${STATUTS_OK.includes(x.statut) ? x.statut : ""}" data-reinit="${esc(l.email)}" data-m="${m}" title="Mission ${m} : ${esc(s[1])}. Clique pour la rouvrir à cet élève.">${s[0]} ${esc(s[1])}</button>`; };
+  const emoji = (l) => { const t = l.dossier && l.dossier.entreprise ? TYPES.find(x => x.id === l.dossier.entreprise.typeId) : null; return t ? t.emoji + " " : ""; };
+  return head("Pilotage de la classe", "Le tableau de bord <span class='grad'>du professeur</span>", "Ouvre l'accès au début de la séance, choisis les missions, suis tes élèves en direct. Tout est enregistré dans la base de l'école.")
+  + (demo ? `<div class="ask" style="margin:0 0 18px"><div class="q">✨</div><div><b>Mode démonstration :</b> les boutons de pilotage ne font rien. Connecte-toi pour piloter ta vraie classe.</div></div>` : "")
+  + (APP.classe ? `<div class="ask" style="margin:0 0 18px"><div class="q">🏷️</div><div>Seuls les élèves de la classe <b>${esc(APP.classe)}</b> sont affichés. L'accès et les missions ouvertes valent pour toutes les classes.</div></div>` : "")
+  + `<div class="pilot fade-in">
+      <div class="panel acces ${a.ouvert ? "ouvert" : ""}">
+        <div class="etat"><span class="lampe" aria-hidden="true"></span><div><b>${a.ouvert ? "Accès ouvert" : "Accès fermé"}</b><div class="quand">${esc(a.txt)}${a.expire ? " (durée écoulée)" : ""}</div></div></div>
+        <p class="help" style="margin-top:10px">Accès fermé : les élèves voient « La mission est fermée » et leur travail reste sauvegardé. L'accès se referme tout seul à la fin de la durée choisie.</p>
+        <h3 style="margin:18px 0 10px;font-size:18px">Durée d'ouverture</h3>
+        <div class="durees">${DUREES.map(d => `<button class="dur ${duree === d[0] ? "on" : ""}" data-duree="${d[0]}">${d[1]}</button>`).join("")}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn bigbtn btn-vert" data-pilot="ouvrir" ${APP.action ? "disabled" : ""}>🟢 ${a.ouvert ? "Prolonger" : "Ouvrir l'accès"} (${esc((DUREES.find(d => d[0] === duree) || DUREES[2])[1])})</button>
+          <button class="btn bigbtn btn-rouge" data-pilot="fermer" ${APP.action || !a.ouvert ? "disabled" : ""}>🔴 Fermer maintenant</button></div>
+      </div>
+      <div class="panel">
+        <h3>Missions ouvertes</h3>
+        <div class="mtogs">${MISSIONS_APPLI.map(m => { const on = ouvertes.includes(m[0]), f = compte(m[0], "termine"), e = compte(m[0], "en_cours");
+          return `<button class="mtog ${on ? "on" : ""}" data-mission="${m[0]}" aria-pressed="${on}" ${APP.action ? "disabled" : ""}><span class="mi">${m[1]}</span><b>Mission ${m[0]}</b><small>${esc(m[2])}</small>
+            <span class="mstat">${f} terminée${f > 1 ? "s" : ""} · ${e} en cours</span><span class="mcoche">${on ? "✓ ouverte" : "fermée"}</span></button>`; }).join("")}</div>
+        <div class="reglage"><div><b>Élèves maximum par activité</b><small>Mission 1 : quand une activité est complète, les élèves suivants doivent en choisir une autre (0 = pas de limite). Les comptes de test prennent aussi une place.</small></div>
+          <div class="maxbox"><input class="inp" id="pmax" type="number" min="0" max="99" value="${esc(c.max != null ? c.max : 4)}" aria-label="Élèves maximum par activité"><button class="btn btn-ghost" data-pilot="max">Enregistrer</button></div></div>
+        <div class="reglage"><div><b>Liste de classe obligatoire</b><small>Oui : seules les adresses de la liste peuvent travailler (${nbInscrits} élève${nbInscrits > 1 ? "s" : ""} dans la liste). Non : toute adresse @istlm.org.</small></div>
+          <button class="switch ${c.inscritsObligatoire ? "on" : ""}" data-pilot="inscrits" role="switch" aria-checked="${!!c.inscritsObligatoire}"><span></span>${c.inscritsObligatoire ? "Oui" : "Non"}</button></div>
+      </div>
+    </div>
+    <div class="panel fade-in" style="margin-top:18px">
+      <div class="ptitre"><h3>Les élèves${APP.classe ? " · " + esc(APP.classe) : ""} (${lignes.length})</h3><span class="help">Clique sur l'état d'une mission pour la rouvrir à l'élève : son travail est archivé et ses choix sont préremplis.</span></div>
+      <div class="tscroll"><table class="list ptab"><thead><tr><th>Élève</th><th>Classe</th><th>Entreprise</th>${MISSIONS_APPLI.map(m => `<th>Mission ${m[0]}</th>`).join("")}<th></th></tr></thead><tbody>
+      ${lignes.map(l => { const e = l.dossier && l.dossier.entreprise ? (l.dossier.entreprise.denomination || l.dossier.entreprise.nom || "") : "";
+        return `<tr><td><b>${esc(l.prenom)} ${esc(l.nom)}</b>${l.inscrit ? "" : `<span class="hors" title="Cette adresse n'est pas dans la liste de la classe">hors liste</span>`}<small style="display:block;color:var(--dim)">${esc(l.email)}</small></td>
+          <td>${esc(l.classe || "–")}</td>
+          <td>${e ? emoji(l) + esc(e) : `<span style="color:var(--dim)">${l.dossier ? "en création" : "pas encore commencé"}</span>`}</td>
+          ${MISSIONS_APPLI.map(m => `<td>${pill(l, m[0])}</td>`).join("")}
+          <td class="pact">${l.dossier && l.dossier.entreprise && TYPES.some(t => t.id === l.dossier.entreprise.typeId) ? `<button class="link" data-open="${esc(l.email)}" title="Voir son entreprise">👁️</button>` : ""}${l.inscrit ? `<button class="link" data-desinscrire="${esc(l.email)}" title="Retirer de la liste de la classe">✕</button>` : ""}${l.dossier ? `<button class="link danger" data-suppr="${esc(l.email)}" title="Supprimer ce dossier (compte de test…)">🗑️</button>` : ""}</td></tr>`; }).join("")
+        || `<tr><td colspan="7"><div class="empty">Aucun élève pour l'instant.</div></td></tr>`}
+      </tbody></table></div>
+    </div>
+    <div class="grid2 fade-in" style="margin-top:18px;align-items:start">
+      <div class="panel"><h3>Ajouter des élèves à la liste de la classe</h3>
+        <p class="help" style="margin-bottom:10px">Une ligne par élève : <code>prenom.nom@istlm.org ; Prénom ; Nom ; Classe</code>. Tu peux aussi coller des colonnes copiées d'Excel. Seule l'adresse est obligatoire.</p>
+        <textarea class="inp" id="pinscrits" rows="5" placeholder="lina.dupont@istlm.org ; Lina ; Dupont ; 3e TQ">${esc(APP.brouillon)}</textarea>
+        <div style="margin-top:10px"><button class="btn btn-main" data-pilot="ajouter">Ajouter à la liste</button></div></div>
+      <div class="panel"><h3>Sauvegardes</h3>
+        <p class="help" style="margin-bottom:12px">Une copie de tout le travail des élèves, à garder sur ton ordinateur ou dans ton Drive (conseillé une fois par mois et avant les vacances).</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost" data-pilot="export">💾 Sauvegarde complète (fichier JSON)</button><button class="btn btn-ghost" data-pilot="csv">📊 Tableau des élèves (Excel)</button></div>
+        ${blocGoogleSheet()}</div>
+    </div>`;
+};
+
+// ======================================================================
+//  COPIE DANS LE GOOGLE SHEET DES EQ (script « Sauvegarde Supabase » du Google Sheet)
+// ======================================================================
+const ORIGINES_SAUV = { console:"bouton de la console", "fin-de-seance":"fin de séance, automatique", menu:"menu du Google Sheet", soir:"sauvegarde du soir", installation:"installation" };
+/** Appel JSONP du script du Google Sheet (même méthode que l'ancienne console). */
+function appelGoogleSheet(params, timeout = 120000){
+  return new Promise((resolve, reject) => {
+    const cb = "cbGS" + Date.now() + Math.floor(Math.random() * 1e6), s = document.createElement("script");
+    let fini = false;
+    // Une réponse qui arrive en retard ne provoque pas d'erreur : la fonction reste définie (vide) un moment.
+    const fin = () => { fini = true; clearTimeout(t); s.remove(); window[cb] = function(){}; setTimeout(() => { try { delete window[cb]; } catch(e) {} }, 120000); };
+    const t = setTimeout(() => { if (!fini){ fin(); reject(new Error("timeout")); } }, timeout);
+    window[cb] = (d) => { if (fini) return; fin(); resolve(d); };
+    s.onerror = () => { if (!fini){ fin(); reject(new Error("reseau")); } };
+    s.src = CONFIG.GOOGLE_SHEET_URL + "?" + new URLSearchParams(Object.assign({}, params, { callback:cb, _:Date.now() })).toString();
+    document.body.appendChild(s);
+  });
+}
+const quandLisible = (iso) => { const d = new Date(iso); if (isNaN(d)) return "";
+  return (d.toDateString() === new Date().toDateString() ? "aujourd'hui" : d.toLocaleDateString("fr-BE", { weekday:"long", day:"numeric", month:"long" })) + " à " + heure(d); };
+/** Y a-t-il du travail (élèves, liste, réouvertures…) plus récent que la dernière copie réussie ? */
+function sauvegardeEnRetard(){
+  const s = APP.sauvegarde; if (!s || !s.ok || !s.derniereActivite) return false;
+  const r = s.derniereReussie, faite = r ? Date.parse((r.bilan && r.bilan.exporteLe) || r.le) : 0;
+  return Date.parse(s.derniereActivite) > faite;
+}
+function messageSauvegarde(r){
+  const e = r && r.erreur;
+  if (e === "action_inconnue" || e === "ancienne_adresse") return "le script du Google Sheet n'est pas encore mis à jour (guide, partie « Sauvegarde dans le Google Sheet »).";
+  if (e === "jeton_manquant") return "le jeton n'est pas encore collé dans le Google Sheet (menu 💾 Sauvegarde Supabase > 🔐 Coller le jeton).";
+  if (e === "jeton_invalide") return "le Google Sheet a encore l'ancien jeton : colle le nouveau (menu 💾 Sauvegarde Supabase > 🔐 Coller le jeton).";
+  if (e === "occupe") return "une autre copie est en cours : réessaie dans une minute.";
+  return (r && r.message) || "réponse inattendue du Google Sheet.";
+}
+async function chargerSauvegardes(){
+  if (APP.source !== "live") return;
+  try { APP.sauvegarde = await rpcProf("mc_prof_sauvegardes"); }
+  catch(e) { APP.sauvegarde = { ok:false, absent:!!e.absent, erreur:e.message || "" }; }
+}
+/** Le script du Google Sheet lit la base (avec son jeton) et réécrit ses onglets « 💾 » : 10 à 30 secondes. */
+async function sauvegarderGoogleSheet(origine){
+  if (APP.source !== "live"){ noter("Connecte-toi pour copier ta classe dans le Google Sheet.", "ko"); return; }
+  if (APP.sauvEnCours) return;
+  APP.sauvEnCours = true; render();
+  let r = null, msg = "";
+  try { r = await appelGoogleSheet({ action:"sauvegardeSupabase", origine }); }
+  catch(e) { msg = e.message === "timeout" ? "le Google Sheet n'a pas répondu à temps (la copie continue peut-être : regarde dans une minute)." : "le Google Sheet est injoignable (connexion internet ?)."; }
+  APP.sauvEnCours = false;
+  if (r && r.ok){
+    APP.jetonNouveau = "";
+    const b = r.bilan || {};
+    noter(r.inchange ? "📤 Le Google Sheet était déjà à jour."
+      : `📤 Copie faite dans le Google Sheet${origine === "fin-de-seance" ? " (fin de séance)" : ""}${b.eleves != null ? ` : ${b.eleves} élèves, ${b.journal} lignes de journal` : ""}.`);
+  } else noter("⚠️ Copie dans le Google Sheet impossible : " + esc(msg || messageSauvegarde(r)), "ko");
+  await chargerSauvegardes(); render();
+}
+/** Après la séance (accès fermé) : copie automatique s'il y a du nouveau. Jamais pendant le jeu.
+ *  Seulement une fois l'installation finie (une première copie réussie) et quand tout est calme depuis 45 s. */
+function verifierSauvegardeAuto(){
+  const s = APP.sauvegarde;
+  if (APP.source !== "live" || !APP.config || APP.config.acces || APP.sauvEnCours || !s || !s.ok || !s.jeton || !s.derniereReussie || !CONFIG.GOOGLE_SHEET_URL) return;
+  if (!sauvegardeEnRetard() || APP.sauvAutoTentee === s.derniereActivite || Date.now() - Date.parse(s.derniereActivite) < 45000) return;
+  APP.sauvAutoTentee = s.derniereActivite;   // un seul essai automatique par changement (pas de boucle si le Google Sheet n'est pas prêt)
+  sauvegarderGoogleSheet("fin-de-seance");
+}
+function blocGoogleSheet(){
+  const s = APP.sauvegarde, live = APP.source === "live";
+  let etat, cls = "";
+  if (!live) etat = "Connecte-toi pour voir l'état de la copie.";
+  else if (!s) etat = "État de la copie : chargement…";
+  else if (s.absent){ etat = "Pas encore installée : colle d'abord le fichier SQL 3 dans Supabase, puis le script dans le Google Sheet (guide, partie « Sauvegarde dans le Google Sheet »)."; cls = "attente"; }
+  else if (!s.ok){ etat = "État de la copie indisponible : " + esc(s.erreur); cls = "ko"; }
+  else if (APP.sauvEnCours) etat = `<span class="spin"></span> Copie en cours dans le Google Sheet… (10 à 30 secondes)`;
+  else if (!s.jeton){ etat = "Étape 1 : crée le jeton de sauvegarde (bouton 🔐 ci-dessous), puis colle-le dans le Google Sheet."; cls = "attente"; }
+  else {
+    const r = s.derniereReussie, dern = (s.dernieres || [])[0];
+    etat = r ? `✅ Dernière copie : ${esc(quandLisible(r.le))} (${esc(ORIGINES_SAUV[r.origine] || r.origine)})${r.bilan && r.bilan.eleves != null ? ` · ${r.bilan.eleves} élèves, ${r.bilan.journal} lignes de journal` : ""}.`
+      : "Aucune copie pour l'instant : clique sur 📤.";
+    if (dern && !dern.ok){ etat += `<br>⚠️ Dernier essai raté (${esc(quandLisible(dern.le))}) : ${esc(dern.message)}`; cls = "ko"; }
+    else if (r && sauvegardeEnRetard()){ etat += "<br>⏳ Du nouveau n'est pas encore copié : la copie se fera toute seule quand l'accès sera fermé (ou clique sur 📤)."; cls = "attente"; }
+  }
+  return `<div class="gsheet"><h4>📤 Copie dans le Google Sheet des EQ</h4>
+    <div class="gs-etat ${cls}">${etat}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-main" data-pilot="gsheet" ${!live || APP.sauvEnCours || !s || !s.ok || !s.jeton ? "disabled" : ""}>📤 Sauvegarder dans le Google Sheet</button>
+      <button class="btn btn-ghost" data-pilot="jeton" ${!live || !s || s.absent ? "disabled" : ""}>🔐 Jeton de sauvegarde (Google Sheet)</button></div>
+    ${APP.jetonNouveau ? `<div class="jeton"><b>Ton jeton de sauvegarde</b>. Copie-le maintenant : il ne sera plus affiché (si tu le perds, crée simplement un nouveau jeton).
+      <code id="jetonTxt">${esc(APP.jetonNouveau)}</code>
+      <button class="btn btn-ghost" data-pilot="copierJeton">📋 Copier le jeton</button>
+      <ol><li>Ouvre le Google Sheet des EQ (celui avec les onglets Config, Inscrits, Élèves, Dossiers…).</li><li>Menu <b>💾 Sauvegarde Supabase</b> → <b>🔐 Coller le jeton de sauvegarde…</b></li><li>Colle le jeton (Ctrl+V), puis OK : une première copie se fait.</li></ol></div>` : ""}
+  </div>`;
+}
+
+/** Action du professeur : appel à la base, message, puis rechargement des données. */
+async function actionProf(fn, message){
+  if (APP.source !== "live"){ noter("Connecte-toi pour piloter ta classe (ici : données de démonstration).", "ko"); return null; }
+  if (APP.action) return null;
+  APP.action = true; render();
+  try {
+    const r = await fn(); APP.action = false;
+    if (r && r.config) APP.config = r.config;
+    if (message) noter(typeof message === "function" ? message(r) : message);
+    render(); await charger(true); return r;
+  } catch(e) {
+    APP.action = false; noter("⚠️ " + esc(e.message || "Erreur"), "ko");
+    if (e.reserve || e.session) charger(true); else render(); return null;
+  }
+}
+/** Liste collée (une ligne par élève ; séparateurs : tabulation, point-virgule ou virgule). */
+function lireListeCollee(txt){
+  return String(txt || "").split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => {
+    const c = l.split(/\t|;|,/).map(x => x.trim()).filter(Boolean), email = (c.find(x => x.includes("@")) || "").toLowerCase(), reste = c.filter(x => !x.includes("@"));
+    const p = email.split("@")[0].split(".");
+    return { email, prenom:reste[0] || capitaliser(p[0] || ""), nom:reste[1] || p.slice(1).map(capitaliser).join(" "), classe:reste[2] || "" };
+  }).filter(x => x.email);
+}
+function exporterCSV(){
+  const sep = ";", cell = (v) => { const s = String(v ?? ""); return /[;"\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const nb = (v) => v == null || v === "" || isNaN(v) ? "" : String(Math.round(+v * 100) / 100).replace(".", ",");
+  const statut = (l, m) => { const x = missionDe(l, m); return x ? (LIB_STATUT[x.statut] || ["", x.statut || ""])[1] : ""; };
+  const entetes = ["E-mail","Prénom","Nom","Classe","Dans la liste","Entreprise","Activité","Stratégie","Forme","Commune","Capital (€)","Emprunt (€)",
+    "Mission 1","Mission 2","Mission 3","XP total","Trésorerie après la mission 2 (€)","Chiffre d'affaires HT de la mission 3 (€)","Résultat du mois, mission 3 (€)"];
+  const lignes = lignesPilotage().map(l => {
+    const d = l.dossier || {}, e = d.entreprise || {}, fi = e.financement || {}, ms = d.missions || {}, m2 = ms["2"] || {}, m3 = ms["3"] || {};
+    const t = TYPES.find(x => x.id === e.typeId), s = STRATEGIES.find(x => x.id === (e.strategie || {}).id);
+    const xp = l.dossier ? Object.values(ms).reduce((n, m) => n + (+m.xp || 0), 0) : "";
+    const ca = (m3.entreprise && m3.entreprise.ventesDuMois) ? m3.entreprise.ventesDuMois.chiffreAffairesHT : null, res = m3.compteResultats ? m3.compteResultats.resultat : null;
+    return [l.email, l.prenom, l.nom, l.classe, l.inscrit ? "oui" : "non", e.denomination || e.nom || "", t ? t.nom : "", s ? s.nom : "", e.formeCourte || e.forme || "", (e.adresse || {}).commune || "",
+      nb(fi.capital != null ? fi.capital : (e.argent || {}).argentDeDepart), nb(fi.emprunt), statut(l, "1"), statut(l, "2"), statut(l, "3"), xp,
+      nb(m2.entreprise ? m2.entreprise.tresorerie : null), nb(ca), nb(res)].map(cell).join(sep);
+  });
+  telecharger("﻿" + [entetes.map(cell).join(sep)].concat(lignes).join("\r\n"), `eleves-mini-entreprise-eq-${dateFichier()}.csv`, "text/csv;charset=utf-8");
+}
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("button"); if (!b || APP.vue !== "pilotage" || !APP.source) return;
+  const nomDe = (email) => { const l = lignesPilotage().find(x => x.email === email); return l ? `${l.prenom} ${l.nom}`.trim() || email : email; };
+  if (b.dataset.duree){ APP.duree = b.dataset.duree; render(); return; }
+  if (b.dataset.mission){
+    const m = b.dataset.mission, cur = (APP.config && APP.config.missionsOuvertes) || [], ouverte = cur.includes(m);
+    const nv = ouverte ? cur.filter(x => x !== m) : cur.concat([m]).sort();
+    await actionProf(() => rpcProf("mc_prof_reglages", { p_reglages:{ missionsOuvertes:nv } }), `Mission ${m} ${ouverte ? "fermée" : "ouverte"}.`); return;
+  }
+  if (b.dataset.reinit){
+    const email = b.dataset.reinit, m = b.dataset.m, x = missionDe(lignesPilotage().find(l => l.email === email) || {}, m) || {};
+    if (!confirm(`Rouvrir la mission ${m} de ${nomDe(email)} ?\n\nÉtat actuel : ${(LIB_STATUT[x.statut] || ["", x.statut || "?"])[1]}.\nSon travail est archivé (rien n'est perdu) et ses choix seront préremplis : il ou elle pourra les modifier.`)) return;
+    await actionProf(() => rpcProf("mc_prof_reinitialiser", { p_email:email, p_mission:m }), `🔄 Mission ${m} rouverte pour ${esc(nomDe(email))}.`); return;
+  }
+  if (b.dataset.suppr){
+    const email = b.dataset.suppr, rep = prompt(`Supprimer le dossier de ${nomDe(email)} (${email}) ?\nÀ utiliser pour les comptes de test. Une copie complète reste dans le journal de la base.\n\nÉcris SUPPRIMER pour confirmer :`);
+    if ((rep || "").trim().toUpperCase() !== "SUPPRIMER") return;
+    await actionProf(() => rpcProf("mc_prof_supprimer_dossier", { p_email:email }), `🗑️ Dossier de ${esc(nomDe(email))} supprimé.`); return;
+  }
+  if (b.dataset.desinscrire){
+    const email = b.dataset.desinscrire;
+    if (!confirm(`Retirer ${nomDe(email)} (${email}) de la liste de la classe ?\nSon dossier, lui, est gardé.`)) return;
+    await actionProf(() => rpcProf("mc_prof_inscrit_retirer", { p_email:email }), `${esc(email)} retiré de la liste.`); return;
+  }
+  switch (b.dataset.pilot){
+    case "ouvrir": await actionProf(() => rpcProf("mc_prof_ouvrir", { p_duree:APP.duree || (APP.config && APP.config.duree) || "2h" }),
+      r => `🟢 Accès ouvert ${r && r.config && r.config.expiration ? "jusqu'à " + heure(new Date(r.config.expiration)) : "sans limite de temps (pense à le fermer)"}.`); break;
+    case "fermer": await actionProf(() => rpcProf("mc_prof_fermer"), "🔴 Accès fermé : les élèves ne peuvent plus rien modifier."); break;
+    case "max": {
+      const v = Number(($("#pmax") || {}).value);
+      if (!Number.isInteger(v) || v < 0 || v > 99){ noter("Écris un nombre entier entre 0 et 99.", "ko"); return; }
+      await actionProf(() => rpcProf("mc_prof_reglages", { p_reglages:{ max:v } }), v ? `Maximum : ${v} élèves par activité.` : "Plus de limite par activité."); break;
+    }
+    case "inscrits": {
+      const nv = !(APP.config && APP.config.inscritsObligatoire);
+      if (nv && !(APP.inscrits || []).length && !confirm("La liste de la classe est vide : plus aucun élève ne pourra travailler. Continuer ?")) return;
+      await actionProf(() => rpcProf("mc_prof_reglages", { p_reglages:{ inscritsObligatoire:nv } }), nv ? "Seuls les élèves de la liste peuvent travailler." : "Toute adresse @istlm.org peut travailler."); break;
+    }
+    case "ajouter": {
+      const liste = lireListeCollee(($("#pinscrits") || {}).value);
+      if (!liste.length){ noter("Colle au moins une adresse e-mail (une ligne par élève).", "ko"); return; }
+      const r = await actionProf(() => rpcProf("mc_prof_inscrits_ajouter", { p_liste:liste }),
+        r => `${r.ajoutes} élève${r.ajoutes > 1 ? "s" : ""} ajouté${r.ajoutes > 1 ? "s" : ""}, ${r.misAJour} mis à jour${r.refuses && r.refuses.length ? ` · refusé (adresse non valide) : ${esc(r.refuses.join(", "))}` : ""}.`);
+      if (r){ APP.brouillon = ""; render(); }
+      break;
+    }
+    case "export": {
+      if (APP.source !== "live"){ noter("Connecte-toi pour télécharger la sauvegarde.", "ko"); return; }
+      try { const r = await rpcProf("mc_prof_export"); telecharger(JSON.stringify(r, null, 2), `sauvegarde-mini-entreprise-eq-${dateFichier()}.json`, "application/json"); noter("💾 Sauvegarde téléchargée."); }
+      catch(err) { noter("⚠️ " + esc(err.message), "ko"); }
+      break;
+    }
+    case "csv": exporterCSV(); noter("📊 Tableau des élèves téléchargé (s'ouvre avec Excel)."); break;
+    case "gsheet": await sauvegarderGoogleSheet("console"); break;
+    case "jeton": {
+      if (APP.source !== "live"){ noter("Connecte-toi pour créer le jeton de sauvegarde.", "ko"); return; }
+      if (APP.sauvegarde && APP.sauvegarde.jeton && !confirm("Créer un nouveau jeton de sauvegarde ?\n\nL'ancien ne marchera plus : il faudra coller le nouveau dans le Google Sheet (menu 💾 Sauvegarde Supabase > 🔐 Coller le jeton).")) return;
+      try { const r = await rpcProf("mc_prof_creer_jeton_sauvegarde"); APP.jetonNouveau = r.jeton; await chargerSauvegardes(); render(); noter("🔐 Jeton créé : copie-le, puis colle-le dans le Google Sheet."); }
+      catch(err) { noter("⚠️ " + esc(err.absent ? "La sauvegarde n'est pas encore installée dans la base : colle d'abord le fichier SQL 3 dans Supabase." : err.message), "ko"); }
+      break;
+    }
+    case "copierJeton": {
+      try { await navigator.clipboard.writeText(APP.jetonNouveau); noter("📋 Jeton copié : colle-le dans le Google Sheet (Ctrl+V)."); }
+      catch(err) {
+        const c = $("#jetonTxt"), sel = window.getSelection();
+        if (c && sel){ const rg = document.createRange(); rg.selectNodeContents(c); sel.removeAllRanges(); sel.addRange(rg); }
+        noter("Le jeton est sélectionné : appuie sur Ctrl+C pour le copier.", "ko");
+      }
+      break;
+    }
+  }
+});
+
+// ======================================================================
 //  COQUILLE : menu, barre du haut, connexion
 // ======================================================================
 function rail(){
   return `<nav class="rail" aria-label="Menu"><div class="brand"><div class="lg">SL</div><div><b>Mini-entreprises</b><small>Console professeur · Technicien en comptabilité</small></div></div>
     ${VUES.map(v => v[0] === "sep" ? `<div class="navlab">${v[1]}</div>` : `<button class="nv ${APP.vue === v[0] ? "on" : ""}" data-vue="${v[0]}"><span class="i">${v[1]}</span>${v[2]}</button>`).join("")}
-    <div class="foot">Mission 1 · version 4<br>Données : ${APP.source === "demo" ? "démonstration" : "Google Sheet"}</div></nav>`;
+    <div class="foot">Missions 1, 2 et 3<br>Données : ${APP.source === "demo" ? "démonstration" : "base de l'école (Supabase)"}</div></nav>`;
+}
+/** État de l'accès des élèves, en clair (pour la barre du haut et le pilotage). */
+function etatAcces(){
+  const c = APP.config; if (!c) return { ouvert:false, txt:"Accès : inconnu" };
+  if (c.acces) return { ouvert:true, txt: c.expiration ? `Accès ouvert jusqu'à ${heure(new Date(c.expiration))}` : "Accès ouvert sans limite" };
+  if (c.verrouActif && c.expiration) return { ouvert:false, expire:true, txt:`Accès refermé à ${heure(new Date(c.expiration))}` };
+  return { ouvert:false, txt:"Accès fermé" };
+}
+/** Les classes connues (liste de la classe et dossiers), pour le filtre. */
+function classesConnues(){
+  const n = {};
+  (APP.inscrits || []).forEach(i => { if (i.classe) n[i.classe] = (n[i.classe] || 0) + 1; });
+  APP.tous.forEach(E => { if (E.classe && !(APP.inscrits || []).some(i => i.email === E.email)) n[E.classe] = (n[E.classe] || 0) + 1; });
+  return Object.entries(n).sort((a, b) => a[0].localeCompare(b[0], "fr"));
 }
 function topbar(){
   const quand = APP.maj ? (APP.maj.toDateString() === new Date().toDateString() ? heure(APP.maj) : APP.maj.toLocaleDateString("fr-BE") + " " + heure(APP.maj)) : "";
   const s = APP.source === "demo" ? `<span class="dot demo"></span>Données de démonstration (16 élèves fictifs)`
     : APP.err ? `<span class="dot off"></span>${esc(APP.err)}${quand ? " · données de " + quand : ""}`
     : APP.busy ? `<span class="spin"></span> Actualisation…${quand ? " · données de " + quand : ""}`
-    : `<span class="dot"></span>En direct du Google Sheet${quand ? " · mis à jour à " + quand : ""}`;
+    : `<span class="dot"></span>En direct de la base${quand ? " · mis à jour à " + quand : ""}`;
+  const a = etatAcces(), classes = classesConnues();
   return `<div class="topbar"><div class="src">${s}</div>
+    ${APP.source === "live" ? `<button class="acces-chip ${a.ouvert ? "on" : ""}" data-vue="pilotage" title="Ouvrir ou fermer l'accès : vue ⚙️ Pilotage">${a.ouvert ? "🟢" : "🔴"} ${esc(a.txt)}</button>` : ""}
+    ${classes.length > 1 ? `<select class="inp sel-classe" id="selClasse" aria-label="Classe affichée"><option value="">Toutes les classes</option>${classes.map(([c, n]) => `<option value="${esc(c)}" ${APP.classe === c ? "selected" : ""}>${esc(c)} (${n})</option>`).join("")}</select>` : ""}
     <div class="tb-r">
       ${APP.source === "live" ? `<button class="btn btn-ghost ${APP.auto ? "on" : ""}" data-act="auto" title="Actualiser toutes les ${CONFIG.AUTO_REFRESH_S} secondes">${APP.auto ? "⏱️ Auto : oui" : "⏱️ Auto : non"}</button>
         <button class="btn btn-ghost" data-act="refresh">${APP.busy ? `<span class="spin"></span>` : "🔄"} Actualiser</button>` : ""}
@@ -1119,52 +1965,104 @@ function gate(){
   return `<main style="grid-column:1/-1"><div class="gate card fade-in">
     <div class="kick">Console professeur · Institut Saint-Luc de Frameries</div>
     <h2>Les entreprises de <span class="grad">ta classe</span></h2>
-    <p style="color:var(--muted)">Entre la clé professeur (la valeur de <b style="color:var(--text)">CLE_PROF</b> dans l'onglet « Config » de ton Google Sheet). Elle reste enregistrée sur cet ordinateur.</p>
-    <label for="cle">Clé professeur</label><input class="inp" id="cle" type="password" value="${esc(APP.cle)}" autocomplete="off" spellcheck="false">
+    <p style="color:var(--muted)">Connecte-toi avec le <b style="color:var(--text)">compte professeur</b> : le même que pour la console de la JPO et des 3P (même adresse, même code). L'adresse reste retenue sur cet ordinateur.</p>
+    <label for="pmail">Adresse e-mail du compte professeur</label><input class="inp" id="pmail" type="email" value="${esc(APP.email)}" autocomplete="username" spellcheck="false">
+    <label for="pcode">Code professeur</label><input class="inp" id="pcode" type="password" autocomplete="current-password">
     ${APP.err ? `<div class="err">${esc(APP.err)}</div>` : ""}
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
-      <button class="btn btn-main" data-act="login">${APP.busy ? `<span class="spin"></span> Connexion…` : "Se connecter"}</button>
+      <button class="btn btn-main" data-act="login" ${APP.busy ? "disabled" : ""}>${APP.busy ? `<span class="spin"></span> Connexion…` : "Se connecter"}</button>
       <button class="btn btn-ghost" data-act="demo">✨ Voir avec des données de démonstration</button></div>
   </div></main>`;
 }
 function render(){
   const app = $("#app");
-  if (!APP.source){ app.innerHTML = gate(); const c = $("#cle"); if (c) c.focus(); return; }
+  APP.renduEnAttente = false;
+  if (!APP.source){ app.innerHTML = gate(); const c = $(APP.email ? "#pcode" : "#pmail"); if (c) c.focus(); return; }
+  if (APP.source === "chargement"){ app.innerHTML = `<main style="grid-column:1/-1"><div class="gate card fade-in"><div class="kick">Console professeur</div><h2><span class="spin"></span> Chargement de ta classe…</h2><p class="help">Connexion à la base de l'école.</p>${APP.err ? `<div class="err">${esc(APP.err)}</div>` : ""}</div></main>`; return; }
+  if (!V[APP.vue]) APP.vue = "pilotage";
   app.innerHTML = rail() + `<main>${topbar()}<div id="vue">${V[APP.vue]()}</div></main>`;
+}
+/** Actualisation silencieuse : si le professeur est en train d'écrire dans un champ, on attend qu'il en sorte. */
+function renduSilencieux(){
+  const a = document.activeElement;
+  if (a && ["INPUT", "TEXTAREA", "SELECT"].includes(a.tagName) && a.id !== "selClasse"){ APP.renduEnAttente = true; return; }
+  render();
 }
 
 // ======================================================================
-//  DONNÉES : Google Sheet, cache local, démonstration
+//  DONNÉES : base Supabase, cache local, démonstration
 // ======================================================================
-const CLE_CACHE = "mini-entreprise-compta-prof-cache-v4";
-function appliquerDonnees(r, maj){
-  APP.liste = (r.dossiers || []).map(d => { try { return normaliser(d); } catch(e) { return null; } }).filter(Boolean)
-    .sort((a, b) => (a.nomEleve + a.prenom).localeCompare(b.nomEleve + b.prenom, "fr"));
-  APP.config = r.config || null; APP.maj = maj || new Date();
-  try { localStorage.setItem(CLE_CACHE, JSON.stringify({ r, maj: APP.maj.toISOString() })); } catch(e) {}
+const CLE_CACHE = "mini-entreprise-compta-prof-cache-v5";
+/** Applique le filtre de classe en gardant à l'écran le même élève (par son adresse, pas par sa position). */
+function filtrerClasse(){
+  const avant = (avecEntreprise()[APP.idx] || {}).email, avantBilan = (avecFinancement()[APP.exBilan] || {}).email;
+  if (APP.classe && !classesConnues().some(([c]) => c === APP.classe)) APP.classe = "";
+  APP.liste = APP.tous.filter(E => !APP.classe || E.classe === APP.classe);
+  const i = avant ? avecEntreprise().findIndex(E => E.email === avant) : -1; APP.idx = i >= 0 ? i : 0;
+  const j = avantBilan ? avecFinancement().findIndex(E => E.email === avantBilan) : -1; APP.exBilan = j >= 0 ? j : 0;
 }
-async function charger(premiere){
+function appliquerDonnees(r, maj){
+  APP.brut = r.dossiers || []; APP.inscrits = r.inscrits || []; APP.config = r.config || null; APP.maj = maj || new Date();
+  APP.tous = (r.dossiers || []).map(d => { try { return nettoyer(normaliser(d)); } catch(e) { return null; } }).filter(Boolean)
+    .sort((a, b) => (a.nomEleve + a.prenom).localeCompare(b.nomEleve + b.prenom, "fr"));
+  filtrerClasse();
+}
+/** Connexion avec le compte professeur (Supabase Auth, le même que pour la JPO et les 3P). */
+async function connecter(){
+  const email = (($("#pmail") || {}).value || "").trim().toLowerCase(), code = ($("#pcode") || {}).value || "";
+  if (!email || !code){ APP.err = "Écris l'adresse e-mail et le code du compte professeur."; render(); return; }
+  if (!sb){ APP.err = "La bibliothèque Supabase n'a pas pu se charger : vérifie la connexion internet, puis recharge la page."; render(); return; }
+  APP.busy = true; APP.err = ""; APP.email = email; render();
+  let error = null;
+  try { ({ error } = await sb.auth.signInWithPassword({ email, password:code })); } catch(e) { error = e; }
+  APP.busy = false;
+  if (error){ APP.err = /invalid/i.test(error.message || "") ? "Adresse ou code incorrect." : "Connexion impossible : " + (error.message || "réseau"); render(); return; }
+  try { localStorage.setItem(CONFIG.EMAIL_STOCKAGE, email); } catch(e) {}
+  APP.source = "chargement"; APP.vue = "pilotage"; render();
+  await charger(); planifier();
+}
+/** Chargement : les dernières données restent affichées si la base ne répond pas. */
+async function charger(silencieux){
+  if (!sb){ APP.err = "La bibliothèque Supabase n'a pas pu se charger : vérifie la connexion internet, puis recharge la page."; APP.source = null; render(); return; }
   if (APP.busy) return;
-  APP.busy = true; APP.err = ""; render();
+  APP.busy = true; if (!silencieux) render();
   try {
-    const r = await jsonp({ action:"eleves", cle:APP.cle }, 45000);
-    if (!r || !r.ok){ APP.busy = false; APP.err = r && r.erreur === "cle_invalide" ? "Clé professeur incorrecte." : "Réponse inattendue du Google Sheet."; if (premiere){ APP.source = null; } render(); return; }
-    appliquerDonnees(r, new Date());
-    try { localStorage.setItem(CONFIG.CLE_STOCKAGE, APP.cle); } catch(e) {}
-    APP.source = "live"; APP.busy = false; render();
+    const [r, s] = await Promise.all([rpcProf("mc_prof_tableau"), rpcProf("mc_prof_sauvegardes").catch(e => ({ ok:false, absent:!!e.absent, erreur:e.message || "" }))]);
+    APP.busy = false; APP.err = ""; APP.sauvegarde = s;
+    try { localStorage.setItem(CLE_CACHE, JSON.stringify({ maj:Date.now(), dossiers:r.dossiers, config:r.config, inscrits:r.inscrits })); } catch(e) {}
+    APP.source = "live"; appliquerDonnees(r, new Date());
+    if (silencieux) renduSilencieux(); else render();
+    verifierSauvegardeAuto();
   } catch(e) {
     APP.busy = false;
-    const cache = (() => { try { return JSON.parse(localStorage.getItem(CLE_CACHE) || "null"); } catch(x) { return null; } })();
-    if (premiere && cache){ appliquerDonnees(cache.r, new Date(cache.maj)); APP.source = "live"; APP.err = "Google ne répond pas : données du dernier chargement"; render(); return; }
-    APP.err = premiere ? "" : "Google ne répond pas : données précédentes conservées";
-    if (premiere){ APP.source = null; APP.err = e.message === "timeout" ? "Le Google Sheet ne répond pas (délai dépassé). Réessaie dans quelques secondes." : "Impossible de joindre le Google Sheet. Vérifie ta connexion."; }
+    if (e.absent){
+      APP.err = "La base de la mini-entreprise n'est pas encore installée : colle d'abord les fichiers SQL 1 puis 2 dans Supabase (SQL Editor), comme expliqué dans le guide.";
+      APP.source = null; APP.liste = []; APP.tous = []; APP.brut = null; clearInterval(TIMER); render(); return;
+    }
+    if (e.reserve || e.session){
+      APP.err = e.reserve ? "Ce compte n'est pas autorisé : il doit être dans la liste des professeurs (table « profs » de Supabase)." : "Ta connexion a expiré : reconnecte-toi.";
+      try { await sb.auth.signOut(); localStorage.removeItem(CLE_CACHE); } catch(x) {}
+      APP.source = null; APP.liste = []; APP.tous = []; APP.brut = null; clearInterval(TIMER); render(); return;
+    }
+    if (APP.tous.length && APP.source === "live") APP.err = "La base ne répond pas : affichage des dernières données reçues. Nouvel essai automatique.";
+    else { APP.err = "Impossible de joindre la base de données pour l'instant. Vérifie la connexion internet, puis réessaie."; APP.source = null; }
     render();
   }
 }
 let TIMER = null;
 function planifier(){
   clearInterval(TIMER);
-  TIMER = setInterval(() => { if (APP.source === "live" && APP.auto && !document.hidden) charger(false); }, CONFIG.AUTO_REFRESH_S * 1000);
+  TIMER = setInterval(() => { if (APP.source === "live" && APP.auto && !document.hidden) charger(true); }, CONFIG.AUTO_REFRESH_S * 1000);
+}
+/** Démarrage : si le professeur est déjà connecté sur cet ordinateur, on affiche tout de suite ses données. */
+async function demarrer(){
+  if (!sb){ APP.err = "La bibliothèque Supabase n'a pas pu se charger : vérifie la connexion internet, puis recharge la page."; render(); return; }
+  let session = null;
+  try { session = (await sb.auth.getSession()).data.session; } catch(e) {}
+  if (!session){ render(); return; }
+  try { const c = JSON.parse(localStorage.getItem(CLE_CACHE) || "null"); if (c && c.dossiers){ APP.source = "live"; appliquerDonnees(c, new Date(c.maj)); } } catch(e) {}
+  if (APP.source !== "live") APP.source = "chargement";
+  render(); await charger(true); planifier();
 }
 function demo(){
   let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280, pick = (a) => a[Math.floor(rnd() * a.length)];
@@ -1212,6 +2110,7 @@ function demo(){
 //  ÉVÉNEMENTS
 // ======================================================================
 function ouvrir(email){
+  if (APP.classe && !avecEntreprise().some(E => E.email === email) && APP.tous.some(E => E.email === email)){ APP.classe = ""; filtrerClasse(); }   // élève d'une autre classe : on montre toutes les classes
   const L = avecEntreprise(), i = L.findIndex(E => E.email === email);
   if (i >= 0){ APP.idx = i; APP.vue = "eleve"; render(); window.scrollTo({top:0, behavior:"smooth"}); }
 }
@@ -1223,27 +2122,912 @@ document.addEventListener("click", (e) => {
   if (b.dataset.open){ ouvrir(b.dataset.open); return; }
   if (b.dataset.nav){ const L = avecEntreprise(); APP.idx = (APP.idx + +b.dataset.nav + L.length) % L.length; render(); return; }
   switch (b.dataset.act){
-    case "login": { const c = $("#cle"); APP.cle = (c ? c.value : APP.cle).trim(); if (!APP.cle){ APP.err = "Entre la clé professeur."; render(); return; } APP.source = "live"; charger(true); planifier(); break; }
-    case "demo": APP.source = "demo"; APP.liste = demo(); APP.config = null; APP.maj = new Date(); APP.err = ""; render(); break;
+    case "login": if (!APP.busy) connecter(); break;
+    case "demo": clearInterval(TIMER); APP.source = "demo"; APP.tous = demo(); APP.brut = null; APP.inscrits = []; APP.config = null; APP.sauvegarde = null; APP.maj = new Date(); APP.err = ""; filtrerClasse(); render(); break;
     case "refresh": charger(false); break;
     case "auto": APP.auto = !APP.auto; render(); break;
     case "projo": document.body.classList.toggle("projo"); render(); break;
-    case "deco": clearInterval(TIMER); APP.source = null; APP.liste = []; APP.err = ""; APP.busy = false; render(); break;
+    case "deco": {
+      clearInterval(TIMER);
+      const etaitConnecte = APP.source === "live";
+      APP.source = null; APP.liste = []; APP.tous = []; APP.brut = null; APP.inscrits = []; APP.config = null; APP.sauvegarde = null; APP.jetonNouveau = ""; APP.err = ""; APP.busy = false; render();
+      if (etaitConnecte && sb) sb.auth.signOut().catch(() => {}).then(() => { try { localStorage.removeItem(CLE_CACHE); } catch(x) {} });
+      break;
+    }
   }
 });
 document.addEventListener("change", (e) => {
   if (e.target.id === "selEleve"){ APP.idx = +e.target.value; render(); }
   if (e.target.id === "selBilan"){ APP.exBilan = +e.target.value; render(); }
+  if (e.target.id === "selClasse"){ APP.classe = e.target.value; try { localStorage.setItem(CONFIG.CLASSE_STOCKAGE, APP.classe); } catch(x) {} filtrerClasse(); render(); }
 });
+document.addEventListener("input", (e) => { if (e.target.id === "pinscrits") APP.brouillon = e.target.value; });
+document.addEventListener("focusout", () => { setTimeout(() => { if (APP.renduEnAttente) renduSilencieux(); }, 0); });
 document.addEventListener("keydown", (e) => {
-  if (e.target.id === "cle" && e.key === "Enter"){ const b = $('[data-act="login"]'); if (b) b.click(); }
+  if ((e.target.id === "pmail" || e.target.id === "pcode") && e.key === "Enter"){ const b = $('[data-act="login"]'); if (b && !b.disabled) b.click(); }
   if (APP.vue === "eleve" && APP.source && !["INPUT","SELECT"].includes(e.target.tagName)){
     if (e.key === "ArrowRight"){ const b = $('[data-nav="1"]'); if (b) b.click(); }
     if (e.key === "ArrowLeft"){ const b = $('[data-nav="-1"]'); if (b) b.click(); }
   }
 });
-document.addEventListener("visibilitychange", () => { if (!document.hidden && APP.source === "live" && APP.auto) charger(false); });
-render();
+document.addEventListener("visibilitychange", () => { if (!document.hidden && APP.source === "live" && APP.auto) charger(true); });
+demarrer();
+</script>
+<script id="kit-realiste-js">
+// ═══ KIT RÉALISTE COMMUN v1, version EQ — début (identique dans les missions 1, 2 et 3 : ne pas modifier ici, modifier outils/kit-realiste-eq) ═══
+// Sons de synthèse (aucun fichier), décor de ville, avatar du coach, objets réalistes (carte bancaire, camion, colis,
+// code-barres, QR code), animations qui ne se rejouent pas à chaque clic. Tous les noms et numéros sont fictifs.
+const KIT = (() => {
+  const kesc = (t) => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const hashK = (s) => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+  const rnd = (seed) => () => { seed = (Math.imul(seed ^ (seed >>> 15), 2246822507) + 0x9e3779b9) >>> 0; return (seed % 100000) / 100000; };
+  const calme = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ─── Coach Max : avatar dessiné (pas d'identifiants SVG : on peut l'afficher plusieurs fois) ───
+  const avatarMax = `<svg viewBox="0 0 64 64" aria-hidden="true">
+    <path d="M7 64c2.5-12.5 12-18.5 25-18.5S54.5 51.5 57 64z" fill="#22305f"/>
+    <path d="M24.5 46.2 32 55l7.5-8.8c-2.3-.6-4.8-.9-7.5-.9s-5.2.3-7.5.9z" fill="#fff"/>
+    <path d="M30.6 49.5h2.8l.9 2.2-1.2 8.8h-2.2l-1.2-8.8z" fill="#ff5a4e"/>
+    <path d="M18 64l6.5-17.8 4.2 5.3L24 64zM46 64l-6.5-17.8-4.2 5.3L40 64z" fill="#2c3d78"/>
+    <rect x="27" y="37.5" width="10" height="10" rx="4.5" fill="#e3aa7f"/>
+    <ellipse cx="20.3" cy="29.5" rx="2.6" ry="3.6" fill="#e9b488"/><ellipse cx="43.7" cy="29.5" rx="2.6" ry="3.6" fill="#e9b488"/>
+    <ellipse cx="32" cy="28.5" rx="12" ry="13.6" fill="#f3c59b"/>
+    <path d="M20.2 27.2c-1.6-9.6 4.6-15.4 12.1-15.4 8.6 0 13.6 5.4 11.6 14.6-1.1-3.4-3.3-5.9-6.4-7.2-4.4 2.4-10.7 2.9-14.8 1.7-1.3 1.7-2.1 3.8-2.5 6.3z" fill="#3a2719"/>
+    <path d="M24.8 24.6q2.6-1.7 5.2-.1M34 24.5q2.6-1.6 5.2.1" stroke="#3a2719" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="27.6" cy="28.8" rx="1.6" ry="1.8" fill="#2a1b12"/><ellipse cx="36.4" cy="28.8" rx="1.6" ry="1.8" fill="#2a1b12"/>
+    <circle cx="28.1" cy="28.2" r=".55" fill="#fff"/><circle cx="36.9" cy="28.2" r=".55" fill="#fff"/>
+    <path d="M30.9 30.6q1.1 1.9 2.2 0" stroke="#d99a72" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <path d="M26.6 34.3q5.4 4.6 10.8 0" stroke="#9b4637" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+    <path d="M20.6 31.4c.9 8.2 6 11.5 11.4 11.5s10.5-3.3 11.4-11.5c-1.4 4.2-4.6 6.6-11.4 6.6s-10-2.4-11.4-6.6z" fill="#3a2719" opacity=".2"/>
+  </svg>`;
+
+  // ─── Sons de synthèse ───
+  const SON = (() => {
+    let ctx = null, master = null, actif = true;
+    try { actif = localStorage.getItem("mini-entreprise-compta-son") !== "non"; } catch(e) {}
+    const ac = () => {
+      if (!ctx){ const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; ctx = new C(); master = ctx.createGain(); master.gain.value = .55; master.connect(ctx.destination); }
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
+      return ctx;
+    };
+    function note(freq, debut, duree, type, vol, glisse){
+      const c = ac(); if (!c) return;
+      const t = c.currentTime + debut, o = c.createOscillator(), g = c.createGain();
+      o.type = type || "sine"; o.frequency.setValueAtTime(freq, t); if (glisse) o.frequency.exponentialRampToValueAtTime(glisse, t + duree);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .12, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + duree);
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + duree + .05);
+    }
+    function bruit(debut, duree, filtre, freq, vol, freqFin){
+      const c = ac(); if (!c) return;
+      const t = c.currentTime + debut, n = Math.max(1, Math.floor(c.sampleRate * duree)), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      s.buffer = buf; f.type = filtre; f.frequency.setValueAtTime(freq, t); if (freqFin) f.frequency.exponentialRampToValueAtTime(freqFin, t + duree);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .15, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + duree);
+      s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + duree + .02);
+    }
+    const SONS = {
+      clic:    () => note(1500, 0, .035, "sine", .05),
+      succes:  () => { note(1047, 0, .13, "triangle", .11); note(1319, .1, .2, "triangle", .11); },
+      xp:      () => [1047, 1319, 1568, 2093].forEach((f, i) => note(f, i * .055, .11, "triangle", .07)),
+      tampon:  () => { bruit(0, .11, "lowpass", 320, .45); note(92, 0, .17, "sine", .32); },
+      caisse:  () => { bruit(0, .045, "highpass", 2800, .1); note(2637, .05, .55, "sine", .09); note(3520, .05, .45, "sine", .06); note(1760, .06, .3, "triangle", .04); },
+      notif:   () => { note(1568, 0, .14, "sine", .11); note(2093, .12, .24, "sine", .11); },
+      envoi:   () => bruit(0, .38, "bandpass", 500, .14, 2600),
+      camion:  () => { note(392, 0, .15, "square", .035); note(392, .21, .22, "square", .035); },
+      papier:  () => { bruit(0, .09, "highpass", 2200, .08); bruit(.1, .12, "highpass", 1700, .07); },
+      erreur:  () => { note(233, 0, .16, "sine", .13); note(174, .12, .24, "sine", .12); },
+      fanfare: () => [523, 659, 784, 1047, 1319].forEach((f, i) => note(f, i * .1, i === 4 ? .6 : .14, "triangle", .1)),
+      bip:     () => note(1046, 0, .11, "square", .035),
+      porte:   () => { note(1319, 0, .5, "sine", .09); note(1047, .32, .7, "sine", .09); },
+      touche:  () => note(1180, 0, .05, "square", .025)
+    };
+    let bouton = null;
+    const majBouton = () => { if (!bouton) return; bouton.textContent = actif ? "🔊" : "🔇"; bouton.setAttribute("aria-pressed", String(actif)); bouton.title = actif ? "Couper le son" : "Activer le son"; };
+    return {
+      get actif(){ return actif; },
+      jouer(nom){ if (!actif) return; try { (SONS[nom] || SONS.clic)(); } catch(e) {} },
+      basculer(){ actif = !actif; try { localStorage.setItem("mini-entreprise-compta-son", actif ? "oui" : "non"); } catch(e) {} majBouton(); if (actif) SONS.succes(); },
+      installerBouton(){
+        const zone = document.querySelector("header .right") || document.querySelector("header .top-in"); if (!zone || document.getElementById("kitSon")) return;
+        bouton = document.createElement("button"); bouton.id = "kitSon"; bouton.type = "button"; bouton.className = "kit-son";
+        bouton.addEventListener("click", (e) => { e.stopPropagation(); SON.basculer(); });
+        zone.appendChild(bouton); majBouton();
+      }
+    };
+  })();
+
+  // ─── Décor : silhouette de la ville le soir, fenêtres allumées ───
+  function decor(){
+    const mesh = document.querySelector(".mesh"); if (!mesh || mesh.querySelector(".kit-skyline")) return;
+    const r = rnd(20261026), W = 1600, H = 320; let x = 0, imm = "", fen = "";
+    while (x < W){
+      const w = 50 + Math.floor(r() * 90), h = 70 + Math.floor(r() * 190), y = H - h, teinte = ["#0f0c26","#120e2d","#0c0a20","#151132"][Math.floor(r() * 4)];
+      imm += `<rect x="${x}" y="${y}" width="${w - 3}" height="${h}" fill="${teinte}"/>`;
+      if (r() < .25) imm += `<rect x="${x + w / 2 - 2}" y="${y - 18}" width="3" height="18" fill="${teinte}"/>`;
+      for (let fy = y + 12; fy < H - 14; fy += 15) for (let fx = x + 8; fx < x + w - 14; fx += 13)
+        if (r() < .16) fen += `<rect x="${fx}" y="${fy}" width="6" height="8" fill="${r() < .75 ? "#ffd58a" : "#9fd8ff"}" opacity="${(.25 + r() * .5).toFixed(2)}"/>`;
+      x += w;
+    }
+    mesh.insertAdjacentHTML("beforeend", `<svg class="kit-skyline" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${imm}${fen}</svg>`);
+  }
+
+  // ─── Les animations d'arrivée ne se rejouent pas quand l'écran est redessiné (clic sur une option…) ───
+  const dejaVus = new Set();
+  function surveiller(){
+    const marquer = (el) => { const id = el.getAttribute("data-anim"); if (!id) return; if (dejaVus.has(id)) el.classList.add("kit-deja-vu"); else dejaVus.add(id); };
+    new MutationObserver((liste) => liste.forEach(m => m.addedNodes.forEach(n => {
+      if (n.nodeType !== 1) return;
+      if (n.matches && n.matches("[data-anim]")) marquer(n);
+      n.querySelectorAll && n.querySelectorAll("[data-anim]").forEach(marquer);
+    }))).observe(document.body, { childList:true, subtree:true });
+  }
+
+  // ─── Code-barres et QR code (décoratifs, générés à partir d'un texte) ───
+  function codeBarres(texte, h){
+    h = h || 40; const r = rnd(hashK(texte)); let x = 0, barres = "";
+    barres += `<rect x="0" y="0" width="2" height="${h}"/><rect x="3" y="0" width="1" height="${h}"/>`; x = 6;
+    while (x < 150){ const w = 1 + Math.floor(r() * 3); if (r() < .55) barres += `<rect x="${x}" y="0" width="${w}" height="${h}"/>`; x += w + (r() < .5 ? 1 : 2); }
+    barres += `<rect x="${x + 1}" y="0" width="1" height="${h}"/><rect x="${x + 3}" y="0" width="2" height="${h}"/>`;
+    return `<svg viewBox="0 0 ${x + 6} ${h}" preserveAspectRatio="none" fill="#111" aria-hidden="true">${barres}</svg>`;
+  }
+  function qr(texte){
+    const n = 25, r = rnd(hashK("qr" + texte)), m = [];
+    for (let y = 0; y < n; y++){ m.push([]); for (let x = 0; x < n; x++) m[y].push(r() < .48); }
+    const repere = (ox, oy) => { for (let y = -1; y < 8; y++) for (let x = -1; x < 8; x++){ const yy = oy + y, xx = ox + x; if (yy < 0 || xx < 0 || yy >= n || xx >= n) continue;
+      const bord = x === 0 || x === 6 || y === 0 || y === 6, coeur = x >= 2 && x <= 4 && y >= 2 && y <= 4; m[yy][xx] = (x >= 0 && x <= 6 && y >= 0 && y <= 6) && (bord || coeur); } };
+    repere(0, 0); repere(n - 7, 0); repere(0, n - 7);
+    for (let i = 8; i < n - 8; i++){ m[6][i] = i % 2 === 0; m[i][6] = i % 2 === 0; }
+    let d = ""; for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (m[y][x]) d += `M${x} ${y}h1v1h-1z`;
+    return `<svg viewBox="-2 -2 ${n + 4} ${n + 4}" shape-rendering="crispEdges" aria-hidden="true"><rect x="-2" y="-2" width="${n + 4}" height="${n + 4}" fill="#fff"/><path d="${d}" fill="#111"/></svg>`;
+  }
+
+  // ─── Camion de livraison au nom du fournisseur ───
+  function camion(o){
+    o = o || {}; const nom = String(o.nom || "Livraison"), coul = o.couleur || "#1E2A5A", fs = Math.max(11, Math.min(24, 178 / (0.62 * Math.max(nom.length, 6))));
+    return `<svg class="kit-camion" viewBox="0 0 300 140" role="img" aria-label="Camion de ${kesc(nom)}">
+      <ellipse cx="150" cy="130" rx="140" ry="7" fill="rgba(0,0,0,.35)"/>
+      <circle class="fumee" cx="6" cy="112" r="6" fill="rgba(220,220,230,.6)"/>
+      <rect x="10" y="16" width="192" height="92" rx="9" fill="${coul}"/>
+      <rect x="10" y="16" width="192" height="14" rx="9" fill="rgba(255,255,255,.18)"/>
+      <rect x="10" y="94" width="192" height="14" fill="rgba(0,0,0,.18)"/>
+      <text x="106" y="${62 + fs * .3}" text-anchor="middle" font-size="${fs.toFixed(1)}" fill="#fff" style="font-family:Inter,Arial,sans-serif;font-weight:800">${kesc(nom)}</text>
+      <text x="106" y="84" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)" style="font-family:Inter,Arial,sans-serif;font-weight:600;letter-spacing:.12em">${kesc(o.sousTitre || "LIVRAISON")}</text>
+      <rect x="11" y="78" width="6" height="14" rx="2" fill="#ff4b4b"/>
+      <path d="M204 40h50q10 0 16 9l15 23q5 7 5 15v18q0 9-9 9h-77z" fill="#eef0f5"/>
+      <path d="M214 48h37q6 0 9.5 5.5l10 16.5h-56.5z" fill="#7fa8d6"/><path d="M216 50h14l-8 18h-6z" fill="rgba(255,255,255,.35)"/>
+      <rect x="236" y="80" width="12" height="3" rx="1.5" fill="#9aa1b1"/>
+      <rect x="282" y="86" width="9" height="8" rx="2" fill="#ffd34d"/>
+      <rect x="200" y="104" width="94" height="8" rx="3" fill="#565c6b"/>
+      <g class="roue"><circle cx="62" cy="111" r="17" fill="#1a1b20"/><circle cx="62" cy="111" r="8" fill="#c9cdd6"/><path d="M62 103v16M54 111h16" stroke="#7b8190" stroke-width="2"/></g>
+      <g class="roue"><circle cx="246" cy="111" r="17" fill="#1a1b20"/><circle cx="246" cy="111" r="8" fill="#c9cdd6"/><path d="M246 103v16M238 111h16" stroke="#7b8190" stroke-width="2"/></g>
+    </svg>`;
+  }
+  /** La rue : le camion arrive devant le magasin. */
+  const route = (o) => `<div class="kit-route" aria-hidden="true">${camion(o)}<div class="kit-boutique">${kesc((o && o.boutique) || "🏪")}</div></div>`;
+
+  // ─── Colis avec étiquette d'expédition ───
+  function colis(o){
+    o = o || {};
+    return `<div class="colis ${o.ouvert ? "ouvert" : ""}" ${o.id ? `id="${kesc(o.id)}"` : ""}>
+      <span class="rabat g"></span><span class="rabat d"></span>
+      <span class="fragile">Fragile</span><span class="fleches">↑↑</span>${o.nb ? `<span class="nb">Colis ${kesc(o.nb)}</span>` : ""}
+      <div class="etiquette"><span>De : ${kesc(o.de || "")}</span><b>À : ${kesc(o.pour || "")}</b><span>${kesc(o.adresse || "")}</span>${codeBarres(o.ref || o.pour || "colis", 22)}<span style="font-family:'Space Mono',monospace">${kesc(o.ref || "")}</span></div>
+      <span class="contenu">${kesc(o.contenu || "📦")}</span></div>`;
+  }
+
+  // ─── Carte bancaire de l'entreprise (banque fictive) : clic = elle se retourne ───
+  function carteBancaire(o){
+    o = o || {}; const chiffres = String(o.iban || "").replace(/\D/g, ""), fin = (chiffres.slice(-4) || "0000").padStart(4, "0");
+    const debut = "4" + String(hashK(o.iban || o.titulaire || "x") % 1000).padStart(3, "0");
+    return `<button type="button" class="carte-bq" style="--c1:${kesc(o.couleur1 || "#3E63DD")};--c2:${kesc(o.couleur2 || "#1E2A5A")}" aria-label="Carte bancaire de l'entreprise : clique pour la retourner">
+      <span class="cb-in">
+        <span class="cb-face cb-recto"><span class="cb-banque">Borinage Banque<small>Carte entreprise</small></span><span class="cb-marque">débit</span>
+          <span class="cb-puce"></span><span class="cb-sc"></span><span class="cb-num">${debut} •••• •••• ${fin}</span>
+          <span class="cb-bas"><span class="nm"><small>Titulaire</small>${kesc(o.titulaire || "")}</span><span><small>Expire fin</small>${kesc(o.expire || "10/31")}</span></span></span>
+        <span class="cb-face cb-verso"><span class="cb-piste"></span><span class="cb-sig">${kesc(o.signature || "")}</span>
+          <span class="cb-iban"><small>Compte de l'entreprise (IBAN)</small>${kesc(o.iban || "")}</span>
+          <span class="cb-mention">Carte fictive – projet scolaire, Institut Saint-Luc de Frameries</span></span>
+      </span></button>`;
+  }
+
+  /** Fait « appuyer » les touches d'un terminal (.terminal .keys span), une par une. */
+  async function taperTouches(terminal, touches, pause){
+    if (!terminal) return; const spans = [...terminal.querySelectorAll(".keys span")];
+    for (const t of touches){ const s = spans.find(x => x.textContent.trim() === t); if (s){ s.classList.add("appuie"); SON.jouer("touche"); await new Promise(r => setTimeout(r, calme() ? 30 : (pause || 220))); s.classList.remove("appuie"); } }
+  }
+
+  function demarrer(){ decor(); surveiller(); SON.installerBouton(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", demarrer); else demarrer();
+  document.addEventListener("click", (e) => { const c = e.target.closest(".carte-bq"); if (c){ c.classList.toggle("retournee"); SON.jouer("papier"); } });
+
+  return { avatarMax, SON, decor, codeBarres, qr, camion, route, colis, carteBancaire, taperTouches, hash:hashK };
+})();
+const SON = KIT.SON;
+
+// ═══ VITRINE RÉALISTE (fonction autonome, recopiée telle quelle dans les autres pages) ═══
+/**
+ * Façade réaliste d'un magasin, en SVG (viewBox 0 0 400 300). Fonction PURE : elle ne dépend que de cfg et de uid.
+ * cfg = { nom, couleur, couleur2, style:"moderne"|"elegant"|"fun"|"street", symbole (emoji),
+ *         facade:"brique"|"bois"|"pierre"|"moderne"|"", auvent:"raye"|"uni"|"sans"|"",
+ *         ambiance:"chaleureuse"|"lumineuse"|"nature"|"prestige"|"", accueil (phrase de l'ardoise), numero,
+ *         produits:[emojis], equipement:[emojis] (facultatif : objets visibles à l'intérieur),
+ *         panneau:"OUVERT" (pancarte de la porte ; "" = aucune), allumee:true|false (enseigne et intérieur allumés),
+ *         aLouer:true|false (facultatif : boutique vide avec l'affiche « À LOUER »),
+ *         nuit:true|false (facultatif : la rue le soir, réverbère allumé) }
+ * uid : suffixe de tous les identifiants SVG (motifs, dégradés, filtres) : un uid différent par vitrine affichée.
+ * Champs manquants ou vides : valeurs par défaut (enseigne « Ton enseigne », violet, façade enduite, sans auvent…).
+ */
+function vitrineSVG(cfg, uid){
+  cfg = cfg || {};
+  const u = String(uid == null ? "v" : uid).replace(/[^\w-]/g, "") || "v";
+  const X = (t) => String(t == null ? "" : t).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  const hexOk = (c, d) => /^#[0-9a-f]{6}$/i.test(String(c || "")) ? String(c) : d;
+  const rgb = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const lum = (h) => { const c = rgb(h); return (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255; };
+  const mix = (a, b, t) => { const A = rgb(a), B = rgb(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
+  const r1 = (n) => Math.round(n * 10) / 10;
+  // Polices de l'enseigne : [famille, graisse, italique, largeur moyenne d'une lettre, espacement]
+  const POL = {
+    moderne:["Outfit, Arial, sans-serif", 800, "normal", .6, 0],
+    elegant:["'Playfair Display', Georgia, serif", 700, "italic", .56, 0],
+    fun:["Fredoka, 'Comic Sans MS', sans-serif", 600, "normal", .6, 0],
+    street:["'Bebas Neue', Impact, sans-serif", 400, "normal", .43, 1.2]
+  };
+  // Lumière intérieure : [mur haut, mur bas, sol, étagères, couleur de la lumière]
+  const AMB = {
+    chaleureuse:["#ffe6b8", "#f0a65c", "#8a5530", "#7a4823", "#ffc86e"],
+    lumineuse:["#ffffff", "#d3e3ff", "#c3ccd9", "#f2f5fa", "#eaf2ff"],
+    nature:["#eef9e8", "#a7dba9", "#b48f5e", "#9a7343", "#dcf5c9"],
+    prestige:["#4b3a5a", "#1f1727", "#151019", "#c9a34e", "#f3cf7a"],
+    vide:["#7a73a0", "#3d3562", "#2b2546", "#5a5280", "#c4bcf0"]
+  };
+  // Façade : [couleur du mur, corniche et bandeaux, encadrements des fenêtres, devanture traditionnelle ?]
+  const FAC = {
+    brique:["#a5523b", "#e9e0d0", "#f1ebdf", true],
+    bois:["#8f5d2e", "#5e3b1d", "#f3ede2", true],
+    pierre:["#d5cab8", "#ebe3d4", "#ece5d7", true],
+    moderne:["#3c414a", "#2a2e35", "#1d2026", false],
+    vide:["#cfc7ba", "#e4ddd1", "#eee8dd", true]
+  };
+
+  // ─── Paramètres (valeurs par défaut si un choix manque) ───
+  const cle = (table, k, defaut) => Object.prototype.hasOwnProperty.call(table, k) ? k : defaut;
+  const aLouer = !!cfg.aLouer, nuit = !!cfg.nuit, lit = cfg.allumee == null ? true : !!cfg.allumee;
+  const style = cle(POL, cfg.style, "moderne"), P = POL[style], neon = style === "fun" || style === "street";
+  const facade = cle(FAC, cfg.facade, "vide"), F = FAC[facade], trad = F[3];
+  const auvent = !aLouer && (cfg.auvent === "raye" || cfg.auvent === "uni") ? cfg.auvent : "";
+  const A = AMB[cle(AMB, cfg.ambiance, "vide")], prestige = cfg.ambiance === "prestige";
+  const brand = hexOk(cfg.couleur, "#8E4EC6"), c2 = hexOk(cfg.couleur2, "#FFFFFF");
+  const nom = String(cfg.nom == null ? "" : cfg.nom).trim() || "Ton enseigne";
+  const symbole = [...String(cfg.symbole == null ? "" : cfg.symbole).trim()].slice(0, 4).join("") || "★";
+  const prod = (Array.isArray(cfg.produits) && cfg.produits.length ? cfg.produits : ["✨", "✨", "✨", "✨"]).slice(0, 4);
+  const equip = Array.isArray(cfg.equipement) ? cfg.equipement.filter(Boolean).slice(0, 5) : [];
+  const numero = String(cfg.numero == null ? "" : cfg.numero).trim().slice(0, 4);
+  const panneau = aLouer ? "" : String(cfg.panneau == null ? "OUVERT" : cfg.panneau).trim().toUpperCase().slice(0, 12);
+  const accueil = aLouer ? "" : String(cfg.accueil == null ? "" : cfg.accueil).trim().slice(0, 60);
+  const NUIT = "#0a0f2e", nC = (c, t) => nuit ? mix(c, NUIT, t == null ? .5 : t) : c;   // objet non éclairé, la nuit
+  const cadre = !trad ? "#25282f" : aLouer ? "#4c5652" : mix(brand, "#16161c", .52);     // devanture peinte ou aluminium
+  const texte = Math.abs(lum(c2) - lum(brand)) > .35 ? c2 : (lum(brand) > .62 ? "#1D1F33" : "#FFFFFF");
+  const neonC = mix(brand, "#ffffff", lum(brand) < .45 ? .28 : .08);
+  const D = [], O = [];
+  const T = (x, y, fs, txt, extra) => `<text x="${r1(x)}" y="${r1(y)}" font-size="${r1(fs)}" text-anchor="middle"${extra || ""}>${txt}</text>`;
+
+  // ─── Dégradés et motifs communs ───
+  D.push(`<linearGradient id="ciel-${u}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="300">${nuit
+      ? `<stop offset="0" stop-color="#0a1238"/><stop offset=".6" stop-color="#2b3170"/><stop offset="1" stop-color="#5a4a7e"/>`
+      : `<stop offset="0" stop-color="#5f9fe4"/><stop offset="1" stop-color="#d4e9fb"/>`}</linearGradient>`,
+    `<linearGradient id="lum-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>`,
+    `<linearGradient id="omb-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>`,
+    `<linearGradient id="int-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${aLouer ? "#ddd7cb" : A[0]}"/><stop offset="1" stop-color="${aLouer ? "#b9b2a5" : A[1]}"/></linearGradient>`,
+    `<linearGradient id="refl-${u}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".34"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`,
+    `<linearGradient id="verre-${u}" x1="0" y1="0" x2=".4" y2="1">${nuit
+      ? `<stop offset="0" stop-color="#26305a"/><stop offset="1" stop-color="#121733"/>`
+      : `<stop offset="0" stop-color="#d9ebfa"/><stop offset=".55" stop-color="#8fb3d6"/><stop offset="1" stop-color="#5f83a8"/>`}</linearGradient>`,
+    `<linearGradient id="fenL-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a8"/><stop offset="1" stop-color="#f0a854"/></linearGradient>`,
+    `<radialGradient id="halo-${u}"><stop offset="0" stop-color="${A[4]}" stop-opacity=".9"/><stop offset="1" stop-color="${A[4]}" stop-opacity="0"/></radialGradient>`,
+    `<radialGradient id="lant-${u}"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".95"/><stop offset=".3" stop-color="#ffc760" stop-opacity=".42"/><stop offset="1" stop-color="#ffb347" stop-opacity="0"/></radialGradient>`,
+    `<linearGradient id="cone-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6dc" stop-opacity=".85"/><stop offset="1" stop-color="#fff6dc" stop-opacity="0"/></linearGradient>`,
+    `<linearGradient id="flot-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${aLouer ? "#fff3d6" : A[4]}" stop-opacity=".42"/><stop offset="1" stop-color="${aLouer ? "#fff3d6" : A[4]}" stop-opacity="0"/></linearGradient>`,
+    `<linearGradient id="laiton-${u}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a22"/><stop offset=".45" stop-color="#f3d77e"/><stop offset="1" stop-color="#9c7a2c"/></linearGradient>`,
+    `<clipPath id="cv-${u}"><rect x="38" y="134" width="212" height="110"/></clipPath>`,
+    `<pattern id="pav-${u}" width="40" height="14" patternUnits="userSpaceOnUse"><rect width="40" height="14" fill="#bdbab2"/><path d="M0 .5H40M0 7.5H40M.5 0V7M20.5 7V14" stroke="#9f9b93" stroke-width=".9"/><path d="M2 3h6M24 10h5" stroke="#fff" stroke-opacity=".25" stroke-width=".7"/></pattern>`);
+
+  // ─── Texture de la façade ───
+  if (facade === "brique"){
+    const pal = ["#a8543c", "#98462f", "#b25f44", "#8e412c", "#ac5a40", "#9d4b34", "#b8684c", "#934530", "#a24f37"];
+    let b = `<rect width="64" height="32" fill="#cdbca7"/>`, hi = "", lo = "";
+    for (let r = 0; r < 4; r++) for (let c = 0; c < 5; c++){
+      const x = (r % 2 ? -8 : 0) + c * 16 + .5, y = r * 8 + .5;
+      b += `<rect x="${x}" y="${y}" width="15" height="7" fill="${pal[(r * 7 + c * 4) % pal.length]}"/>`;
+      hi += `M${x} ${y + .6}h15`; lo += `M${x} ${y + 6.5}h15`;
+    }
+    D.push(`<pattern id="fac-${u}" width="64" height="32" patternUnits="userSpaceOnUse">${b}<path d="${hi}" stroke="#fff" stroke-opacity=".16" stroke-width="1"/><path d="${lo}" stroke="#000" stroke-opacity=".2" stroke-width="1"/></pattern>`);
+  } else if (facade === "bois"){
+    D.push(`<pattern id="fac-${u}" width="96" height="24" patternUnits="userSpaceOnUse"><rect width="96" height="12" fill="#966233"/><rect y="12" width="96" height="12" fill="#87552a"/>
+      <path d="M0 4.2Q24 3.2 48 4.6T96 4.2M0 8Q30 7 60 8.6T96 8M0 16.5Q20 15.6 44 16.8T96 16.4M0 20Q36 19 70 20.6T96 20" stroke="#5a3617" stroke-opacity=".28" stroke-width=".6" fill="none"/>
+      <path d="M0 .6H96M0 12.6H96" stroke="#fff" stroke-opacity=".14"/><path d="M0 11.3H96M0 23.3H96" stroke="#4a2c12" stroke-opacity=".75" stroke-width="1.4"/>
+      <path d="M60.5 0V11M20.5 12V23" stroke="#4a2c12" stroke-opacity=".6"/><ellipse cx="34" cy="6.5" rx="2.4" ry="1.3" fill="#62391a" opacity=".7"/><ellipse cx="78" cy="18" rx="1.8" ry="1" fill="#62391a" opacity=".6"/></pattern>`);
+  } else if (facade === "pierre"){
+    D.push(`<pattern id="fac-${u}" width="64" height="32" patternUnits="userSpaceOnUse"><rect width="64" height="32" fill="#b3a893"/>
+      <rect x=".5" y=".5" width="31" height="15" fill="#d6cbb9"/><rect x="32.5" y=".5" width="31" height="15" fill="#cdc1ad"/>
+      <rect x="-15.5" y="16.5" width="31" height="15" fill="#d2c6b3"/><rect x="16.5" y="16.5" width="31" height="15" fill="#dad0bf"/><rect x="48.5" y="16.5" width="31" height="15" fill="#d2c6b3"/>
+      <path d="M.5 1.2h31M32.5 1.2h31M0 17.2h15.5M16.5 17.2h31M48.5 17.2h15.5" stroke="#fff" stroke-opacity=".45"/>
+      <path d="M.5 15h31M32.5 15h31M0 31h15.5M16.5 31h31M48.5 31h15.5M31.5 1v14M63.5 1v14M15.5 17v14M47.5 17v14" stroke="#7e7462" stroke-opacity=".35"/>
+      <circle cx="9" cy="7" r=".6" fill="#9b907c"/><circle cx="44" cy="10" r=".5" fill="#9b907c"/><circle cx="27" cy="24" r=".6" fill="#9b907c"/><circle cx="56" cy="21" r=".5" fill="#9b907c"/></pattern>`);
+  } else if (facade === "moderne"){
+    D.push(`<pattern id="fac-${u}" width="120" height="40" patternUnits="userSpaceOnUse"><rect width="120" height="40" fill="#22252b"/>
+      <rect x=".75" y=".75" width="58.5" height="38.5" fill="#3f444d"/><rect x="60.75" y=".75" width="58.5" height="38.5" fill="#393e46"/>
+      <path d="M1 1.4h58M61 1.4h58" stroke="#fff" stroke-opacity=".1"/></pattern>`);
+  }
+  const mur = facade === "vide" ? F[0] : `url(#fac-${u})`;
+
+  // ─── 1. Ciel, voisins, cheminée ───
+  O.push(`<rect width="400" height="300" fill="url(#ciel-${u})"/>`);
+  if (nuit) O.push(`<g fill="#fff">${[[34, 5, .7], [70, 2.5, .5], [122, 6, .6], [178, 3, .45], [236, 5.5, .7], [292, 2.5, .5], [350, 6, .6], [9, 16, .6], [16, 7, .45], [394, 2.5, .5]].map(s => `<circle cx="${s[0]}" cy="${s[1]}" r="${s[2]}"/>`).join("")}</g>
+    <circle cx="390" cy="9" r="5" fill="#f4edd0"/><circle cx="392.4" cy="7.4" r="4.3" fill="url(#ciel-${u})"/>`);
+  O.push(`<rect x="0" y="30" width="26" height="234" fill="#8f9ba8"/><rect x="0" y="26" width="28" height="5" fill="#bcc5ce"/>
+    <rect x="4" y="44" width="15" height="40" fill="url(#verre-${u})" stroke="#e9edf1" stroke-width="2"/><rect x="0" y="132" width="20" height="118" fill="#1d2a37"/><rect x="0" y="250" width="20" height="12" fill="#4e5862"/>
+    <rect x="374" y="18" width="26" height="246" fill="#6f3b2e"/><rect x="372" y="14" width="28" height="5" fill="#50291f"/>
+    <rect x="382" y="34" width="15" height="44" fill="url(#verre-${u})" stroke="#dcd3c6" stroke-width="2"/><rect x="384" y="132" width="16" height="118" fill="#1b2633"/>
+    <rect x="316" y="0" width="16" height="13" fill="#7a3e2e"/><rect x="314" y="0" width="20" height="3" fill="#57291f"/>`);
+
+  // ─── 2. Façade de l'immeuble ───
+  O.push(`<rect x="22" y="14" width="356" height="250" fill="${mur}"/><rect x="22" y="14" width="356" height="250" fill="url(#lum-${u})"/>
+    <rect x="22" y="14" width="2.5" height="250" fill="#000" opacity=".22"/><rect x="375.5" y="14" width="2.5" height="250" fill="#000" opacity=".22"/>`);
+  // Corniche du toit
+  const co = F[1];
+  if (trad){
+    let dents = ""; for (let x = 24; x < 376; x += 8) dents += `M${x} 21h4v3h-4z`;
+    O.push(`<rect x="16" y="7" width="368" height="5" fill="${mix(co, "#ffffff", .3)}"/><rect x="18" y="12" width="364" height="7" fill="${co}"/>
+      <rect x="18" y="19" width="364" height="2" fill="${mix(co, "#000000", .28)}"/><path d="${dents}" fill="${mix(co, "#000000", .08)}"/>
+      <rect x="22" y="24" width="356" height="7" fill="url(#omb-${u})" opacity=".55"/>`);
+  } else {
+    O.push(`<rect x="18" y="9" width="364" height="5" fill="#8b929c"/><rect x="18" y="13" width="364" height="1.5" fill="#5a6069"/><rect x="22" y="14.5" width="356" height="5" fill="url(#omb-${u})" opacity=".5"/>`);
+  }
+
+  // ─── 3. Étage : fenêtres ───
+  const fenetres = [];
+  if (trad){
+    [86, 200, 314].forEach((cx, i) => {
+      const x = cx - 23, y = 31, enc = F[2];
+      let s = "";
+      if (facade === "bois"){   // volets en bois
+        const vo = nC("#5f7f63", 0);
+        s += `<rect x="${x - 12}" y="${y}" width="11" height="50" fill="${vo}"/><rect x="${x + 47}" y="${y}" width="11" height="50" fill="${vo}"/>`
+          + `<path d="${[0, 1, 2, 3, 4, 5, 6, 7, 8].map(k => `M${x - 11} ${y + 4 + k * 5.2}h9M${x + 48} ${y + 4 + k * 5.2}h9`).join("")}" stroke="#000" stroke-opacity=".22"/>`;
+      }
+      if (facade === "brique") s += `<rect x="${x - 4}" y="${y - 6}" width="54" height="6" fill="${enc}"/><path d="M${x - 4} ${y - .5}h54" stroke="#000" stroke-opacity=".15"/>`;
+      if (facade === "pierre") s += `<rect x="${x - 5}" y="${y - 5}" width="56" height="59" fill="none" stroke="${mix(enc, "#000000", .1)}" stroke-width="3"/><path d="M${cx - 5} ${y - 7}h10l-2 6h-6z" fill="${mix(enc, "#000000", .06)}"/>`;
+      s += `<rect x="${x}" y="${y}" width="46" height="50" fill="${enc}"/><rect x="${x + 3}" y="${y + 3}" width="40" height="44" fill="url(#verre-${u})"/>`;
+      if (!nuit) s += `<path d="M${x + 3} ${y + 3}h9q-3 20 1 44h-10z M${x + 43} ${y + 3}h-9q3 20 -1 44h10z" fill="#fff" opacity=".55"/>`;
+      s += `<path d="M${cx} ${y + 3}v44M${x + 3} ${y + 17}h40" stroke="${enc}" stroke-width="2.4"/>`
+        + `<rect x="${x - 5}" y="${y + 50}" width="56" height="4" fill="${mix(enc, "#000000", .05)}"/><rect x="${x - 4}" y="${y + 54}" width="54" height="3" fill="#000" opacity=".18"/>`;
+      if (i === 1){   // jardinière fleurie
+        s += `<rect x="${x + 1}" y="${y + 44}" width="44" height="7" rx="1" fill="#a9532f"/><path d="M${x + 1} ${y + 45}h44" stroke="#fff" stroke-opacity=".2"/>`
+          + [6, 13, 20, 27, 34, 40].map((d, k) => `<circle cx="${x + d}" cy="${y + 42 - (k % 2) * 2}" r="3.2" fill="#3f8a45"/><circle cx="${x + d + 1}" cy="${y + 40 - (k % 2) * 2}" r="2.1" fill="${k % 3 ? "#e63946" : "#ff7aa8"}"/>`).join("");
+      }
+      fenetres.push({ x: x + 3, y: y + 3, w: 40, h: 44, cx, enc });
+      O.push(s);
+    });
+  } else {
+    let s = `<rect x="38" y="32" width="324" height="48" fill="#16181d"/>`;
+    for (let k = 0; k < 5; k++){ const x = 41 + k * 64; s += `<rect x="${x}" y="35" width="62" height="42" fill="url(#verre-${u})"/>`; fenetres.push({ x, y: 35, w: 62, h: 42, cx: x + 31, enc: "#16181d", moderne: true }); }
+    if (!nuit) s += `<polygon points="60,35 92,35 70,77 38,77" fill="#fff" opacity=".18"/><polygon points="250,35 270,35 248,77 228,77" fill="#fff" opacity=".14"/>`;
+    O.push(s + `<rect x="36" y="80" width="328" height="3" fill="#6b727c"/>`);
+  }
+  // Bandeau entre l'étage et le magasin
+  O.push(trad ? `<rect x="22" y="86" width="356" height="5" fill="${co}"/><path d="M22 86.5h356" stroke="#fff" stroke-opacity=".3"/><rect x="22" y="91" width="356" height="3" fill="#000" opacity=".18"/>`
+    : `<rect x="22" y="87" width="356" height="3" fill="#5a6069"/>`);
+  // Descente d'eau de pluie
+  O.push(`<rect x="369.5" y="20" width="4" height="242" fill="${trad ? "#8d949c" : "#2b2f36"}"/><rect x="369.5" y="20" width="1.2" height="242" fill="#fff" opacity=".22"/>
+    ${[40, 100, 160, 220].map(y => `<rect x="368" y="${y}" width="7" height="2" fill="#5f656d"/>`).join("")}<path d="M369.5 258h4v4h-7v-2.4h3z" fill="#6f757d"/>`);
+
+  // ─── 4. Rez-de-chaussée : la devanture ───
+  if (trad){
+    O.push(`<rect x="26" y="92" width="312" height="170" fill="${cadre}"/>
+      <rect x="24" y="92" width="316" height="4" fill="${mix(cadre, "#ffffff", .18)}"/><rect x="26" y="96" width="312" height="1.5" fill="#000" opacity=".25"/>
+      <path d="M29.5 128V259M252.5 132V259M266.5 132V259M335 128V259" stroke="${mix(cadre, "#ffffff", .16)}" stroke-width="1.2"/>
+      <path d="M31 128V259M254 132V259M268 132V259M336.5 128V259" stroke="#000" stroke-opacity=".22"/>`);
+  } else {
+    O.push(`<rect x="30" y="128" width="226" height="134" fill="#1b1d22"/><rect x="272" y="130" width="58" height="132" fill="#1b1d22"/>`);
+  }
+  // Soubassement sous la vitrine
+  O.push(trad ? `<rect x="38" y="246" width="212" height="16" fill="${mix(cadre, "#000000", .12)}"/><rect x="42" y="249" width="204" height="10" fill="none" stroke="${mix(cadre, "#ffffff", .14)}" stroke-width="1"/><rect x="42.8" y="249.8" width="204" height="10" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".8"/>`
+    : `<rect x="34" y="246" width="218" height="15" fill="#121317"/><path d="M34 246.5h218" stroke="#fff" stroke-opacity=".12"/>`);
+  // Porte : dormant, vantail, panneau du bas, seuil
+  const porte = trad ? mix(cadre, "#ffffff", .06) : "#202329";
+  O.push(`<rect x="276" y="132" width="50" height="130" fill="${mix(cadre, "#000000", .2)}"/>
+    <rect x="278" y="150" width="46" height="110" fill="${porte}"/><rect x="278" y="150" width="46" height="110" fill="none" stroke="#000" stroke-opacity=".3"/>
+    ${trad ? `<rect x="284" y="221" width="34" height="31" fill="none" stroke="${mix(porte, "#ffffff", .15)}" stroke-width="1.2"/><rect x="285" y="222" width="34" height="31" fill="none" stroke="#000" stroke-opacity=".28" stroke-width=".8"/>` : ""}
+    <rect x="272" y="260" width="58" height="4" fill="#8f949a"/><path d="M272 260.5h58" stroke="#fff" stroke-opacity=".4"/>`);
+
+  // ─── 5. Trottoir ───
+  O.push(`<rect x="0" y="262" width="400" height="29" fill="url(#pav-${u})"/><rect x="0" y="262" width="400" height="29" fill="url(#omb-${u})" opacity=".35"/>
+    <rect x="0" y="262" width="400" height="2.5" fill="#000" opacity=".3"/><rect x="0" y="290" width="400" height="5" fill="#a8a59e"/><rect x="0" y="290" width="400" height="1" fill="#dedbd4"/><rect x="0" y="295" width="400" height="5" fill="#38383d"/>`);
+
+  // ─── 6. La nuit tombe : tout ce qui n'est pas éclairé s'assombrit ───
+  if (nuit) O.push(`<rect width="400" height="300" fill="${NUIT}" opacity=".56"/>`);
+
+  // ─── 7. Fenêtres éclairées à l'étage (la nuit) ───
+  if (nuit) fenetres.forEach((f, i) => {
+    if (!(f.moderne ? (i === 1 || i === 3) : i === 0)) return;
+    O.push(`<rect x="${f.x}" y="${f.y}" width="${f.w}" height="${f.h}" fill="url(#fenL-${u})"/>`
+      + (f.moderne ? "" : `<path d="M${f.x} ${f.y}h9q-3 20 1 ${f.h}h-10zM${f.x + f.w} ${f.y}h-9q3 20 -1 ${f.h}h10z" fill="#c4672a" opacity=".55"/><path d="M${f.cx} ${f.y}v${f.h}M${f.x} ${f.y + 14}h${f.w}" stroke="${nC(f.enc, .55)}" stroke-width="2.4"/>`));
+  });
+
+  // ─── 8. L'intérieur du magasin, vu à travers la vitrine ───
+  let int = `<rect x="38" y="134" width="212" height="110" fill="url(#int-${u})"/><rect x="38" y="134" width="212" height="9" fill="#000" opacity=".16"/>`;
+  if (aLouer){
+    int += `<rect x="38" y="230" width="212" height="14" fill="#9a958b"/><path d="M38 230.5h212" stroke="#000" stroke-opacity=".15"/>
+      <path d="M196 232l14-62 14 62M201 210h18M204 196h12M207 183h7" stroke="#9c7a4d" stroke-width="2.2" fill="none"/>
+      <rect x="60" y="214" width="26" height="18" fill="#c39a69"/><rect x="66" y="200" width="20" height="14" fill="#b88d5c"/><path d="M60 220h26M66 205h20" stroke="#e8d3a8" stroke-width="2"/>
+      <path d="M104 222h14v10h-14z" fill="#e8ecef"/><path d="M104 222q7 4 14 0" stroke="#7aa6d9" stroke-width="2" fill="none"/>
+      <path d="M150 134v18" stroke="#333" stroke-width="1"/><circle cx="150" cy="155" r="3.2" fill="${lit ? "#fff4cf" : "#d8d3c6"}"/>`;
+    if (lit) int += `<circle cx="150" cy="156" r="26" fill="url(#halo-${u})" opacity=".6"/>`;
+  } else {
+    // décor du mur du fond (lattes de bois, carrelage, rayures dorées), sol et étagère
+    const lignes = (n, f) => Array.from({ length:n }, (_, k) => f(k)).join("");
+    int += ({
+      chaleureuse:`<path d="${lignes(17, k => `M${44 + k * 12.5} 143V232`)}" stroke="#7a3f12" stroke-opacity=".12" stroke-width="1.2"/>`,
+      nature:`<path d="${lignes(17, k => `M${44 + k * 12.5} 143V232`)}" stroke="#4d7a3c" stroke-opacity=".1" stroke-width="1"/>`,
+      lumineuse:`<path d="${lignes(8, k => `M38 ${146 + k * 11}H250`)}${lignes(12, k => `M${48 + k * 18} 143V232`)}" stroke="#7d93b8" stroke-opacity=".14" stroke-width=".7"/>`,
+      prestige:`<path d="${lignes(14, k => `M${46 + k * 15} 143V232`)}" stroke="#d8b45a" stroke-opacity=".14" stroke-width=".8"/>`
+    })[cle(AMB, cfg.ambiance, "vide")] || "";
+    int += `<rect x="38" y="232" width="212" height="12" fill="${A[2]}"/><rect x="38" y="232" width="212" height="12" fill="url(#omb-${u})" opacity=".5"/>
+      <rect x="46" y="183" width="196" height="3.2" fill="${A[3]}"/><path d="M60 186.2v5M228 186.2v5" stroke="${A[3]}" stroke-width="2"/><rect x="46" y="186.2" width="196" height="3" fill="#000" opacity=".12"/>`;
+    [0, 1, 2, 3, 0, 1].forEach((k, i) => { int += T(62 + i * 32.8, 181.5, 12, X(prod[k % prod.length])); });
+    // lampes au plafond (selon l'ambiance)
+    if (cfg.ambiance === "lumineuse") int += `<rect x="62" y="134" width="44" height="3" fill="#fff"/><rect x="122" y="134" width="44" height="3" fill="#fff"/><rect x="182" y="134" width="44" height="3" fill="#fff"/>`;
+    else [84, 144, 204].forEach((x) => {
+      int += `<path d="M${x} 134v12" stroke="#2a2a2a" stroke-width=".8"/>` + (prestige
+        ? `<path d="M${x - 5} 146h10l-2 4h-6z" fill="#c9a34e"/>`
+        : `<path d="M${x - 7} 152q7 -9 14 0z" fill="${cfg.ambiance === "nature" ? "#d9c7a0" : "#2d2d33"}"/>`);
+      if (lit) int += `<circle cx="${x}" cy="153" r="${prestige ? 16 : 22}" fill="url(#halo-${u})" opacity="${nuit ? .85 : .6}"/>`;
+    });
+    if (prestige && lit) int += [84, 144, 204].map(x => `<polygon points="${x - 3},150 ${x + 3},150 ${x + 18},232 ${x - 18},232" fill="url(#cone-${u})" opacity=".22"/>`).join("");
+    if (cfg.ambiance === "nature") int += `<path d="M44 244c2-18 6-30 14-40M52 244c0-14-4-26-10-34M48 244c4-10 10-16 18-20" stroke="#3f7d3a" stroke-width="2" fill="none"/>
+      <ellipse cx="58" cy="205" rx="7" ry="3" fill="#4f9a48" transform="rotate(-40 58 205)"/><ellipse cx="42" cy="211" rx="6" ry="2.6" fill="#3f8a3c" transform="rotate(35 42 211)"/><ellipse cx="66" cy="224" rx="7" ry="2.8" fill="#5aa652" transform="rotate(-20 66 224)"/>
+      <ellipse cx="236" cy="208" rx="8" ry="3" fill="#4f9a48" transform="rotate(30 236 208)"/><ellipse cx="244" cy="220" rx="7" ry="2.6" fill="#3f8a3c" transform="rotate(-35 244 220)"/><path d="M238 244c0-14 2-24 0-36" stroke="#3f7d3a" stroke-width="2" fill="none"/>`;
+    // matériel visible à l'intérieur (facultatif)
+    equip.forEach((e, i) => { int += T(144 + (i - (equip.length - 1) / 2) * 36, 211, 16, X(e)); });
+    // présentoir avec les produits et leurs étiquettes de prix
+    const pres = prestige ? "#1b1420" : mix(A[3], "#000000", .05);
+    int += `<rect x="58" y="231" width="172" height="13" fill="${pres}"/><rect x="58" y="231" width="172" height="2.5" fill="${prestige ? "#d8b45a" : mix(A[3], "#ffffff", .3)}"/><rect x="58" y="233.5" width="172" height="3" fill="#000" opacity=".15"/>`;
+    prod.forEach((p, i) => {
+      const x = 80 + i * 43;
+      int += `<ellipse cx="${x}" cy="231.5" rx="10" ry="1.6" fill="#000" opacity=".18"/>` + T(x, 230.5, 21, X(p))
+        + `<path d="M${x + 9} 219l3 4" stroke="#777" stroke-width=".5"/><rect x="${x + 10}" y="222.5" width="8" height="5" rx=".8" fill="#fff" transform="rotate(14 ${x + 14} 225)"/>`;
+    });
+  }
+  if (!lit) int += `<rect x="38" y="134" width="212" height="110" fill="#05060f" opacity="${nuit ? .62 : .42}"/>`;
+  if (aLouer){   // vitre passée au blanc : grands coups de chiffon circulaires qui se chevauchent
+    const tours = [[70, 168, 30, 20, -20], [122, 206, 34, 22, 15], [168, 160, 30, 18, -10], [216, 204, 34, 20, 25], [58, 226, 28, 16, 10], [232, 150, 22, 16, -30], [150, 236, 30, 14, -5], [104, 150, 24, 12, 8]];
+    int += `<g opacity="${nuit && !lit ? .55 : 1}"><rect x="38" y="134" width="212" height="110" fill="#fff" opacity=".3"/>${tours.map(t => `<ellipse cx="${t[0]}" cy="${t[1]}" rx="${t[2]}" ry="${t[3]}" fill="none" stroke="#fff" stroke-width="13" opacity=".17" transform="rotate(${t[4]} ${t[0]} ${t[1]})"/>`).join("")}</g>`;
+  }
+  O.push(`<g clip-path="url(#cv-${u})">${int}</g>`);
+  // Vitre de la porte et imposte
+  const vitreP = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#int-${u})"/>` + (lit ? "" : `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#05060f" opacity="${nuit ? .62 : .42}"/>`);
+  O.push(vitreP(280, 135, 42, 12) + `<path d="M301 135v12" stroke="${porte}" stroke-width="1.5"/>`
+    + (trad ? vitreP(284, 157, 34, 57) : vitreP(283, 155, 36, 98)));
+  // Ombre de l'auvent (ou de l'enseigne) sur la vitre
+  O.push(auvent ? `<rect x="38" y="158" width="212" height="38" fill="url(#omb-${u})" opacity="${nuit ? .35 : .85}"/>` : `<rect x="38" y="134" width="212" height="10" fill="url(#omb-${u})" opacity=".6"/>`);
+  // Reflets sur le verre
+  O.push(`<g opacity="${nuit ? .3 : .85}"><g clip-path="url(#cv-${u})"><polygon points="72,134 108,134 66,244 30,244" fill="url(#refl-${u})"/><polygon points="122,134 132,134 90,244 80,244" fill="url(#refl-${u})" opacity=".7"/><polygon points="206,134 240,134 198,244 164,244" fill="url(#refl-${u})" opacity=".55"/></g>
+    <polygon points="${trad ? "290,157 300,157 292,214 284,214" : "292,155 302,155 290,253 283,253"}" fill="url(#refl-${u})"/></g>
+    <rect x="38" y="134" width="212" height="110" fill="none" stroke="${mix(cadre, "#000000", .35)}" stroke-width="1.6"/>
+    ${trad ? `<rect x="284" y="157" width="34" height="57" fill="none" stroke="${mix(porte, "#000000", .35)}" stroke-width="1.2"/>` : `<path d="M147 134v110" stroke="#1b1d22" stroke-width="2.5"/>`}`);
+
+  // Affiche « À LOUER » collée sur la vitrine
+  if (aLouer){
+    const enc = nuit && !lit ? .25 : 0;
+    O.push(`<g transform="rotate(-3 144 190)"><rect x="92" y="163" width="104" height="54" fill="${nC("#ffffff", enc)}" stroke="${nC("#d62828", enc)}" stroke-width="3"/>
+      ${T(144, 191, 18, "À LOUER", ` fill="${nC("#d62828", enc)}" style="font-family:Outfit,Arial,sans-serif;font-weight:800;letter-spacing:.5px"`)}
+      ${T(144, 206, 7.4, "Bientôt ton entreprise ici ?", ` fill="${nC("#2b2b33", enc)}" style="font-family:Outfit,Arial,sans-serif;font-weight:600"`)}
+      <rect x="86" y="159" width="14" height="6" fill="#f3efe1" opacity=".75" transform="rotate(-30 93 162)"/><rect x="188" y="213" width="14" height="6" fill="#f3efe1" opacity=".75" transform="rotate(-30 195 216)"/></g>`);
+  }
+
+  // ─── 9. L'enseigne ───
+  const allumeEns = lit && !aLouer, sombre = nuit && !allumeEns;
+  const fond = aLouer ? nC("#59625d", .35) : neon ? nC("#17171e", .2) : (sombre ? nC(brand, .45) : brand);
+  O.push(`<rect x="32" y="97" width="300" height="29" rx="${style === "fun" ? 9 : 2}" fill="${fond}"/>`
+    + `<rect x="32" y="97" width="300" height="29" rx="${style === "fun" ? 9 : 2}" fill="none" stroke="${mix(fond, "#000000", .38)}" stroke-width="1.6"/>`
+    + `<path d="M${style === "fun" ? 40 : 34} 98.6H${style === "fun" ? 324 : 330}" stroke="#fff" stroke-opacity=".28"/>`);
+  if (aLouer){
+    O.push(`<rect x="70" y="103" width="226" height="17" rx="2" fill="${nC("#69726c", .35)}"/><path d="M90 108h4M118 112h3M150 107h4M182 113h3M214 108h4M246 112h3" stroke="#000" stroke-opacity=".3" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M40 101q20 6 8 22M300 122q10-10 24-6" stroke="#000" stroke-opacity=".12" stroke-width="3" fill="none"/>`);
+  } else {
+    const len = [...nom].length, place = 258;
+    let fs = Math.min(20, (place - Math.max(0, len - 1) * P[4]) / (len * P[3]));
+    fs = Math.max(9, fs);
+    const trop = len * P[3] * fs + Math.max(0, len - 1) * P[4] > place;
+    const police = ` style="font-family:${P[0]};font-weight:${P[1]};font-style:${P[2]};letter-spacing:${P[4]}px"${trop ? ` textLength="${place}" lengthAdjust="spacingAndGlyphs"` : ""}`;
+    const yT = 111.5 + fs * .36, nomX = X(nom);
+    if (neon){
+      if (allumeEns){
+        D.push(`<filter id="neon-${u}" x="-10%" y="-60%" width="120%" height="220%"><feGaussianBlur stdDeviation="2.3"/></filter>`,
+          `<radialGradient id="nh-${u}"><stop offset="0" stop-color="${neonC}" stop-opacity=".55"/><stop offset="1" stop-color="${neonC}" stop-opacity="0"/></radialGradient>`);
+        if (nuit) O.push(`<ellipse cx="182" cy="111" rx="190" ry="40" fill="url(#nh-${u})" opacity=".55"/>`);
+        O.push(`<circle cx="48" cy="111.5" r="11.5" fill="none" stroke="${neonC}" stroke-width="3" filter="url(#neon-${u})"/>`
+          + T(195, yT, fs, nomX, ` fill="${neonC}" stroke="${neonC}" stroke-width="2.4" filter="url(#neon-${u})"${police}`)
+          + T(195, yT, fs, nomX, ` fill="${mix(neonC, "#ffffff", .62)}" stroke="${neonC}" stroke-width=".5"${police}`));
+      } else {
+        O.push(T(195, yT, fs, nomX, ` fill="${nC("#c9cad3", .3)}" stroke="${nC("#7c7e8b", .3)}" stroke-width=".5"${police}`));
+      }
+      O.push(`<circle cx="48" cy="111.5" r="10.5" fill="${nC(c2, sombre ? .4 : 0)}" stroke="${allumeEns ? mix(neonC, "#ffffff", .5) : nC("#8b8d99", .3)}" stroke-width="1.4"/>` + T(48, 116.2, 12.5, X(symbole)));
+      if (style === "street") O.push(`<g fill="${nC("#9aa0aa", .3)}"><circle cx="36" cy="101" r="1"/><circle cx="328" cy="101" r="1"/><circle cx="36" cy="122" r="1"/><circle cx="328" cy="122" r="1"/></g>`);
+    } else {
+      O.push(`<circle cx="48" cy="111.5" r="11.5" fill="${nC(c2, sombre ? .4 : 0)}" stroke="#000" stroke-opacity=".25"/>` + T(48, 116.2, 13, X(symbole))
+        + T(195, yT, fs, nomX, ` fill="${sombre ? nC(texte, .45) : texte}"${police}`));
+      if (style === "elegant"){   // spots en col de cygne, en laiton
+        [110, 195, 280].forEach((x) => {
+          if (allumeEns) O.push(`<polygon points="${x - 3},89 ${x + 3},89 ${x + 40},126 ${x - 40},126" fill="url(#cone-${u})" opacity="${nuit ? .5 : .22}"/><ellipse cx="${x}" cy="103" rx="30" ry="6" fill="#fff8e1" opacity="${nuit ? .28 : .12}"/>`);
+          O.push(`<path d="M${x} 93V86q0 -3 3 -3" stroke="${nC("#9c7a2c", .3)}" stroke-width="1.6" fill="none"/><path d="M${x - 4} 85h8l-1.2 4h-5.6z" fill="${nC("#c49a3c", .3)}"/>`);
+        });
+      } else {                    // rampe de leds au-dessus de l'enseigne
+        if (allumeEns) O.push(`<rect x="32" y="97" width="300" height="14" fill="url(#cone-${u})" opacity="${nuit ? .5 : .2}"/>`);
+        O.push(`<rect x="44" y="91.4" width="276" height="3" rx="1.5" fill="${nC("#a3aab4", .3)}"/>${allumeEns ? `<rect x="46" y="94" width="272" height="1.2" fill="#fffbe8" opacity=".9"/>` : ""}
+          <path d="M60 94.4v2.4M182 94.4v2.4M304 94.4v2.4" stroke="${nC("#7d848e", .3)}" stroke-width="1.6"/>`);
+      }
+    }
+  }
+
+  // ─── 10. L'auvent en tissu ───
+  if (auvent){
+    const n = 12, yT = 129, yB = 150, yV = 158, rr = (256 - 32) / n / 2;
+    const c1 = nC(brand, .45), cr = nC("#f6f1e6", .5);
+    let s = "", plis = "";
+    for (let i = 0; i < n; i++){
+      const a = 40 + 208 * i / n, b = 40 + 208 * (i + 1) / n, d = 32 + 224 * i / n, c = 32 + 224 * (i + 1) / n, col = auvent === "raye" && i % 2 ? cr : c1;
+      s += `<polygon points="${r1(a)},${yT} ${r1(b) + .3},${yT} ${r1(c) + .3},${yB} ${r1(d)},${yB}" fill="${col}"/><rect x="${r1(d)}" y="${yB}" width="${r1(c - d + .4)}" height="${yV - yB}" fill="${col}"/>`
+        + `<path d="M${r1(d)} ${yV}a${r1(rr)} ${r1(rr)} 0 0 0 ${r1(2 * rr)} 0z" fill="${col}" stroke="#000" stroke-opacity=".16" stroke-width=".7"/>`;
+      plis += `M${r1(a)} ${yT}L${r1(d)} ${yB}`;
+    }
+    D.push(`<linearGradient id="aw-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".32"/><stop offset=".55" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity=".14"/></linearGradient>`,
+      `<linearGradient id="val-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>`);
+    O.push(`<g>${s}<polygon points="40,${yT} 248,${yT} 256,${yB} 32,${yB}" fill="url(#aw-${u})"/><path d="${plis}" stroke="#000" stroke-opacity=".1" stroke-width=".8"/>
+      <rect x="32" y="${yB}" width="224" height="${yV - yB}" fill="url(#val-${u})"/><path d="M32 ${yB}H256" stroke="#000" stroke-opacity=".28"/><path d="M40 ${yT + .6}H248" stroke="#000" stroke-opacity=".35" stroke-width="1.4"/>
+      <path d="M36 135l-3.5 15M252 135l3.5 15" stroke="${nC("#2a2b30", .2)}" stroke-width="1.6"/></g>`);
+  }
+
+  // ─── 11. Porte : pancarte, poignée, boîte aux lettres ───
+  const pc = /^OUVERT/.test(panneau) ? "#1f8a4c" : /^FERM/.test(panneau) ? "#c62828" : "#1d3b8f";
+  if (panneau){
+    const pl = [...panneau].length;
+    O.push(`<path d="M301 160.5l-11 9M301 160.5l11 9" stroke="${nC("#d9d4c8", .3)}" stroke-width=".7"/><circle cx="301" cy="160" r="1.1" fill="${nC("#c9a54a", .3)}"/>
+      <rect x="287" y="169" width="28" height="12" rx="1.6" fill="${nC("#fdfbf4", nuit && !lit ? .4 : 0)}" stroke="#bdb6a6" stroke-width=".6"/>
+      ${T(301, 177.6, pl > 7 ? 5.4 : 6.6, X(panneau), ` fill="${pc}" style="font-family:Outfit,Arial,sans-serif;font-weight:800"${pl > 8 ? ` textLength="24" lengthAdjust="spacingAndGlyphs"` : ""}`)}`);
+  }
+  O.push(trad ? `<rect x="315.5" y="190" width="3" height="26" rx="1.5" fill="url(#laiton-${u})"/><rect x="291" y="232" width="20" height="3" rx="1" fill="url(#laiton-${u})"/>`
+    : `<rect x="314.5" y="176" width="2.6" height="56" rx="1.3" fill="#cfd4dc"/>`);
+
+  // ─── 12. Plaque émaillée du numéro et applique murale ───
+  if (nuit && lit) O.push(`<circle cx="356" cy="140" r="22" fill="url(#lant-${u})" opacity=".8"/>`);
+  O.push(`<rect x="352" y="133" width="8" height="5" rx="1" fill="${nC("#2c2c31", .2)}"/><path d="M352.6 138h6.8l-1.2 3h-4.4z" fill="${nuit && lit ? "#ffe9b0" : nC("#d7d2c4", .3)}"/>`);
+  if (numero){
+    const pe = nuit ? (lit ? .12 : .4) : 0;
+    O.push(`<rect x="344" y="149" width="24" height="17" rx="2.5" fill="${nC("#1f4f9e", pe)}"/><rect x="345.6" y="150.6" width="20.8" height="13.8" rx="1.6" fill="none" stroke="${nC("#f3f5fa", pe)}" stroke-width="1"/>
+      <path d="M346 151h20" stroke="#fff" stroke-opacity=".35" stroke-width=".8"/>${T(356, numero.length > 2 ? 160.6 : 161.2, numero.length > 2 ? 7.6 : 9.4, X(numero), ` fill="${nC("#ffffff", pe)}" style="font-family:Outfit,Arial,sans-serif;font-weight:700"`)}`);
+  }
+
+  // ─── 13. Lumière qui s'échappe sur le trottoir, réverbère ───
+  if (nuit && lit) O.push(`<polygon points="38,262 250,262 290,291 0,291" fill="url(#flot-${u})"/><polygon points="279,262 323,262 338,291 266,291" fill="url(#flot-${u})" opacity=".7"/>`);
+  if (nuit) O.push(`<ellipse cx="18" cy="286" rx="52" ry="8" fill="url(#lant-${u})"/>`);
+
+  // ─── 14. Sur le trottoir : ardoise, plante, réverbère ───
+  if (accueil){
+    const mots = accueil.split(/\s+/), nbL = accueil.length <= 13 ? 1 : accueil.length <= 30 ? 2 : 3, lignes = [];
+    let reste = mots.slice();
+    for (let l = nbL; l > 0; l--){
+      const cible = reste.join(" ").length / l; let ligne = "";
+      while (reste.length && (!ligne || (ligne + " " + reste[0]).length <= cible + 3)) ligne = ligne ? ligne + " " + reste.shift() : reste.shift();
+      if (l === 1 && reste.length) ligne += " " + reste.splice(0).join(" ");
+      lignes.push(ligne);
+    }
+    const lmax = Math.max(...lignes.map(l => [...l].length)), fsA = Math.max(7, Math.min(12.5, 54 / (lmax * .42), 30 / lignes.length));
+    const craie = nC("#f6f2e6", .2), y0 = 258 - (lignes.length - 1) * fsA * .5 + fsA * .32;
+    O.push(`<ellipse cx="173" cy="288.5" rx="31" ry="2.6" fill="#000" opacity=".3"/><path d="M147 288l7-48M199 288l-7-48" stroke="${nC("#6e4320", .4)}" stroke-width="3" stroke-linecap="round"/>
+      <rect x="141" y="238" width="64" height="40" rx="2" fill="${nC("#8a5a2b", .4)}"/><rect x="144" y="241" width="58" height="34" fill="${nC("#26342e", .25)}"/><ellipse cx="166" cy="262" rx="20" ry="9" fill="#fff" opacity=".05"/>
+      ${lignes.map((l, i) => T(173, y0 + i * fsA * 1.02, fsA, X(l), ` fill="${craie}" style="font-family:Caveat,'Segoe Print','Comic Sans MS',cursive;font-weight:700"${[...l].length * .42 * fsA > 55 ? ` textLength="54" lengthAdjust="spacingAndGlyphs"` : ""}`)).join("")}`);
+  }
+  if (!aLouer){
+    const pot = trad ? "#b5653b" : "#3a3e45";
+    O.push(`<ellipse cx="353" cy="288" rx="15" ry="2.6" fill="#000" opacity=".3"/><rect x="352" y="258" width="2.2" height="12" fill="${nC("#5b3a20", .4)}"/>
+      <circle cx="353" cy="252" r="12.5" fill="${nC("#3e7a37", .45)}"/><circle cx="346" cy="247" r="7" fill="${nC("#4b8d43", .45)}"/><circle cx="360" cy="246" r="7.5" fill="${nC("#3a7034", .45)}"/><circle cx="353" cy="241" r="6.5" fill="${nC("#58a04f", .45)}"/>
+      <circle cx="349" cy="244" r="2.2" fill="#fff" opacity="${nuit ? .05 : .14}"/><circle cx="357" cy="250" r="1.8" fill="#000" opacity=".12"/>
+      <path d="M342 271h22l-3 17h-16z" fill="${nC(pot, .45)}"/><rect x="340.5" y="268" width="25" height="4" rx="1" fill="${nC(mix(pot, "#ffffff", .15), .45)}"/><path d="M345 274l1.5 12" stroke="#fff" stroke-opacity=".15" stroke-width="1.5"/>`);
+  }
+  // Réverbère
+  if (nuit) O.push(`<circle cx="11" cy="58" r="44" fill="url(#lant-${u})"/>`);
+  const fer = nC("#24262c", .2);
+  O.push(`<path d="M7 290l1.6-12h4.8l1.6 12z" fill="${fer}"/><rect x="9.7" y="66" width="2.6" height="214" fill="${fer}"/><rect x="8.4" y="120" width="5.2" height="3" rx="1" fill="${fer}"/><rect x="8.4" y="270" width="5.2" height="3" rx="1" fill="${fer}"/>
+    <path d="M4.5 52L11 45.5L17.5 52z" fill="${fer}"/><circle cx="11" cy="44.5" r="1.4" fill="${fer}"/>
+    <polygon points="5.5,52 16.5,52 14.6,66 7.4,66" fill="${nuit ? "#ffe6a6" : "#dfe5ea"}" stroke="${fer}" stroke-width="1"/><path d="M11 52v14" stroke="${fer}" stroke-width=".8"/><rect x="7" y="66" width="8" height="2.6" fill="${fer}"/>`);
+
+  const label = aLouer ? "Boutique vide, à louer" : `Vitrine de ${nom}`;
+  return `<svg class="front" viewBox="0 0 400 300" role="img" aria-label="${X(label)}"><defs>${D.join("")}</defs>${O.join("")}</svg>`;
+}
+// ═══ fin de la vitrine réaliste ═══
+// ═══ KIT RÉALISTE COMMUN v1, version EQ — fin ═══
+</script>
+<script id="kit-compta-js">
+// ═══ KIT COMPTA EQ v1 — début (identique dans les missions 1, 2 et 3 : ne pas modifier ici, modifier outils/kit-compta-eq) ═══
+// Objets du cabinet comptable, dessinés (aucune image) : Nadia, logo de la Borinage Banque, calculatrice TerrilCalc,
+// balance du bilan, classeur, post-it et punaises, étiquette de prix, étagère de classeurs, objets du bureau.
+// Affichage seulement : rien n'est enregistré. Seule vitrineEQ lit les choix de l'élève, exactement comme l'ancienne vitrine.
+// Toutes les marques sont fictives (Borinage Banque, TerrilCalc, TerrilPay).
+// v1.1 (26/10/2026) : inserer accepte un html « paresseux » (fonction), poser remplace un décor dont le contenu a changé,
+// vitrineEQ accepte des réglages en plus (boutique fermée, à louer…), taperCalcul peut se taire et relire le résultat au dernier moment.
+// v1.2 (26/10/2026) : creditsImages() ajoute au bas d'une mission les crédits des photos de matières (CC0).
+const COMPTA = (() => {
+  const X = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+  // ─── Nadia, expert-comptable : avatar dessiné (pas d'identifiants SVG : on peut l'afficher plusieurs fois) ───
+  const avatarNadia = `<svg viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="11.5" r="6.4" fill="#2b1d16"/>
+    <path d="M7 64c2.5-12.5 12-18.5 25-18.5S54.5 51.5 57 64z" fill="#6b2140"/>
+    <path d="M25 46.2 32 55.5l7-9.3c-2.2-.5-4.6-.8-7-.8s-4.8.3-7 .8z" fill="#f7f2ea"/>
+    <path d="M18.4 64l6.1-17.9 4.6 6.3L25 64zM45.6 64l-6.1-17.9-4.6 6.3L39 64z" fill="#4e1630"/>
+    <path d="M41.2 51.6l1.5-.4 1.8 6.6-1.5.4z" fill="#e3b85c"/>
+    <path d="M18.6 31c-1.2-10.6 4.8-17.4 13.4-17.4S46.6 20.4 45.4 31c-.5 4.2-1.8 7.3-3.4 9.2H22c-1.6-1.9-2.9-5-3.4-9.2z" fill="#2b1d16"/>
+    <rect x="27.2" y="37.5" width="9.6" height="10" rx="4.5" fill="#c98e66"/>
+    <ellipse cx="20.6" cy="30" rx="2.4" ry="3.4" fill="#d79b72"/><ellipse cx="43.4" cy="30" rx="2.4" ry="3.4" fill="#d79b72"/>
+    <circle cx="20.5" cy="34.6" r="1.1" fill="#e3b85c"/><circle cx="43.5" cy="34.6" r="1.1" fill="#e3b85c"/>
+    <ellipse cx="32" cy="29" rx="11.6" ry="13.2" fill="#e2a97f"/>
+    <path d="M20.5 27.8c0-8.9 5.2-13.4 11.7-13.4 6.9 0 11.8 4.7 11.3 12.9-2.7-4.8-6.8-7.2-11.8-7.4-4.6 1.3-8.4 3.8-11.2 7.9z" fill="#2b1d16"/>
+    <path d="M24.4 24.6q2.7-1.5 5.3-.2M34.3 24.4q2.7-1.3 5.3.2" stroke="#2b1d16" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="27.6" cy="29.3" rx="1.4" ry="1.6" fill="#24160f"/><ellipse cx="36.4" cy="29.3" rx="1.4" ry="1.6" fill="#24160f"/>
+    <circle cx="28.1" cy="28.7" r=".5" fill="#fff"/><circle cx="36.9" cy="28.7" r=".5" fill="#fff"/>
+    <circle cx="27.6" cy="29.1" r="3.7" fill="rgba(255,255,255,.16)" stroke="#3b2a4a" stroke-width="1.2"/><circle cx="36.4" cy="29.1" r="3.7" fill="rgba(255,255,255,.16)" stroke="#3b2a4a" stroke-width="1.2"/>
+    <path d="M31.3 28.8q.7-.5 1.4 0M23.9 28.4l-2.6-.8M40.1 28.4l2.6-.8" stroke="#3b2a4a" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <path d="M31.1 32q.9 1.5 1.8 0" stroke="#b97a55" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <circle cx="24.3" cy="33.4" r="2" fill="#e8907a" opacity=".35"/><circle cx="39.7" cy="33.4" r="2" fill="#e8907a" opacity=".35"/>
+    <path d="M27.5 35.2q4.5 3.7 9 0" stroke="#a8394a" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+  </svg>`;
+  /** Remplace l'émoji des encadrés de Nadia par l'avatar dessiné (une seule fois par encadré). */
+  function coachs(racine){
+    (racine || document).querySelectorAll(".coach .av:not(.cpt-nadia)").forEach((av, i) => {
+      av.innerHTML = avatarNadia; av.classList.add("cpt-nadia"); if (i === 0) av.classList.add("parle");
+    });
+  }
+
+  // ─── Borinage Banque (fictive) : un terril et un chevalement, en or sur bleu nuit ───
+  const pictoBanque = `<svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#14284b"/>
+    <path d="M3 22c3.6-.4 5.6-5.7 8.4-10.4 1-1.6 2.2-1.6 3.2 0C17.4 16.3 19.4 21.6 25 22z" fill="#e3b85c"/>
+    <path d="M17.5 22V8.5h4.5V22M17.5 12.5l4.5-4M17.5 16.5l4.5-4M16.5 8.5h6.5" stroke="#f6d88f" stroke-width="1.1" fill="none" stroke-linejoin="round"/>
+    <circle cx="19.75" cy="6.3" r="1.7" fill="none" stroke="#f6d88f" stroke-width="1.1"/></svg>`;
+  function logoBanque(o){
+    o = o || {};
+    return `<span class="cpt-banque${o.clair ? " clair" : ""}" aria-hidden="true">${pictoBanque}<span><b>Borinage</b> Banque</span></span>`;
+  }
+  /** En-tête de document : logo (banque) ou titre libre, à droite un titre et une petite ligne. Textes échappés. */
+  function entete(o){
+    o = o || {};
+    const gauche = o.logo === "banque" ? logoBanque() : `<span class="cpt-ent-titre">${X(o.gauche || "")}</span>`;
+    return `<div class="cpt-entete" aria-hidden="true">${gauche}<div style="text-align:right"><span class="cpt-ent-titre">${X(o.titre || "")}</span>${o.sous ? `<small>${X(o.sous)}</small>` : ""}</div></div>`;
+  }
+  const mention = (clair) => `<small class="cpt-fictif${clair ? " clair" : ""}" aria-hidden="true">Document fictif · projet scolaire</small>`;
+
+  // ─── Calculatrice TerrilCalc ───
+  // o.ecran : ce qu'affiche l'écran ; o.ruban : lignes [calcul, résultat] du ticket. Décorative (aria-hidden) :
+  // on n'y met que des chiffres déjà affichés par la page, jamais un calcul fait ici.
+  const TOUCHES = [["C","c"],["%","op"],["÷","op"],["×","op"],["7"],["8"],["9"],["−","op"],["4"],["5"],["6"],["+","op"],["1"],["2"],["3"],["=","eg"],["0","zero"],[","]];
+  function calculatrice(o){
+    o = o || {};
+    const ruban = (o.ruban || []).length ? `<div class="cpt-ruban">${o.ruban.map(l => `<div><span>${X(l[0])}</span><b>${X(l[1] || "")}</b></div>`).join("")}</div>` : "";
+    return `<div class="cpt-calc" aria-hidden="true">${ruban}<div class="cpt-calc-corps"><div class="cpt-calc-haut"><span class="cpt-calc-marque">TERRILCALC</span><span class="cpt-solaire"></span></div>
+      <div class="cpt-ecran"><span class="cpt-fantome">88888888</span><span class="cpt-val">${X(o.ecran == null ? "0" : o.ecran)}</span></div>
+      <div class="cpt-touches">${TOUCHES.map(t => `<span${t[1] ? ` class="${t[1]}"` : ""}>${t[0]}</span>`).join("")}</div></div></div>`;
+  }
+  /** Tape une suite de touches (chaîne, ex. « 225,06÷12= ») puis affiche « fin » (un nombre déjà présent dans la page,
+   *  ou une fonction qui le relit au dernier moment). o.muet : sans le son des touches. */
+  async function taperCalcul(calc, suite, fin, pause, o){
+    o = o || {};
+    if (!calc) return;
+    const val = calc.querySelector(".cpt-val"), touches = [...calc.querySelectorAll(".cpt-touches span")];
+    const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let saisie = "";
+    for (const ch of reduit ? [] : [...String(suite || "")]){
+      const t = touches.find(s => s.textContent === ch); if (!calc.isConnected) return;
+      if (t){ t.classList.add("appuie"); if (!o.muet && typeof SON !== "undefined") SON.jouer("touche"); setTimeout(() => t.classList.remove("appuie"), 110); }
+      saisie = /[0-9,]/.test(ch) ? (/[÷×−+%=]$/.test(saisie) || saisie === "" ? "" : saisie) + ch : saisie + ch;
+      if (val && /[0-9,]/.test(ch)) val.textContent = saisie.replace(/^.*[÷×−+%=]/, "");
+      await new Promise(r => setTimeout(r, pause || 130));
+    }
+    const resultat = typeof fin === "function" ? fin() : fin;
+    if (val && resultat != null && calc.isConnected) val.textContent = resultat;
+  }
+
+  // ─── Balance du bilan : ACTIF à gauche, PASSIF à droite ; à plat quand le bilan est équilibré ───
+  function balance(equilibre, o){
+    o = o || {};
+    const a = equilibre ? 0 : (o.angle || -9) * Math.PI / 180, cx = 66, cy = 22, L = 46;
+    const xg = cx - L * Math.cos(a), yg = cy - L * Math.sin(a), xd = cx + L * Math.cos(a), yd = cy + L * Math.sin(a);
+    const plateau = (x, y, mot) => `<path d="M${x} ${y}l-14 30M${x} ${y}l14 30" stroke="#a77f2e" stroke-width="1.2"/>
+      <path d="M${x - 19} ${y + 30}h38q-3 9-19 9t-19-9z" fill="#e3b85c" stroke="#a77f2e" stroke-width="1"/>
+      <text x="${x}" y="${y + 52}" text-anchor="middle" fill="${o.couleurTexte || "#e3b85c"}">${mot}</text>`;
+    return `<svg class="cpt-balance" viewBox="0 0 132 112" aria-hidden="true">
+      <path d="M44 106h44l-7-8H51z" fill="#a77f2e"/><rect x="63" y="${cy}" width="6" height="77" rx="2" fill="#c9a24a"/>
+      <path d="M${xg} ${yg}L${xd} ${yd}" stroke="#e3b85c" stroke-width="5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="5" fill="#f6d88f" stroke="#a77f2e"/>
+      ${plateau(xg, yg, "ACTIF")}${plateau(xd, yd, "PASSIF")}
+      ${equilibre ? `<text x="${cx}" y="${cy + 30}" text-anchor="middle" font-size="16" fill="${o.couleurTexte || "#e3b85c"}" style="font-size:16px">=</text>` : ""}</svg>`;
+  }
+
+  // ─── Classeur à anneaux ───  o : { titre, sous, couleur, feuilles (1 à 3), tampon (texte du tampon sur la 1re feuille) }
+  function classeur(o){
+    o = o || {};
+    const n = Math.max(1, Math.min(3, o.feuilles || 3));
+    const feuilles = Array.from({ length:n }, (_, i) => `<div class="cpt-cl-feuille">${i === 0 && o.tampon ? `<span class="tampon vert">${X(o.tampon)}</span>` : ""}</div>`).reverse().join("");
+    return `<div class="cpt-classeur" aria-hidden="true" style="--c:${X(o.couleur || "#1e3a6e")}">
+      <div class="cpt-cl-couv"><div class="cpt-cl-etiq"><b>${X(o.titre || "Classeur")}</b>${X(o.sous || "")}</div><i class="cpt-cl-trou"></i></div>
+      <div class="cpt-cl-int">${feuilles}<i class="cpt-cl-anneau" style="top:22%"></i><i class="cpt-cl-anneau" style="top:47%"></i><i class="cpt-cl-anneau" style="top:72%"></i></div></div>`;
+  }
+
+  // ─── Liège : punaise, post-it ; étiquette de prix ───
+  const punaise = (couleur) => `<i class="cpt-punaise" aria-hidden="true"${couleur ? ` style="--p:${X(couleur)}"` : ""}></i>`;
+  /** html : texte déjà échappé par l'appelant (utiliser COMPTA.X pour les valeurs de la page). */
+  const postit = (html, o) => { o = o || {}; return `<div class="cpt-postit ${X(o.couleur || "")}" style="--rot:${+o.rot || -2}deg">${o.punaise === false ? "" : punaise(o.couleurPunaise)}${html}</div>`; };
+  const etiquette = (prix, o) => { o = o || {}; return `<span class="cpt-etiquette" style="--rot:${+o.rot || -4}deg" aria-hidden="true">${o.titre ? `<small>${X(o.titre)}</small>` : ""}${X(prix)}</span>`; };
+
+  // ─── Étagère de classeurs (le cabinet comptable) ───
+  function etagere(dos){
+    dos = dos || [["Achats","#1e3a6e"],["Ventes","#7a1f3d"],["Banque","#14284b"],["TVA","#2f6b4f"],["Bilans","#a77f2e"],["Courrier","#4b3b7a"]];
+    let x = 14, livres = "";
+    dos.forEach((d, i) => {
+      const w = 34 + (i % 3) * 4, h = 88 - (i % 2) * 8, y = 100 - h;
+      livres += `<g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${X(d[1])}"/><rect x="${x}" y="${y}" width="5" height="${h}" rx="2" fill="rgba(255,255,255,.12)"/>
+        <rect x="${x + 5}" y="${y + 10}" width="${w - 10}" height="${h - 34}" rx="2" fill="#fffdf6" opacity=".92"/>
+        <text x="${x + w / 2}" y="${y + 14}" transform="rotate(90 ${x + w / 2} ${y + 14})" font-size="10" font-weight="800" fill="#14284b" font-family="Inter,Arial,sans-serif">${X(d[0])}</text>
+        <circle cx="${x + w / 2}" cy="${y + h - 13}" r="5.5" fill="#11131a" stroke="rgba(255,255,255,.35)" stroke-width="2"/></g>`;
+      x += w + 3;
+    });
+    return `<svg class="cpt-etagere" viewBox="0 0 ${x + 14} 112" aria-hidden="true">${livres}
+      <rect x="0" y="100" width="${x + 14}" height="8" rx="2" fill="#6b4426"/><rect x="0" y="108" width="${x + 14}" height="4" fill="#3d2615"/></svg>`;
+  }
+
+  // ─── Objets du bureau (décor, aria-hidden) : stylo, tasse, trombones, tampon encreur ───
+  const OBJETS = {
+    stylo:`<svg class="cpt-objet" viewBox="0 0 120 24" width="120" height="24" aria-hidden="true"><rect x="10" y="8" width="88" height="9" rx="4.5" fill="#14284b"/><rect x="66" y="8" width="10" height="9" fill="#e3b85c"/><path d="M98 8.5l16 4-16 4z" fill="#d9d4c7"/><path d="M110 11.5l4 1-4 1z" fill="#222"/><rect x="18" y="5" width="34" height="3.5" rx="1.7" fill="#c9a24a"/></svg>`,
+    tasse:`<svg class="cpt-objet" viewBox="0 0 70 70" width="70" height="70" aria-hidden="true"><ellipse cx="32" cy="58" rx="26" ry="7" fill="rgba(0,0,0,.3)"/><path d="M12 22h40v26a14 14 0 0 1-14 14h-12a14 14 0 0 1-14-14z" fill="#f4efe6"/><path d="M52 28h4a8 8 0 0 1 0 16h-5" stroke="#f4efe6" stroke-width="5" fill="none"/><ellipse cx="32" cy="22" rx="20" ry="5.5" fill="#5a3a26"/><path d="M24 14q-4-6 1-11M34 14q-4-6 1-11" stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="12" y="34" width="40" height="5" fill="#e3b85c" opacity=".8"/></svg>`,
+    trombones:`<svg class="cpt-objet" viewBox="0 0 60 40" width="60" height="40" aria-hidden="true"><path d="M8 26V10a5 5 0 0 1 10 0v18a3 3 0 0 1-6 0V12" stroke="#b9c0cc" stroke-width="2" fill="none" stroke-linecap="round" transform="rotate(-20 13 18)"/><path d="M34 30V14a5 5 0 0 1 10 0v18a3 3 0 0 1-6 0V16" stroke="#e3b85c" stroke-width="2" fill="none" stroke-linecap="round" transform="rotate(25 39 22)"/></svg>`,
+    tampon:`<svg class="cpt-objet" viewBox="0 0 70 60" width="70" height="60" aria-hidden="true"><ellipse cx="35" cy="52" rx="26" ry="6" fill="rgba(0,0,0,.3)"/><rect x="12" y="40" width="46" height="12" rx="3" fill="#2f2f38"/><rect x="15" y="36" width="40" height="6" rx="2" fill="#c62828"/><rect x="29" y="12" width="12" height="25" rx="3" fill="#7a4f2a"/><ellipse cx="35" cy="11" rx="11" ry="7" fill="#9a6a3c"/></svg>`
+  };
+  const objet = (nom) => OBJETS[nom] || "";
+
+  // ─── Vitrine réaliste des EQ : mêmes choix et mêmes valeurs par défaut que l'ancienne vitrine ───
+  // (lit S, type(), empl() et, s'il existe, EQUIPEMENT_VITRINE(), comme l'ancienne fonction vitrine des trois missions)
+  // « autres » (facultatif, pour le décor seulement) : réglages qui remplacent ceux par défaut, ex. { allumee:false, panneau:"FERMÉ" }.
+  function vitrineEQ(uid, autres){
+    const t = typeof type === "function" ? type() : null, em = typeof empl === "function" ? empl() : null;
+    const equip = typeof EQUIPEMENT_VITRINE === "function" ? EQUIPEMENT_VITRINE() : [];
+    const svg = vitrineSVG(Object.assign({
+      nom: String(S.nom || "").trim() || "Ton enseigne", couleur: S.couleur || "#8E4EC6", couleur2: S.couleur2 || "#FFFFFF",
+      style: S.style || "moderne", symbole: S.symbole || (t ? t.emoji : "★"),
+      facade: S.facade || "", auvent: S.auvent || "", ambiance: S.ambiance || "", accueil: S.accueil || "", numero: S.numero || "",
+      produits: t ? t.vitrine : ["✨","✨","✨","✨"], equipement: equip, panneau: "OUVERT", allumee: true, nuit: uid !== "print"
+    }, autres || {}), uid);
+    // L'emplacement choisi reste visible, comme avant : zone piétonne au centre-ville, parking en périphérie, arbre dans le quartier
+    const coin = !em ? "" : em.id === "centre"
+      ? `<g aria-hidden="true"><rect x="377" y="196" width="3" height="58" fill="#5d6570"/><circle cx="378.5" cy="190" r="12" fill="#1E5BD6" stroke="#fff" stroke-width="2"/><text x="378.5" y="195" font-size="13" text-anchor="middle" fill="#fff">🚶</text></g>`
+      : em.id === "peripherie"
+      ? `<g aria-hidden="true"><rect x="370" y="208" width="3" height="46" fill="#5d6570"/><rect x="359" y="186" width="25" height="25" rx="4" fill="#1E5BD6" stroke="#fff" stroke-width="2"/><text x="371.5" y="205" font-size="17" font-weight="800" text-anchor="middle" fill="#fff" style="font-family:Arial">P</text></g>`
+      : `<text x="364" y="256" font-size="34" text-anchor="middle" aria-hidden="true">🌳</text>`;
+    return svg.replace(/<\/svg>\s*$/, coin + "</svg>");
+  }
+
+  // ─── Petits outils pour les décors des missions ───
+  /** Insère html une seule fois dans « cible » (repère data-decor="cle") ; rend l'élément inséré.
+   *  html peut être une fonction : elle n'est appelée que s'il faut vraiment insérer (decorer() passe à chaque frappe). */
+  function inserer(cible, position, cle, html){
+    if (!cible) return null;
+    const deja = (position === "beforebegin" || position === "afterend" ? cible.parentElement : cible);
+    const ex = deja && deja.querySelector(`[data-decor="${cle}"]`);
+    if (ex) return ex;
+    const tmp = document.createElement("div"); tmp.innerHTML = String(typeof html === "function" ? html() : html).trim();
+    const el = tmp.firstElementChild; if (!el) return null;
+    el.setAttribute("data-decor", cle); cible.insertAdjacentElement(position, el);
+    return el;
+  }
+  /** Comme inserer, mais remplace le décor déjà posé si son contenu a changé (décor qui suit ce que l'élève tape). */
+  function poser(cible, position, cle, html){
+    if (!cible) return null;
+    const h = String(typeof html === "function" ? html() : html).trim();
+    const deja = (position === "beforebegin" || position === "afterend" ? cible.parentElement : cible);
+    const ex = deja && deja.querySelector(`[data-decor="${cle}"]`);
+    if (ex && ex.__cptHtml === h) return ex;
+    const tmp = document.createElement("div"); tmp.innerHTML = h;
+    const el = tmp.firstElementChild;
+    if (!el){ if (ex) ex.remove(); return null; }
+    el.setAttribute("data-decor", cle); el.__cptHtml = h;
+    if (ex) ex.replaceWith(el); else cible.insertAdjacentElement(position, el);
+    return el;
+  }
+  // ─── Crédits des photos de matières (CC0) : une ligne discrète au bas de la page, détails sur demande ───
+  const CREDITS = [
+    ["Bois du bureau", "Wood Table 001", "Dimitrios Savva et Rico Cilliers, Poly Haven", "https://polyhaven.com/a/wood_table_001"],
+    ["Liège", "Cork 003", "Lennart Demes, ambientCG", "https://ambientcg.com/a/Cork003"],
+    ["Carton", "Cardboard 004", "Lennart Demes, ambientCG", "https://ambientcg.com/a/Cardboard004"],
+    ["Cuir du classeur", "Brown Leather", "Rob Tuytel, Poly Haven", "https://polyhaven.com/a/brown_leather"]
+  ];
+  /** Ajoute une fois, au bas de la page, les crédits des photos (titre, auteur, licence, lien). */
+  function creditsImages(){
+    if (document.getElementById("cptCredits")) return;
+    const f = document.createElement("footer"); f.id = "cptCredits"; f.className = "cpt-credits";
+    f.innerHTML = `<details><summary>Crédits des images</summary><ul>${CREDITS.map(c => `<li>${X(c[0])} : « ${X(c[1])} », ${X(c[2])}, licence CC0 1.0 (domaine public) — <a href="${X(c[3])}" target="_blank" rel="noopener">${X(c[3].replace(/^https:\/\//, ""))}</a></li>`).join("")}</ul>
+      <p>Photos réduites et converties en WebP pour l'application. Illustrations, documents et objets : dessinés pour l'application ; toutes les marques sont fictives.</p></details>`;
+    document.body.appendChild(f);
+  }
+
+  const vus = new Set();
+  /** Vrai seulement la première fois pour cette clé (animation ou son à ne jouer qu'une fois). */
+  const premiereFois = (cle) => vus.has(cle) ? false : (vus.add(cle), true);
+  const son = (nom) => { if (typeof SON !== "undefined") SON.jouer(nom); };
+
+  return { X, avatarNadia, coachs, logoBanque, entete, mention, calculatrice, taperCalcul, balance, classeur, punaise, postit, etiquette, etagere, objet, vitrineEQ, inserer, poser, premiereFois, son, creditsImages };
+})();
+// ═══ KIT COMPTA EQ v1 — fin ═══
+</script>
+<script id="decor-prof-js">
+// ═══ DÉCOR CONSOLE — début (affichage seulement : aucune logique, rien n'est enregistré ; voir outils/DECOR_REGLES.md) ═══
+// Le décor s'ajoute APRÈS chaque affichage : render() d'origine ne change pas, on le complète.
+// La vitrine de chaque élève est la même que dans ses missions (vitrine réaliste, mêmes choix, mêmes valeurs par défaut).
+const DECOR = (() => {
+  const X = COMPTA.X;
+  /** Vue affichée : même règle que render(), en lecture seule. */
+  const ecran = () => !APP.source ? "connexion" : APP.source === "chargement" ? "chargement" : APP.vue;
+
+  // Trois boutiques fictives pour la rue de l'écran de connexion (décor seulement)
+  const RUE = [
+    { nom:"Atelier Cacao", couleur:"#7a3fbf", couleur2:"#ffffff", style:"elegant", symbole:"🍫", facade:"brique", auvent:"raye", ambiance:"chaleureuse", accueil:"Bienvenue chez nous !", numero:"12", produits:["🍫","🎁","🍬","🍫"] },
+    { nom:"Roue Libre", couleur:"#1f8a5b", couleur2:"#ffffff", style:"moderne", symbole:"🚲", facade:"moderne", auvent:"uni", ambiance:"lumineuse", accueil:"Entrez, c'est ouvert !", numero:"14", produits:["🚲","⛑️","🔧","🚲"] },
+    { nom:"Au Jardin Fleuri", couleur:"#d9480f", couleur2:"#fff4e0", style:"fun", symbole:"🌷", facade:"bois", auvent:"raye", ambiance:"nature", accueil:"Ici, chaque client compte", numero:"16", produits:["🌷","🪴","🌻","🌵"] }
+  ];
+  let rueHTML = "";
+  const rue = () => rueHTML || (rueHTML = `<div aria-hidden="true"><div class="pf-rue">${RUE.map((c, i) => `<figure>${vitrineSVG(Object.assign({ panneau:"OUVERT", allumee:true, nuit:true }, c), "pfrue" + i)}</figure>`).join("")}</div><div class="pf-rue-sol"></div></div>`);
+
+  const pancarte = (ouvert) => `<div class="pf-pancarte${COMPTA.premiereFois("pancarte-" + ouvert) ? " pf-bouge" : ""}" aria-hidden="true"><svg viewBox="0 0 120 92">
+    <path d="M60 2L22 34M60 2l38 32" stroke="#c9b48a" stroke-width="2" fill="none"/><circle cx="60" cy="3" r="3" fill="#8d96a5"/>
+    <rect x="6" y="30" width="108" height="56" rx="9" fill="${ouvert ? "#f4fff7" : "#fff4f2"}" stroke="${ouvert ? "#1f7a45" : "#b42318"}" stroke-width="3"/>
+    <rect x="12" y="36" width="96" height="44" rx="6" fill="none" stroke="${ouvert ? "#1f7a45" : "#b42318"}" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>
+    <text x="60" y="64" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="900" font-size="${ouvert ? 19 : 20}" letter-spacing="2" fill="${ouvert ? "#1f7a45" : "#b42318"}">${ouvert ? "OUVERT" : "FERMÉ"}</text>
+    <text x="60" y="77" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="600" font-size="8" fill="#5b6478">${ouvert ? "les élèves peuvent jouer" : "missions en pause"}</text></svg></div>`;
+
+  function decorer(){
+    try {
+      const app = document.getElementById("app"); if (!app) return;
+      const e = ecran();
+      // Écran de connexion : la rue des boutiques
+      const porte = app.querySelector(".gate");
+      if (e === "connexion" && porte) COMPTA.inserer(porte, "afterend", "rue", rue());
+      // Menu : étagère de classeurs
+      const menu = app.querySelector("nav.rail");
+      if (menu) COMPTA.inserer(menu, "beforeend", "etagere", `<div class="pf-etagere" aria-hidden="true">${COMPTA.etagere()}</div>`);
+      // Pilotage : la pancarte suit l'état réel de l'accès (classe « ouvert » du panneau d'origine)
+      const acces = app.querySelector(".panel.acces");
+      if (acces){
+        const ouvert = acces.classList.contains("ouvert"), autre = acces.querySelector(`[data-decor="pancarte-${!ouvert}"]`);
+        if (autre) autre.remove();
+        COMPTA.inserer(acces, "afterbegin", "pancarte-" + ouvert, pancarte(ouvert));
+      }
+      // Élève par élève : l'extrait officiel porte la mention « document fictif », comme dans les missions
+      app.querySelectorAll("#vue .paper").forEach(p => { if (/Extrait de la Banque-Carrefour/i.test(p.textContent)) COMPTA.inserer(p, "beforeend", "fictif", `<div aria-hidden="true">${COMPTA.mention()}</div>`); });
+      // Élève par élève : balance du bilan d'ouverture quand la page dit « Actif = Passif »
+      app.querySelectorAll("#vue h3").forEach(h => {
+        if (!/Bilan d.ouverture/i.test(h.textContent)) return;
+        const bloc = h.parentElement; if (!bloc || !/Actif\s*=\s*Passif/i.test(bloc.textContent)) return;
+        COMPTA.inserer(h, "afterend", "balance", `<div class="pf-balance" aria-hidden="true">${COMPTA.balance(true)}</div>`);
+      });
+    } catch(e) { console.warn("décor :", e); }
+  }
+  // ─── Accroche (seules affectations permises ici : render, vitrine) ───
+  const renduOrigine = render;
+  render = function(){ renduOrigine(); decorer(); };
+  vitrine = COMPTA.vitrineEQ;                                         // la même vitrine réaliste que dans les missions
+  window.__decor = { renduOrigine, decorer, ecran };
+  render();
+  return { decorer, ecran };
+})();
+// ═══ DÉCOR CONSOLE — fin ═══
 </script>
 </body>
 </html>
