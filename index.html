@@ -305,7 +305,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .ptab td{vertical-align:middle}
 .mpill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--line2);background:none;color:var(--text);font:600 12px var(--ui);cursor:pointer;white-space:nowrap}
 .mpill.termine{border-color:rgba(52,211,153,.55);color:var(--mint)} .mpill.en_cours{border-color:rgba(251,191,36,.55);color:var(--amber)} .mpill.reinitialise{border-color:rgba(124,176,255,.6);color:var(--steel)}
-.mpill.vide{cursor:default;color:var(--dim);border-style:dashed}
+.mpill.vide{cursor:default;color:var(--dim);border-style:dashed} .mpill:disabled{cursor:default}
 .hors{margin-left:6px;font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid rgba(251,191,36,.5);color:var(--amber)}
 .pact{white-space:nowrap;text-align:right} .pact .link{text-decoration:none;font-size:16px;margin-left:6px} .link.danger{color:var(--coral)}
 .gsheet{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)} .gsheet h4{font-size:15px;margin-bottom:6px}
@@ -723,10 +723,47 @@ body{background:radial-gradient(130% 85% at 50% -10%, #241a52 0%, #120d2c 45%, #
   .cpt-liege{padding:20px 14px}
   .cpt-scene{min-height:0}
 }
+/* ─── v1.3 : petits films sur tout l'écran (3 s au plus, passés d'un clic ou d'une touche) ─── */
+.cpt-film{position:fixed; inset:0; z-index:95; display:grid; grid-template-columns:minmax(0,1fr); place-items:center; padding:16px; overflow:hidden; cursor:pointer;
+  background:radial-gradient(120% 90% at 50% 40%, rgba(30,20,60,.92), rgba(6,4,16,.96)); animation:cpt-film-entre .25s ease-out both}
+.cpt-film.cpt-film-sort{animation:cpt-film-sort .22s ease-in both}
+@keyframes cpt-film-entre{from{opacity:0}}
+@keyframes cpt-film-sort{to{opacity:0}}
+.cpt-film-boite{display:flex; flex-direction:column; align-items:center; width:min(680px,100%); min-width:0; max-width:100%; max-height:100%}
+.cpt-film-boite > *{max-width:100%; min-width:0}
+.cpt-film-texte{margin:18px 0 0; font:700 22px var(--display,'Segoe UI',Arial,sans-serif); color:#fff; text-align:center; text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.cpt-film-passer{position:absolute; right:16px; bottom:12px; font:500 12px var(--ui,'Segoe UI',Arial,sans-serif); color:rgba(255,255,255,.55)}
+.cpt-film-temps{position:absolute; left:0; bottom:0; width:100%; height:3px; transform-origin:left; background:linear-gradient(90deg,#e3b85c,#ff3d8b); animation:cpt-film-temps linear both}
+@keyframes cpt-film-temps{from{transform:scaleX(0)} to{transform:scaleX(1)}}
+.cpt-film-calme .cpt-film-temps{display:none}
+
+/* ─── v1.3 : la page qui vit (allumée par le décor d'une mission : body.cpt-vivant) ─── */
+.cpt-vivant .cpt-arrive{animation:cpt-arrive .45s cubic-bezier(.2,.9,.3,1) both; animation-delay:calc(var(--cpt-i,0) * 70ms)}
+@keyframes cpt-arrive{from{opacity:0; transform:translateY(14px) scale(.985)}}
+.cpt-vivant .choice,.cpt-vivant .offer,.cpt-vivant .chip{transition:transform .18s cubic-bezier(.3,1.5,.5,1), box-shadow .18s, border-color .15s, background .15s}
+.cpt-vivant .choice:not([aria-disabled="true"]):hover,.cpt-vivant .offer:hover{transform:translateY(-3px); box-shadow:0 14px 28px rgba(0,0,0,.3)}
+.cpt-vivant .choice:not([aria-disabled="true"]):hover .ico{animation:cpt-frise .5s ease-in-out}
+@keyframes cpt-frise{25%{transform:rotate(-9deg)} 75%{transform:rotate(9deg)}}
+.cpt-vivant .choice:active,.cpt-vivant .offer:active{transform:scale(.98)}
+.cpt-vivant .grad{background-size:220% auto; animation:cpt-reflet 5s ease-in-out infinite alternate}
+@keyframes cpt-reflet{to{background-position:100% center}}
+.cpt-vivant .cpt-xp-saute{animation:cpt-xp .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes cpt-xp{40%{transform:scale(1.2)}}
+.cpt-vivant #toasts .toast{border-radius:18px; background:rgba(26,18,52,.94); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); animation:cpt-notif .45s cubic-bezier(.2,.9,.3,1) both}
+@keyframes cpt-notif{from{opacity:0; transform:translateX(34px) scale(.96)}}
+.cpt-confettis{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0}
+.cpt-confettis i{position:absolute; top:-14px; width:8px; height:13px; border-radius:2px; opacity:.85; animation:cpt-tombe linear infinite}
+@keyframes cpt-tombe{to{transform:translateY(520px) rotate(560deg)}}
+@media (max-width:640px){
+  .cpt-film-texte{font-size:18px}
+  .cpt-film-passer{right:10px; bottom:8px}
+}
+
 @media (prefers-reduced-motion:reduce){
   .cpt-pose,.cpt-glisse{animation:none !important}
+  .cpt-vivant .cpt-arrive,.cpt-vivant .grad,.cpt-confettis i,.cpt-film,.cpt-film-temps{animation:none !important}
 }
-@media print{ .cpt-scene,.cpt-calc,.cpt-objet,.cpt-credits{display:none !important} }
+@media print{ .cpt-scene,.cpt-calc,.cpt-objet,.cpt-credits,.cpt-film,.cpt-confettis{display:none !important} }
 /* ═══ KIT COMPTA EQ v1 — fin ═══ */
 </style>
 <style id="decor-prof">
@@ -1619,7 +1656,7 @@ function sectionsM23(E){
   if (E.m2){ const m = E.m2;
     html += `<div class="card fade-in" style="margin-top:22px"><h3>🧰 Mission 2 · équipement ${stM(m)}</h3>
       <div class="kpi-row"><div class="k"><span>Budget</span><b>${m.budget ? euro0(m.budget) : "–"}</b></div><div class="k"><span>Engagé TTC</span><b style="color:${m.respecte === false ? "var(--coral)" : "var(--text)"}">${euro0(m.engage)}</b></div><div class="k"><span>Trésorerie après</span><b style="color:var(--mint)">${m.tresorerie != null ? euro0(m.tresorerie) : "–"}</b></div><div class="k"><span>Dettes fournisseurs</span><b>${euro0(m.dettes)}</b></div><div class="k"><span>Facture piégée</span><b style="font-size:14px">${m.piege ? (m.piege.trouve ? "🦅 repérée" : m.piege.decision === "acceptee" ? "💸 acceptée" : m.piege.decision ? "⚠ mauvaise ligne" : "en attente") : "–"}</b></div></div>
-      ${m.journal.length ? `<table class="led"><thead><tr><th>Pièce</th><th>Fournisseur</th><th class="n">HT</th><th class="n">TVA</th><th class="n">TTC</th><th>Paiement</th></tr></thead><tbody>${m.journal.map(j => `<tr><td class="money">${esc(j.piece)}</td><td>${esc(j.fournisseur)}</td><td class="n">${euro(j.ht)}</td><td class="n">${euro(j.tva)}</td><td class="n">${euro(j.ttc)}</td><td>${j.paye ? "✓ payé" : "📅 à 30 jours"}</td></tr>`).join("")}</tbody></table>` : `<p class="help">Achats en cours : ${m.achats.filter(a => a.termine).length}/3 terminés.</p>`}
+      ${m.journal.length ? `<table class="led"><thead><tr><th>Pièce</th><th>Fournisseur</th><th class="n">HT</th><th class="n">TVA</th>${m.journal.some(j => j.enTrop > 0) ? `<th class="n">En trop</th>` : ""}<th class="n">TTC</th><th>Paiement</th></tr></thead><tbody>${m.journal.map(j => `<tr><td class="money">${esc(j.piece)}</td><td>${esc(j.fournisseur)}</td><td class="n">${euro(j.ht)}</td><td class="n">${euro(j.tva)}</td>${m.journal.some(x => x.enTrop > 0) ? `<td class="n">${j.enTrop > 0 ? euro(j.enTrop) : "–"}</td>` : ""}<td class="n">${euro(j.ttc)}</td><td>${j.paye ? "✓ payé" : "📅 à 30 jours"}</td></tr>`).join("")}</tbody></table>` : `<p class="help">Achats en cours : ${m.achats.filter(a => a.termine).length}/3 terminés.</p>`}
       ${m.fini && m.bilan ? `<h3 class="sub">Bilan après équipement</h3>${bilanDoc(m.bilan)}` : ""}</div>`;
   }
   if (E.m3){ const m = E.m3, dv = m.devis, cr = m.cr;
@@ -1666,7 +1703,8 @@ V.pilotage = () => {
   const compte = (m, s) => lignes.filter(l => (missionDe(l, m) || {}).statut === s).length;
   const pill = (l, m) => { const x = missionDe(l, m); if (!x) return `<span class="mpill vide">–</span>`;
     const s = LIB_STATUT[x.statut] || ["•", x.statut || "?"];
-    return `<button class="mpill ${STATUTS_OK.includes(x.statut) ? x.statut : ""}" data-reinit="${esc(l.email)}" data-m="${m}" title="Mission ${m} : ${esc(s[1])}. Clique pour la rouvrir à cet élève.">${s[0]} ${esc(s[1])}</button>`; };
+    if (x.statut === "reinitialise") return `<button class="mpill reinitialise" data-reinit="${esc(l.email)}" data-m="${m}" disabled title="Mission ${m} déjà rouverte : l'élève peut la refaire (son ancien travail est archivé).">${s[0]} ${esc(s[1])}</button>`;
+    return `<button class="mpill ${STATUTS_OK.includes(x.statut) ? x.statut : ""}" data-reinit="${esc(l.email)}" data-m="${m}" ${APP.action ? "disabled" : ""} title="Mission ${m} : ${esc(s[1])}. Clique pour la rouvrir à cet élève.">${s[0]} ${esc(s[1])}</button>`; };
   const emoji = (l) => { const t = l.dossier && l.dossier.entreprise ? TYPES.find(x => x.id === l.dossier.entreprise.typeId) : null; return t ? t.emoji + " " : ""; };
   return head("Pilotage de la classe", "Le tableau de bord <span class='grad'>du professeur</span>", "Ouvre l'accès au début de la séance, choisis les missions, suis tes élèves en direct. Tout est enregistré dans la base de l'école.")
   + (demo ? `<div class="ask" style="margin:0 0 18px"><div class="q">✨</div><div><b>Mode démonstration :</b> les boutons de pilotage ne font rien. Connecte-toi pour piloter ta vraie classe.</div></div>` : "")
@@ -1675,8 +1713,9 @@ V.pilotage = () => {
       <div class="panel acces ${a.ouvert ? "ouvert" : ""}">
         <div class="etat"><span class="lampe" aria-hidden="true"></span><div><b>${a.ouvert ? "Accès ouvert" : "Accès fermé"}</b><div class="quand">${esc(a.txt)}${a.expire ? " (durée écoulée)" : ""}</div></div></div>
         <p class="help" style="margin-top:10px">Accès fermé : les élèves voient « La mission est fermée » et leur travail reste sauvegardé. L'accès se referme tout seul à la fin de la durée choisie.</p>
-        <h3 style="margin:18px 0 10px;font-size:18px">Durée d'ouverture</h3>
+        <h3 style="margin:18px 0 10px;font-size:18px">${a.ouvert ? "Durée pour prolonger" : "Durée d'ouverture"}</h3>
         <div class="durees">${DUREES.map(d => `<button class="dur ${duree === d[0] ? "on" : ""}" data-duree="${d[0]}">${d[1]}</button>`).join("")}</div>
+        ${a.ouvert ? `<p class="help" style="margin:-4px 0 12px">L'accès est déjà ouvert : la durée choisie ne compte que si tu cliques sur « Prolonger ».</p>` : ""}
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn bigbtn btn-vert" data-pilot="ouvrir" ${APP.action ? "disabled" : ""}>🟢 ${a.ouvert ? "Prolonger" : "Ouvrir l'accès"} (${esc((DUREES.find(d => d[0] === duree) || DUREES[2])[1])})</button>
           <button class="btn bigbtn btn-rouge" data-pilot="fermer" ${APP.action || !a.ouvert ? "disabled" : ""}>🔴 Fermer maintenant</button></div>
@@ -1693,7 +1732,7 @@ V.pilotage = () => {
       </div>
     </div>
     <div class="panel fade-in" style="margin-top:18px">
-      <div class="ptitre"><h3>Les élèves${APP.classe ? " · " + esc(APP.classe) : ""} (${lignes.length})</h3><span class="help">Clique sur l'état d'une mission pour la rouvrir à l'élève : son travail est archivé et ses choix sont préremplis.</span></div>
+      <div class="ptitre"><h3>Les élèves${APP.classe ? " · " + esc(APP.classe) : ""} (${lignes.length})</h3><span class="help">Clique sur l'état d'une mission pour la rouvrir à l'élève : son travail est archivé (rien n'est perdu). En mission 1, ses choix sont préremplis ; en missions 2 et 3, il recommence la mission avec son entreprise.</span></div>
       <div class="tscroll"><table class="list ptab"><thead><tr><th>Élève</th><th>Classe</th><th>Entreprise</th>${MISSIONS_APPLI.map(m => `<th>Mission ${m[0]}</th>`).join("")}<th></th></tr></thead><tbody>
       ${lignes.map(l => { const e = l.dossier && l.dossier.entreprise ? (l.dossier.entreprise.denomination || l.dossier.entreprise.nom || "") : "";
         return `<tr><td><b>${esc(l.prenom)} ${esc(l.nom)}</b>${l.inscrit ? "" : `<span class="hors" title="Cette adresse n'est pas dans la liste de la classe">hors liste</span>`}<small style="display:block;color:var(--dim)">${esc(l.email)}</small></td>
@@ -1812,15 +1851,16 @@ function blocGoogleSheet(){
 /** Action du professeur : appel à la base, message, puis rechargement des données. */
 async function actionProf(fn, message){
   if (APP.source !== "live"){ noter("Connecte-toi pour piloter ta classe (ici : données de démonstration).", "ko"); return null; }
-  if (APP.action) return null;
+  if (APP.action){ noter("⏳ Une action est déjà en cours : attends son message (vert ou rouge) avant de recommencer.", "ko"); return null; }
   APP.action = true; render();
+  const lent = setTimeout(() => { if (APP.action) noter("⏳ La base met du temps à répondre : attends le message de confirmation. Si rien ne vient d'ici une minute, recharge la page (F5) et regarde le tableau avant de recommencer.", "ko"); }, 15000);
   try {
-    const r = await fn(); APP.action = false;
+    const r = await fn(); clearTimeout(lent); APP.action = false;
     if (r && r.config) APP.config = r.config;
     if (message) noter(typeof message === "function" ? message(r) : message);
     render(); await charger(true); return r;
   } catch(e) {
-    APP.action = false; noter("⚠️ " + esc(e.message || "Erreur"), "ko");
+    clearTimeout(lent); APP.action = false; noter("⚠️ " + esc(e.message || "Erreur"), "ko");
     if (e.reserve || e.session) charger(true); else render(); return null;
   }
 }
@@ -1852,7 +1892,7 @@ function exporterCSV(){
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("button"); if (!b || APP.vue !== "pilotage" || !APP.source) return;
   const nomDe = (email) => { const l = lignesPilotage().find(x => x.email === email); return l ? `${l.prenom} ${l.nom}`.trim() || email : email; };
-  if (b.dataset.duree){ APP.duree = b.dataset.duree; render(); return; }
+  if (b.dataset.duree){ APP.duree = b.dataset.duree; render(); if (etatAcces().ouvert) noter("Durée choisie : clique sur 🟢 Prolonger pour l'appliquer. Pour l'instant, " + esc(etatAcces().txt.replace("Accès ouvert", "l'accès est ouvert")) + "."); return; }
   if (b.dataset.mission){
     const m = b.dataset.mission, cur = (APP.config && APP.config.missionsOuvertes) || [], ouverte = cur.includes(m);
     const nv = ouverte ? cur.filter(x => x !== m) : cur.concat([m]).sort();
@@ -1860,7 +1900,7 @@ document.addEventListener("click", async (e) => {
   }
   if (b.dataset.reinit){
     const email = b.dataset.reinit, m = b.dataset.m, x = missionDe(lignesPilotage().find(l => l.email === email) || {}, m) || {};
-    if (!confirm(`Rouvrir la mission ${m} de ${nomDe(email)} ?\n\nÉtat actuel : ${(LIB_STATUT[x.statut] || ["", x.statut || "?"])[1]}.\nSon travail est archivé (rien n'est perdu) et ses choix seront préremplis : il ou elle pourra les modifier.`)) return;
+    if (!confirm(`Rouvrir la mission ${m} de ${nomDe(email)} ?\n\nÉtat actuel : ${(LIB_STATUT[x.statut] || ["", x.statut || "?"])[1]}.\nSon travail est archivé (rien n'est perdu). ${m === "1" ? "Ses choix seront préremplis : il ou elle pourra les modifier." : "Il ou elle recommencera la mission, avec son entreprise des missions précédentes."}`)) return;
     await actionProf(() => rpcProf("mc_prof_reinitialiser", { p_email:email, p_mission:m }), `🔄 Mission ${m} rouverte pour ${esc(nomDe(email))}.`); return;
   }
   if (b.dataset.suppr){
@@ -2759,6 +2799,8 @@ function vitrineSVG(cfg, uid){
 // v1.1 (26/10/2026) : inserer accepte un html « paresseux » (fonction), poser remplace un décor dont le contenu a changé,
 // vitrineEQ accepte des réglages en plus (boutique fermée, à louer…), taperCalcul peut se taire et relire le résultat au dernier moment.
 // v1.2 (26/10/2026) : creditsImages() ajoute au bas d'une mission les crédits des photos de matières (CC0).
+// v1.3 (27/10/2026) : film() (scène de 3 s au plus sur tout l'écran, passée d'un clic, comme aux 3P), cascade(), confettis(),
+// xpSaute(), vivant() (cartes qui réagissent, reflets, notifications façon téléphone), couperFilms() pour les bancs d'essai.
 const COMPTA = (() => {
   const X = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 
@@ -2963,7 +3005,63 @@ const COMPTA = (() => {
   const premiereFois = (cle) => vus.has(cle) ? false : (vus.add(cle), true);
   const son = (nom) => { if (typeof SON !== "undefined") SON.jouer(nom); };
 
-  return { X, avatarNadia, coachs, logoBanque, entete, mention, calculatrice, taperCalcul, balance, classeur, punaise, postit, etiquette, etagere, objet, vitrineEQ, inserer, poser, premiereFois, son, creditsImages };
+  // ─── v1.3 : petits films sur tout l'écran (comme aux 3P) et page qui vit ───
+  // Un film dure 3 s au plus et ne se joue qu'une fois par clé. Un clic ou une touche le passe ; « moins d'animations »
+  // le réduit à un instant (état final seulement). Il ne retarde jamais la mission : il passe par-dessus l'écran suivant, déjà affiché.
+  let filmsCoupes = false, filmEnCours = null;
+  /** Plus aucun film (bancs d'essai qui contrôlent chaque écran). */
+  function couperFilms(){ filmsCoupes = true; if (filmEnCours) filmEnCours(); }
+  /** Lance les étapes d'un film (instants en fraction de la durée) ; rien ne se passe si le film a déjà disparu. */
+  function etapes(el, ms, liste){ liste.forEach(([f, fn]) => setTimeout(() => { if (el.isConnected) try { fn(); } catch(e) {} }, Math.round(f * ms))); }
+  /** Joue un film : { cle, html, texte, duree (3000 ms au plus), jouer(el, ms), final(el) }. Promesse : true s'il s'est joué. */
+  function film(o){
+    if (filmsCoupes || !o || !o.html || !premiereFois("film-" + o.cle)) return Promise.resolve(false);
+    if (filmEnCours) filmEnCours();
+    const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches, ms = reduit ? 700 : Math.min(3000, o.duree || 2400);
+    const el = document.createElement("div");
+    el.className = "cpt-film" + (reduit ? " cpt-film-calme" : ""); el.setAttribute("aria-hidden", "true");
+    el.innerHTML = `<div class="cpt-film-boite">${o.html}${o.texte ? `<p class="cpt-film-texte">${X(o.texte)}</p>` : ""}</div><span class="cpt-film-passer">Clique pour passer</span><i class="cpt-film-temps" style="animation-duration:${ms}ms"></i>`;
+    document.body.appendChild(el);
+    return new Promise((fin) => {
+      let fini = false, t = null;
+      const fermer = () => { if (fini) return; fini = true; clearTimeout(t); document.removeEventListener("keydown", fermer, true); if (filmEnCours === fermer) filmEnCours = null;
+        el.classList.add("cpt-film-sort"); setTimeout(() => el.remove(), 230); fin(true); };
+      t = setTimeout(fermer, ms);
+      filmEnCours = fermer;
+      el.addEventListener("click", fermer);
+      document.addEventListener("keydown", fermer, true);
+      try { if (reduit){ if (o.final) o.final(el); } else if (o.jouer) o.jouer(el, ms); } catch(e) {}
+    });
+  }
+  /** Les blocs d'un écran arrivent l'un après l'autre (une fois par écran ; ceux qui ont déjà leur animation sont laissés). */
+  function cascade(racine, cle){
+    if (!racine || !premiereFois("cascade-" + cle)) return;
+    const deja = /\b(kit-anim|cpt-pose|cpt-glisse|m[123]-pose|m[123]-glisse|reveal)\b/, cls = (el) => el.getAttribute("class") || "", blocs = [];
+    [...racine.children].forEach((el) => {
+      if (el.hasAttribute("data-decor") || deja.test(cls(el))) return;
+      if (/\b(grid|offers|checks|money-opts)\b/.test(cls(el))) [...el.children].forEach((x) => { if (!x.hasAttribute("data-decor") && !deja.test(cls(x))) blocs.push(x); });
+      else blocs.push(el);
+    });
+    blocs.slice(0, 14).forEach((el, k) => { el.classList.add("cpt-arrive"); el.style.setProperty("--cpt-i", String(k)); });
+  }
+  /** Une pluie de confettis (grands moments), à poser dans un bloc en position relative. */
+  function confettis(n){
+    const C = ["#e3b85c", "#ff3d8b", "#9d4edd", "#22d3ee", "#34d399", "#f6f1e6"]; let s = "";
+    for (let i = 0; i < (n || 36); i++) s += `<i style="left:${(i * 37 % 100)}%;background:${C[i % C.length]};animation-duration:${(3 + (i * 7 % 25) / 10).toFixed(1)}s;animation-delay:-${((i * 13 % 50) / 10).toFixed(1)}s"></i>`;
+    return `<span class="cpt-confettis" aria-hidden="true">${s}</span>`;
+  }
+  /** La pastille d'XP de la barre du haut saute quand l'élève gagne des points. */
+  let xpVu = null;
+  function xpSaute(valeur){
+    const el = document.querySelector("#top .xp"); if (!el) return;
+    if (xpVu != null && valeur > xpVu){ el.classList.remove("cpt-xp-saute"); void el.offsetWidth; el.classList.add("cpt-xp-saute"); }
+    xpVu = valeur;
+  }
+  /** Allume la page qui vit (cartes qui réagissent, titres à reflets, notifications façon téléphone) : chaque mission l'allume dans son décor. */
+  const vivant = () => document.body.classList.add("cpt-vivant");
+
+  return { X, avatarNadia, coachs, logoBanque, entete, mention, calculatrice, taperCalcul, balance, classeur, punaise, postit, etiquette, etagere, objet, vitrineEQ, inserer, poser, premiereFois, son, creditsImages,
+    film, etapes, couperFilms, cascade, confettis, xpSaute, vivant };
 })();
 // ═══ KIT COMPTA EQ v1 — fin ═══
 </script>
