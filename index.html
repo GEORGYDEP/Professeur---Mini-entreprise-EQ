@@ -317,6 +317,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .note-prof.ko{border-color:rgba(251,113,133,.6)}
 @media (max-width:1180px){ .pilot{grid-template-columns:1fr} }
 @media (max-width:620px){ .mtogs{grid-template-columns:1fr} .reglage{flex-direction:column;align-items:flex-start} }
+/* ---------- V3 (28/10/2026) : comptes à quatre chiffres, journal et balance des missions ---------- */
+.cpt{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.02em}
+.jrn td.cpt,table.led td.cpt{color:var(--gold);font-weight:600;font-size:13px}
+.bilan .l .cpt{color:inherit;opacity:.72;margin-right:4px}   /* hérite de l'encre du document : lisible sur papier clair comme sur fond sombre */
+.ind{display:inline-block;width:22px}
+.jrn-wrap{overflow-x:auto;margin-top:6px} table.jrn{min-width:640px;font-size:13px}
+.jrn .ecr-h td{background:rgba(255,255,255,.05);font-weight:600;padding-top:9px;border-bottom:0} .jrn .jl{font-weight:500;color:var(--text)}
+.jtag{display:inline-block;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;background:rgba(255,255,255,.1);color:var(--text)}
+.jtag.j-ACH{color:var(--coral)} .jtag.j-VEN{color:var(--mint)} .jtag.j-FIN{color:var(--steel)} .jtag.j-OD{color:var(--amber)}
+.cr .l .dt{display:block;font-size:12px;color:inherit;opacity:.75;font-weight:400} .cr .cpt{color:inherit;opacity:.72} .cr .l.st{border-top:1px solid var(--line);font-weight:600;background:rgba(255,255,255,.03)}
 </style>
 <style id="kit-realiste">
 /* ═══ KIT RÉALISTE COMMUN v1, version EQ — début (identique dans les missions 1, 2 et 3 : ne pas modifier ici, modifier outils/kit-realiste-eq) ═══ */
@@ -815,30 +825,30 @@ body .kit-skyline{opacity:.5}
 //  CATALOGUE — 8 entreprises fictives (mêmes identifiants que les missions suivantes)
 // ======================================================================
 const TYPES = [
-{ id:"ferme", secteur:"primaire", famille:"fabrique", bs:"biens", emoji:"🐄", nom:"La ferme avec son magasin", nace:"01.50 – Culture et élevage associés",
-  desc:"Tu élèves des vaches et tu cultives des légumes. Dans le magasin de la ferme, tu vends tes produits frais aux habitants de la région.",
-  achete:"semences, aliments pour animaux, emballages", vend:"légumes de saison, lait, œufs, fromages",
+{ id:"ferme", secteur:"primaire", famille:"produit", bs:"biens", emoji:"🐄", nom:"La ferme avec son magasin", nace:"01.50 – Culture et élevage associés (avec vente à la ferme)",
+  desc:"Tu élèves des vaches et tu cultives des fruits et des légumes. Dans le magasin de la ferme, tu vends ta production et celle des producteurs voisins, que tu achètes à la coopérative.",
+  achete:"cageots, paniers et produits du terroir à la coopérative, emballages", vend:"fruits et légumes de saison, paniers, produits du terroir",
   noms:["La Ferme du Terril","Les Saveurs du Pré","Ferme des Trois Tilleuls","Le Panier Fermier"], slogans:["Du champ à ton assiette","Le goût du vrai","Frais, local et fait avec amour"],
   symboles:["🐄","🌾","🥕","🧀","🥚","🌻"], vitrine:["🥕","🥚","🧀","🥛"],
-  strat:["Des légumes et du lait à petits prix, pour les familles qui veulent économiser.","Des produits frais et de qualité, à des prix corrects.","Des produits bio et des fromages affinés : plus chers, mais d'exception."],
+  strat:["Des légumes et des fruits à petits prix, pour les familles qui veulent économiser.","Des produits frais et de qualité, à des prix corrects.","Des produits bio et des paniers gourmands : plus chers, mais d'exception."],
   marche:{ familles:[55,38], jeunes:[15,14], passionnes:[30,62] } },
-{ id:"pepiniere", secteur:"primaire", famille:"fabrique", bs:"biens", emoji:"🌱", nom:"La pépinière", nace:"01.30 – Reproduction de plantes",
-  desc:"Tu fais pousser des plantes, des fleurs et des arbres dans tes serres, puis tu les vends aux particuliers et aux jardiniers.",
-  achete:"graines, bulbes, pots, terreau", vend:"plantes, fleurs, arbustes, arbres fruitiers",
+{ id:"pepiniere", secteur:"primaire", famille:"produit", bs:"biens", emoji:"🌱", nom:"La pépinière et sa jardinerie", nace:"01.30 – Reproduction de plantes (avec vente aux particuliers)",
+  desc:"Tu fais pousser des plantes dans tes serres et tu les vends aux particuliers et aux jardiniers. Pour élargir ton choix, tu complètes avec les plantes d'un grossiste horticole.",
+  achete:"plantes, fleurs et arbustes du grossiste, pots, terreau", vend:"plantes, fleurs, arbustes, arbres fruitiers",
   noms:["Au Jardin Fleuri","Vert Passion","Graines de Bonheur","Les Serres du Borinage"], slogans:["Faites fleurir vos envies","Des plantes qui ont du caractère","Le vert, c'est notre nature"],
   symboles:["🌱","🌷","🌻","🌳","🍓","🌵"], vitrine:["🌷","🌻","🌵","🌳"],
   strat:["Des plantes et des fleurs pas chères, vendues en grande quantité.","Un grand choix de plantes en bonne santé, à prix raisonnables.","Des plantes rares et des conseils de spécialiste, à prix élevés."],
   marche:{ familles:[50,45], jeunes:[12,18], passionnes:[38,85] } },
-{ id:"chocolaterie", secteur:"secondaire", famille:"fabrique", bs:"biens", emoji:"🍫", nom:"La chocolaterie artisanale", nace:"10.82 – Fabrication de cacao, chocolat et confiseries",
-  desc:"Dans ton atelier, tu transformes le cacao, le sucre et le lait en pralines et en tablettes, que tu vends dans ta boutique.",
-  achete:"cacao, sucre, noisettes, emballages", vend:"pralines, tablettes, coffrets cadeaux",
+{ id:"chocolaterie", secteur:"tertiaire", famille:"distribue", bs:"biens", emoji:"🍫", nom:"La boutique de chocolats", nace:"47.24 – Commerce de détail de confiserie et de chocolat",
+  desc:"Tu vends dans ta boutique les pralines, tablettes et coffrets d'un atelier-grossiste belge, et tu composes des cadeaux pour toutes les occasions.",
+  achete:"sachets, ballotins et coffrets de l'atelier-grossiste, emballages cadeaux", vend:"pralines, chocolats, coffrets cadeaux",
   noms:["L'Atelier Cacao","Praline & Cie","Douceur Noire","Les Chocolats du Borinage"], slogans:["Le chocolat belge, avec passion","Craquez pour nos pralines","Fait main, fait pour vous"],
   symboles:["🍫","🍬","🎁","💝","🌰","👑"], vitrine:["🍫","🍬","🎁","💝"],
-  strat:["Des tablettes simples à petit prix, pour tous les jours.","De bonnes pralines, pour se faire plaisir sans se ruiner.","Des pralines de luxe dans des coffrets élégants, pour les grandes occasions."],
+  strat:["Des sachets et des tablettes à petit prix, pour tous les jours.","De bonnes pralines, pour se faire plaisir sans se ruiner.","Des pralines de luxe dans des coffrets élégants, pour les grandes occasions."],
   marche:{ familles:[45,22], jeunes:[25,12], passionnes:[30,48] } },
-{ id:"textile", secteur:"secondaire", famille:"fabrique", bs:"biens", emoji:"👕", nom:"L'atelier de T-shirts personnalisés", nace:"18.12 – Autre imprimerie (impression sur textile)",
-  desc:"Tu imprimes des dessins, des prénoms ou des logos sur des T-shirts, des sweats et des casquettes, selon les envies de tes clients.",
-  achete:"T-shirts blancs, sweats, encres, vinyle", vend:"vêtements personnalisés",
+{ id:"textile", secteur:"tertiaire", famille:"distribue", bs:"biens", emoji:"👕", nom:"La boutique de vêtements personnalisés", nace:"47.71 – Commerce de détail d'habillement",
+  desc:"Tu vends des T-shirts, des sweats et des vestes imprimés ou brodés par un atelier partenaire, aux couleurs des clubs, des écoles et des entreprises de la région.",
+  achete:"T-shirts, sweats et vestes personnalisés par l'atelier-grossiste", vend:"vêtements personnalisés",
   noms:["Borinage Print","L'Atelier du T-shirt","Street Ink","Mon Style Unique"], slogans:["Ton style, ton message","On imprime tes idées","Unique comme toi"],
   symboles:["👕","🎨","✂️","⚡","🔥","⭐"], vitrine:["👕","🧢","🎨","👕"],
   strat:["Des T-shirts imprimés à petits prix, prêts en un jour.","Des vêtements de bonne qualité, personnalisés avec soin.","Des pièces uniques en coton bio, avec des dessins faits sur mesure."],
@@ -873,7 +883,7 @@ const TYPES = [
   marche:{ familles:[55,42], jeunes:[15,25], passionnes:[30,95] } }
 ];
 const SECTEURS = { primaire:"Secteur primaire", secondaire:"Secteur secondaire", tertiaire:"Secteur tertiaire" };
-const FAMILLES = { fabrique:"fabrique des biens", distribue:"distribue des biens", mixte:"vend des biens et rend des services" };
+const FAMILLES = { fabrique:"fabrique des biens", produit:"produit et vend des biens", distribue:"distribue des biens", mixte:"vend des biens et rend des services" };
 
 // ======================================================================
 //  ÉTUDE DE MARCHÉ : trois clientèles possibles (sur 100 passants interrogés)
@@ -916,7 +926,22 @@ const EMPLACEMENTS = [
   { id:"peripherie", emoji:"🛣️", nom:"Zone commerciale en périphérie", loyer:450, passage:"faible", passants:120, surface:"110 m²", desc:"Un grand local accessible en voiture, loin du centre.", pro:"Loyer bas, grand parking, grande surface", con:"Peu de passants : il faudra faire de la publicité" }
 ];
 const MOIS_GARANTIE = 2;             // garantie locative = 2 mois de loyer (bloqués sur un compte, rendus à la fin du bail)
-const CHARGES_AUTRES = 180;          // assurances, énergie, abonnements : montant mensuel simplifié pour le jeu
+// V3 (28/10/2026) : les « autres charges » en trois lignes réalistes (assurances sans TVA ; énergie et télécom avec 21 % de TVA déductible)
+const CHARGES_LIGNES = [ { id:"assurances", compte:"assurances", emoji:"🛡️", nom:"Assurances (incendie, responsabilité)", ht:90, tva:0 }, { id:"energie", compte:"energie", emoji:"🔌", nom:"Énergie (électricité, chauffage)", ht:150, tva:0.21 }, { id:"telecom", compte:"telecom", emoji:"📶", nom:"Télécom et abonnements", ht:60, tva:0.21 } ];
+const CHARGES_AUTRES = 300;          // total HT des trois lignes : la charge du mois au compte de résultats
+const CHARGES_AUTRES_TVAC = 344.1;   // ce qui sort réellement de la banque chaque mois (TVA comprise)
+// V3 : plan comptable (numéros à quatre chiffres : PCMN + 0, à aligner sur le plan « 370 » du cours). Un seul endroit à modifier.
+const PLAN = {
+  capital:["1000","Capital"], apport:["1100","Apport des fondateurs"], benefReporte:["1400","Bénéfice reporté"], perteReportee:["1410","Perte reportée"],
+  emprunt:["1730","Emprunt bancaire (dettes envers les établissements de crédit)"], fraisEtab:["2000","Frais d'établissement"],
+  mobilier:["2400","Mobilier"], matBureau:["2410","Matériel de bureau"], matInfo:["2420","Matériel informatique"], garantie:["2880","Cautionnements versés (garantie locative)"],
+  stock:["3400","Marchandises (stock)"], clients:["4000","Clients"], tvaRecup:["4110","TVA à récupérer"], fournisseurs:["4400","Fournisseurs"], tvaPayer:["4510","TVA à payer"],
+  banque:["5500","Banque (Borinage Banque)"], caisse:["5700","Caisse"],
+  achats:["6040","Achats de marchandises"], rrrObtenus:["6080","Remises, ristournes et rabais obtenus"], varStock:["6090","Variation des stocks de marchandises"],
+  loyer:["6100","Loyer"], assurances:["6110","Assurances"], energie:["6120","Énergie (électricité, chauffage)"], telecom:["6130","Télécom et abonnements"], publicite:["6140","Publicité"],
+  interets:["6500","Intérêts de l'emprunt"], escAccordes:["6530","Escomptes accordés"],
+  ventes:["7000","Ventes de marchandises"], rrrAccordes:["7080","Remises, ristournes et rabais accordés"], escObtenus:["7570","Escomptes obtenus"] };
+const cpt = (k) => PLAN[k][0], lib = (k) => PLAN[k][1];
 
 // ======================================================================
 //  FORME JURIDIQUE ET FINANCEMENT
@@ -1026,7 +1051,7 @@ const emprunt = () => (S.emprunt && empruntAccepte()) ? S.emprunt : 0;
 const mensualite = () => { const P = emprunt(); if (!P) return 0; const i = TAUX / 12; return r2(P * i / (1 - Math.pow(1 + i, -DUREE_MOIS))); };
 const interetsTotaux = () => r2(mensualite() * DUREE_MOIS - emprunt());
 const tresorerie = () => capital() + emprunt() - fraisCreation() - garantie();
-const chargesMensuelles = () => (S.emplacement ? loyer() + CHARGES_AUTRES : 0) + mensualite();
+const chargesMensuelles = () => (S.emplacement ? loyer() + CHARGES_AUTRES_TVAC : 0) + mensualite();   // V3 : sorties fixes du mois (loyer, assurances, énergie et télécom TVA comprise, mensualité)
 const autonomie = () => chargesMensuelles() > 0 ? Math.floor(tresorerie() / chargesMensuelles()) : null;
 const totalBilan = () => capital() + emprunt();
 const financementPret = () => !!S.direction && !!S.apport && S.emprunt != null && empruntAccepte() && tresorerie() >= TRESO_MIN;
@@ -1063,13 +1088,24 @@ function genIBAN(){
 const ANNEE = () => new Date().getFullYear();
 
 function bilanData(){
-  const actif = [], passif = [];
-  if (fraisCreation()) actif.push({ libelle:"Frais d'établissement (frais de création)", court:"Frais d'établissement", montant:fraisCreation(), rubrique:"Actif immobilisé" });
-  if (garantie()) actif.push({ libelle:"Garantie locative (créance)", court:"Garantie locative", montant:garantie(), rubrique:"Actif immobilisé" });
-  actif.push({ libelle:"Banque (trésorerie)", court:"Banque", montant:tresorerie(), rubrique:"Actif circulant" });
-  passif.push({ libelle:"Capital", court:"Capital", montant:capital(), rubrique:"Fonds propres" });
-  if (emprunt()) passif.push({ libelle:"Emprunt bancaire", court:"Emprunt", montant:emprunt(), rubrique:"Dettes à plus d'un an" });
-  return { actif, passif, total: totalBilan() };
+  const actif = [], passif = [], srl = S.direction === "plusieurs";
+  if (fraisCreation()) actif.push({ compte:cpt("fraisEtab"), libelle:"Frais d'établissement (frais de création)", court:"Frais d'établissement", montant:fraisCreation(), rubrique:"Actif immobilisé" });
+  if (garantie()) actif.push({ compte:cpt("garantie"), libelle:"Garantie locative (cautionnement versé)", court:"Garantie locative", montant:garantie(), rubrique:"Actif immobilisé" });
+  actif.push({ compte:cpt("banque"), libelle:"Banque (trésorerie)", court:"Banque", montant:tresorerie(), rubrique:"Actif circulant" });
+  passif.push({ compte:cpt(srl ? "apport" : "capital"), libelle:srl ? "Apport des fondateurs" : "Capital", court:srl ? "Apport" : "Capital", montant:capital(), rubrique:"Fonds propres" });
+  if (emprunt()) passif.push({ compte:cpt("emprunt"), libelle:"Emprunt bancaire", court:"Emprunt", montant:emprunt(), rubrique:"Dettes à plus d'un an" });
+  return { actif, passif, total: totalBilan(), totalPassif: totalBilan() };
+}
+/** V3 : les écritures d'ouverture (partie double) : apports et emprunt reçus en banque, frais de création et garantie locative payés. Le bilan d'ouverture en est le résultat. */
+function ecrituresOuverture(){
+  const srl = S.direction === "plusieurs", E = [];
+  E.push({ p:"Extrait 1", l:srl ? "Apport des fondateurs versé sur le compte de la société" : "Capital versé sur le compte professionnel", L:[["banque", capital(), 0], [srl ? "apport" : "capital", 0, capital()]] });
+  if (emprunt()) E.push({ p:"Extrait 1", l:"Emprunt reçu de la Borinage Banque", L:[["banque", emprunt(), 0], ["emprunt", 0, emprunt()]] });
+  if (fraisCreation()) E.push({ p:srl ? "Facture du notaire" : "Facture du guichet d'entreprises", l:"Frais de création payés (frais d'établissement)", L:[["fraisEtab", fraisCreation(), 0], ["banque", 0, fraisCreation()]] });
+  if (garantie()) E.push({ p:"Extrait 2", l:"Garantie locative versée sur un compte bloqué", L:[["garantie", garantie(), 0], ["banque", 0, garantie()]] });
+  return `<div class="ecritures-ouv">${E.map((e, k) => { const td = r2(e.L.reduce((s, l) => s + l[1], 0)), tc = r2(e.L.reduce((s, l) => s + l[2], 0));
+    return `<div class="ecriture"><h4>🎓 Écriture ${k + 1} <small>journal financier · ${esc(S.dateCreation || today())} · pièce : ${esc(e.p)}</small></h4><table><thead><tr><th>Compte</th><th>Libellé</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody>
+      ${e.L.map(l => `<tr><td class="n cpt">${cpt(l[0])}</td><td>${l[2] && !l[1] ? "<span class='ind'></span>" : ""}${esc(lib(l[0]))}</td><td class="n">${l[1] ? euro(l[1]) : ""}</td><td class="n">${l[2] ? euro(l[2]) : ""}</td></tr>`).join("")}<tr class="tot"><td></td><td>Totaux</td><td class="n">${euro(td)}</td><td class="n">${euro(tc)}</td></tr></tbody></table><div class="help">${esc(e.l)}. Débit = crédit.</div></div>`; }).join("")}</div>`;
 }
 
 // ======================================================================
@@ -1173,13 +1209,14 @@ function extraitBCE(){
     <div class="foot"><span>Toute entreprise belge est identifiée par un numéro unique à 10 chiffres.</span><div class="seal"><b>BCE</b>inscription ${ANNEE()}</div></div></div>`;
 }
 function bilanHTML(opts={}){
-  const d = bilanData();
-  const col = (titre, sous, lignes) => { let rub = null;
+  const d = bilanData(), tP = d.totalPassif != null ? d.totalPassif : d.total;
+  const col = (titre, sous, lignes, total) => { let rub = null;
     return `<div class="col"><h5>${titre}<small>${sous}</small></h5>${lignes.map(l => { const h = l.rubrique !== rub ? `<div class="sect">${esc(l.rubrique)}</div>` : ""; rub = l.rubrique;
-      return h + `<div class="l"><span class="k"><b>${esc(opts.court ? l.court : l.libelle)}</b></span><span class="v">${euro(l.montant)}</span></div>`; }).join("")}
-      <div class="t"><span>Total</span><span>${euro(d.total)}</span></div></div>`; };
-  return `<div class="bilan">${col("ACTIF", "ce que l'entreprise possède", d.actif)}${col("PASSIF", "d'où vient l'argent", d.passif)}</div>
-    ${opts.foot === false ? "" : `<div class="bilan-foot"><span>Les deux totaux sont égaux : <b>Actif = Passif</b>. Chaque euro possédé a une origine.</span><span class="money">${euro(d.total)} = ${euro(d.total)}</span></div>`}`;
+      return h + `<div class="l"><span class="k">${l.compte ? `<small class="cpt">${esc(l.compte)}</small>` : ""}<b>${esc(opts.court ? l.court : l.libelle)}</b></span><span class="v">${euro(l.montant)}</span></div>`; }).join("")}
+      <div class="t"><span>Total</span><span>${euro(total)}</span></div></div>`; };
+  // V3 : chaque colonne a son propre total, le pied compare vraiment l'actif au passif, et chaque poste porte son numéro de compte
+  return `<div class="bilan">${col("ACTIF", "ce que l'entreprise possède", d.actif, d.total)}${col("PASSIF", "d'où vient l'argent", d.passif, tP)}</div>
+    ${opts.foot === false ? "" : `<div class="bilan-foot"><span>Les deux totaux sont égaux : <b>Actif = Passif</b>. Chaque euro possédé a une origine.</span><span class="money">${euro(d.total)} = ${euro(tP)}</span></div>`}`;
 }
 function planFinancier(){
   const l = (k, v, cls="") => `<tr class="${cls}"><td>${k}</td><td class="n">${euro(v)}</td></tr>`;
@@ -1218,6 +1255,7 @@ const SECTEURS_FICHE = {
   tertiaire:{ titre:"Tertiaire", slogan:"« Je rends un service »", def:"Les services : ce qui ne cultive pas, n'extrait pas et ne transforme pas. Le commerce en fait partie.", c1:"#E3B85C", ex:["Commerce","Banques","Transport","Enseignement"] }
 };
 const FAMILLES_FICHE = [
+  { id:"produit", titre:"Elles produisent et vendent des biens", def:"Elles cultivent ou élèvent, et vendent elles-mêmes leur production (et celle de producteurs voisins) dans leur magasin.", ex:["Le magasin à la ferme","La pépinière-jardinerie","Le vigneron qui vend à la propriété"], c1:"#4FD69C" },
   { id:"fabrique", titre:"Elles fabriquent des biens", def:"Dans leurs usines ou ateliers, elles produisent des objets ou des aliments.", ex:["Audi Brussels","AB InBev","Puratos","GSK"], c1:"#7CB0FF" },
   { id:"service", titre:"Elles rendent des services", def:"Elles apportent une aide, un travail, un accès à quelque chose.", ex:["Belfius","Proximus","SNCB","AG"], c1:"#B48CFF" },
   { id:"mixte", titre:"Services et biens à la fois", def:"Elles font les deux : réparer un vélo et vendre un casque.", ex:["Le garage","Le salon de coiffure"], c1:"#FFB454" },
@@ -1283,7 +1321,8 @@ function normaliser(d){
     apport: fi.apportParFondateur || et.apport || null, emprunt: fi.emprunt != null ? fi.emprunt : (et.emprunt != null ? et.emprunt : null),
     ids: (ent.numeroEntreprise || (et.ids || {}).bce) ? { bce: ent.numeroEntreprise || et.ids.bce, iban: ent.iban || (et.ids || {}).iban || "" } : null,
     dateCreation: ent.dateCreation || et.dateCreation || "", signature: (m.declaration || {}).signature || "",
-    concurrent: ((m.bonus || {}).concurrent) || ((et.bonus || {}).concurrent) || "", quiz: et.quiz || {}, defis: m.defisEclair || [],
+    concurrent: ((m.bonus || {}).concurrent) || ((et.bonus || {}).concurrent) || "", quiz: et.quiz || {}, defis: m.defisEclair || [], versionM1:m.version || "",
+    chargesM1:(m.entreprise && m.entreprise.chargesFixesMensuelles) || ent.chargesFixesMensuelles || null, tresoM1:(m.entreprise && m.entreprise.tresorerieDepart != null) ? m.entreprise.tresorerieDepart : null, autonomieM1:(m.entreprise && m.entreprise.autonomieMois != null) ? m.entreprise.autonomieMois : null,
     ancien, legacy: ancien ? ent.argent || null : null, m2: lireM2(d), m3: lireM3(d)
   };
   if (ancien && ent.argent){ E.apport = ent.argent.argentDeDepart || 10000; E.nbAssocies = 1; E.emprunt = 0; }
@@ -1316,11 +1355,11 @@ function nettoyer(E){
 // Les fonctions dérivées (capital(), tresorerie()…) lisent S : on l'y place avant de calculer.
 const calc = (E, fn) => { const prev = S; S = E; try { return fn(); } finally { S = prev; } };
 const pretE = (E) => calc(E, () => !!S.direction && !!S.apport && S.emprunt != null && empruntAccepte());
-const tresoE = (E) => calc(E, tresorerie);
-const autoE = (E) => calc(E, autonomie);
+const tresoE = (E) => E.tresoM1 != null ? E.tresoM1 : calc(E, tresorerie);        // V3 : lu dans le dossier de la mission 1 quand il l'a envoyé
+const autoE = (E) => E.autonomieM1 != null ? E.autonomieM1 : calc(E, autonomie);
 const capE = (E) => calc(E, capital);
 const empE = (E) => calc(E, emprunt);
-const chargesE = (E) => calc(E, chargesMensuelles);
+const chargesE = (E) => E.chargesM1 && E.chargesM1.total != null ? E.chargesM1.total : calc(E, chargesMensuelles);
 const partPropreE = (E) => calc(E, () => totalBilan() ? Math.round(capital() / totalBilan() * 100) : 100);
 const denoE = (E) => calc(E, deno);
 const typeE = (E) => TYPES.find(t => t.id === E.typeId);
@@ -1345,10 +1384,10 @@ try { localStorage.removeItem("mini-entreprise-compta-prof-cle"); localStorage.r
 const VUES = [
   ["pilotage","⚙️","Pilotage de la classe"],
   ["ensemble","🏠","Vue d'ensemble"], ["eleve","👤","Élève par élève"], ["bilans","⚖️","Comparer les bilans"], ["marche","🎯","Marché et positionnement"],
-  ["sep","Le cours · fiche 1 : l'entreprise"],
+  ["sep","Le cours · 300 L'entreprise"],
   ["identites","📇","Cartes d'identité"], ["biens","🧺","Biens ou services"], ["familles","🏭","Que font-elles ?"], ["secteurs","🌍","Secteurs d'activité"], ["formes","🏛️","Individuelle ou société"],
-  ["sep","Le cours · fiche 2 : financer et comptabiliser"],
-  ["financement","🏦","Capital et emprunt"], ["bilan","📘","Le bilan d'ouverture"],
+  ["sep","Le cours · financer et comptabiliser (fiches 310 à 350, plan comptable)"],
+  ["financement","🏦","Capital, apport et emprunt"], ["bilan","📘","Le bilan d'ouverture"],
   ["sep","Missions 2 et 3"],
   ["achats","🧰","Mission 2 · les achats"], ["ventes","🛍️","Mission 3 · le premier mois"]
 ];
@@ -1444,7 +1483,7 @@ V.eleve = () => {
           ${c ? `<span class="tag">${c.emoji} ${esc(c.nom)}</span>` : ""}${s ? `<span class="tag">${s.icone} ${esc(s.nom)}</span>` : ""}${coh != null ? `<span class="coh ${coh ? "ok" : "warn"}">${coh ? "✓ cible et positionnement cohérents" : "⚠ cible et positionnement à discuter"}</span>` : ""}
           ${em ? `<span class="tag">${em.emoji} ${esc(em.nom)}</span>` : ""}
         </div>
-        ${ok ? `<div class="kpi-row"><div class="k"><span>Capital</span><b>${euro0(capital())}</b></div><div class="k"><span>Emprunt</span><b>${euro0(emprunt())}</b></div><div class="k"><span>Trésorerie</span><b style="color:var(--mint)">${euro0(tresorerie())}</b></div><div class="k"><span>Charges / mois</span><b>${euro(chargesMensuelles())}</b></div><div class="k"><span>Autonomie</span><b style="color:${autonomie() < 3 ? "var(--coral)" : autonomie() < 6 ? "var(--amber)" : "var(--mint)"}">${autonomie()} mois</b></div></div>`
+        ${ok ? `<div class="kpi-row"><div class="k"><span>${E.direction === "plusieurs" ? "Apport" : "Capital"}</span><b>${euro0(capital())}</b></div><div class="k"><span>Emprunt</span><b>${euro0(emprunt())}</b></div><div class="k"><span>Trésorerie</span><b style="color:var(--mint)">${euro0(tresorerie())}</b></div><div class="k"><span>Sorties / mois</span><b>${euro(chargesE(E))}</b></div><div class="k"><span>Autonomie</span><b style="color:${autoE(E) < 3 ? "var(--coral)" : autoE(E) < 6 ? "var(--amber)" : "var(--mint)"}">${autoE(E)} mois</b></div></div>`
           : `<div class="empty" style="margin:12px 0">Le financement n'est pas encore décidé : les chiffres apparaîtront à l'étape 8.</div>`}
         ${E.ids ? carteBancaire() : ""}
       </div>
@@ -1455,7 +1494,7 @@ V.eleve = () => {
     </div>
     ${ok ? `<div class="grid2 fade-in" style="margin-top:18px;align-items:start">
       <div class="card tight"><h3>Plan financier</h3>${planFinancier()}<p class="help">Fonds propres : ${partPropreE(E)} % du financement${emprunt() ? ` · emprunt à ${(TAUX*100).toLocaleString("fr-BE")} % sur ${DUREE_MOIS/12} ans : ${euro(mensualite())} / mois, ${euro(interetsTotaux())} d'intérêts au total` : " · aucun emprunt"}.</p></div>
-      <div class="card tight"><h3>Charges fixes et autonomie</h3><table class="led"><tbody><tr><td>Loyer (${esc(em.nom.toLowerCase())})</td><td class="n">${euro(loyer())}</td></tr><tr><td>Assurances, énergie, abonnements</td><td class="n">${euro(CHARGES_AUTRES)}</td></tr><tr><td>Remboursement de l'emprunt</td><td class="n">${euro(mensualite())}</td></tr><tr class="tot"><td>Chaque mois, quoi qu'il arrive</td><td class="n">${euro(chargesMensuelles())}</td></tr></tbody></table><div style="margin-top:12px">${jaugeAutonomie()}</div></div>
+      <div class="card tight"><h3>Sorties fixes et autonomie</h3>${chargesCardProf(E, em)}<div style="margin-top:12px">${jaugeAutonomie()}</div></div>
     </div>` : ""}
     <div class="grid3 fade-in" style="margin-top:18px;align-items:start">
       <div class="card tight"><h3>🎯 Marché et stratégie</h3>${c ? `<p style="font-size:15px">${c.emoji} <b>${esc(c.nom)}</b> : ${t.marche[c.id][0]} clients sur 100, panier moyen ${euro(t.marche[c.id][1])}, soit un potentiel de <b class="money">${euro(t.marche[c.id][0] * t.marche[c.id][1])}</b> par 100 passants.</p>` : `<p class="help">Clientèle pas encore choisie.</p>`}
@@ -1504,12 +1543,12 @@ V.marche = () => {
 };
 
 V.identites = () => { const L = avecEntreprise().filter(E => E.ids);
-  return head("Fiche 1 · partie 1", "Les cartes d'identité des entreprises", "Dénomination, forme juridique, siège, numéro d'entreprise, numéro de TVA, code NACE, compte bancaire : les mêmes rubriques que sur un vrai extrait de la BCE.")
+  return head("300 · L'entreprise (1)", "Les cartes d'identité des entreprises", "Dénomination, forme juridique, siège, numéro d'entreprise, numéro de TVA, code NACE, compte bancaire : les mêmes rubriques que sur un vrai extrait de la BCE.")
     + (L.length ? `<div class="docgrid fade-in">${L.map(E => `<div>${calc(E, extraitBCE)}</div>`).join("")}</div>` : `<div class="empty">Aucune entreprise immatriculée pour l'instant (décision 9).</div>`)
     + ask("Comment reconnaît-on une société au simple nom ? À quoi servent les deux derniers chiffres du numéro d'entreprise ? Pourquoi le numéro de TVA reprend-il le numéro d'entreprise ?"); };
 
 V.biens = () => { const L = avecEntreprise(), biens = L.filter(E => typeE(E).bs === "biens"), deux = L.filter(E => typeE(E).bs === "les deux");
-  return head("Fiche 1 · partie 2", "Biens ou services ?", "Un bien se touche, se stocke, se livre. Un service se consomme au moment où il est rendu.")
+  return head("300 · L'entreprise (2)", "Biens ou services ?", "Un bien se touche, se stocke, se livre. Un service se consomme au moment où il est rendu.")
     + `<div class="cols fade-in" style="grid-template-columns:repeat(3,minmax(0,1fr))">
       <div class="card col" style="--c1:#7CB0FF"><h3>📦 Vendent des biens</h3><span class="slog">Des objets, des aliments : on les touche.</span><div class="count"><b>${biens.length}</b><span>entreprises</span></div><div class="tiles">${biens.map(tile).join("") || `<div class="empty">Aucune.</div>`}</div></div>
       <div class="card col" style="--c1:#FFB454"><h3>🔧 Biens et services</h3><span class="slog">Vendre un vélo, et le réparer.</span><div class="count"><b>${deux.length}</b><span>entreprises</span></div><div class="tiles">${deux.map(tile).join("") || `<div class="empty">Aucune.</div>`}</div></div>
@@ -1517,14 +1556,14 @@ V.biens = () => { const L = avecEntreprise(), biens = L.filter(E => typeE(E).bs 
     + ask("La chocolaterie vend des pralines : un bien. Et le conseil du chocolatier qui aide à composer le ballotin ? Un service gratuit… inclus dans le prix du bien."); };
 
 V.familles = () => { const L = avecEntreprise();
-  return head("Fiche 1 · partie 3", "Que font les entreprises ?", "Fabriquer, distribuer, rendre des services, ou plusieurs à la fois.")
+  return head("300 · L'entreprise (3)", "Que font les entreprises ?", "Fabriquer, distribuer, rendre des services, ou plusieurs à la fois.")
     + `<div class="cols fade-in" style="grid-template-columns:repeat(4,minmax(0,1fr))">${FAMILLES_FICHE.map(f => { const arr = L.filter(E => typeE(E).famille === f.id);
       return `<div class="card col" style="--c1:${f.c1}"><h3>${esc(f.titre)}</h3><p class="def">${esc(f.def)}</p><div class="refs">${f.ex.map(x => `<span class="ref">${esc(x)}</span>`).join("")}</div>
         <div class="count"><b>${arr.length}</b><span>entreprise${arr.length > 1 ? "s" : ""}</span></div><div class="tiles">${arr.map(tile).join("") || `<div class="empty">Aucune dans la classe.</div>`}</div></div>`; }).join("")}</div>`
     + ask("Le magasin de baskets ne fabrique rien : d'où viennent ses chaussures ? Combien d'entreprises ont-elles touché une paire avant qu'elle n'arrive en rayon ?"); };
 
 V.secteurs = () => { const L = avecEntreprise(), n = L.length || 1;
-  return head("Fiche 1 · partie 4", "Les trois secteurs d'activité", "De la nature jusqu'au rayon du magasin.")
+  return head("300 · L'entreprise (4)", "Les trois secteurs d'activité", "De la nature jusqu'au rayon du magasin.")
     + `<div class="chain fade-in"><div style="border-color:rgba(79,214,156,.5)"><b>🌱 Dans la nature</b><small>on récolte les fèves de cacao</small></div><span class="arr">→</span><div style="border-color:rgba(124,176,255,.5)"><b>🏭 À l'atelier</b><small>on fabrique les tablettes</small></div><span class="arr">→</span><div style="border-color:rgba(227,184,92,.5)"><b>🏪 Au magasin</b><small>on conseille et on encaisse</small></div></div>
     <div class="cols fade-in" style="grid-template-columns:repeat(3,minmax(0,1fr))">${Object.entries(SECTEURS_FICHE).map(([k,s]) => { const arr = L.filter(E => typeE(E).secteur === k);
       return `<div class="card col" style="--c1:${s.c1}"><h3>${s.titre}</h3><span class="slog">${s.slogan}</span><p class="def">${esc(s.def)}</p><div class="refs">${s.ex.map(x => `<span class="ref">${esc(x)}</span>`).join("")}</div>
@@ -1535,7 +1574,7 @@ V.formes = () => { const L = avecEntreprise(), ind = L.filter(E => E.direction =
   const box = (c1, ico, titre, arr, pros, cons, frais) => `<div class="card col" style="--c1:${c1}"><h3>${ico} ${titre}</h3><div class="count"><b>${arr.length}</b><span>entreprise${arr.length > 1 ? "s" : ""} · ${pct(arr.length, L.length)} %</span></div>
       <div class="chips" style="margin-bottom:10px">${pros.map(p => `<span class="chip" style="border-color:rgba(79,214,156,.5)">+ ${p}</span>`).join("")}${cons.map(p => `<span class="chip" style="border-color:rgba(255,111,111,.5)">− ${p}</span>`).join("")}</div>
       <p class="def">Frais de création dans le jeu : <b class="money" style="color:var(--text)">${frais}</b></p><div class="tiles">${arr.map(tile).join("") || `<div class="empty">Aucune.</div>`}</div></div>`;
-  return head("Fiche 1 · partie 5", "Entreprise individuelle ou société ?", "L'entreprise, c'est la personne elle-même, ou une personne morale distincte avec sa propre personnalité juridique ?")
+  return head("300 · L'entreprise (5)", "Entreprise individuelle ou société ?", "L'entreprise, c'est la personne elle-même, ou une personne morale distincte avec sa propre personnalité juridique ?")
     + `<div class="grid2 fade-in" style="margin-bottom:18px"><div class="panel"><h3>La répartition dans la classe</h3><div class="donut-wrap">${donut([{v:ind.length,c:"#7CB0FF"},{v:soc.length,c:"#E3B85C"},{v:nd.length,c:"rgba(255,255,255,.2)"}], 170, "entreprises")}
         <div class="legend"><div><i style="background:#7CB0FF"></i>Entreprises individuelles : <b>${ind.length}</b></div><div><i style="background:#E3B85C"></i>Sociétés (SRL) : <b>${soc.length}</b></div>${nd.length ? `<div><i style="background:rgba(255,255,255,.2)"></i>Pas encore décidé : <b>${nd.length}</b></div>` : ""}</div></div></div>
       <div class="panel"><h3>Responsabilité : la vraie différence</h3><p style="color:var(--muted);font-size:14.5px">En entreprise individuelle, le patrimoine de l'entreprise et celui de la personne ne font qu'un : les créanciers peuvent saisir la voiture ou les économies du fondateur. En SRL, la société a son propre patrimoine : les associés ne risquent que leur apport.</p>
@@ -1549,10 +1588,10 @@ V.formes = () => { const L = avecEntreprise(), ind = L.filter(E => E.direction =
 V.financement = () => { const L = avecFinancement();
   const max = Math.max(1, ...L.map(E => capE(E) + empE(E)));
   const tot = L.reduce((s, E) => s + capE(E) + empE(E), 0), totCap = L.reduce((s, E) => s + capE(E), 0), totEmp = tot - totCap, interets = L.reduce((s, E) => s + calc(E, interetsTotaux), 0);
-  return head("Fiche 2 · partie 1", "Capital et emprunt : d'où vient l'argent ?", "Deux origines possibles pour financer un projet. Les deux se retrouvent au passif du bilan, mais elles n'ont pas le même prix ni le même risque.")
+  return head("Financer et comptabiliser (1)", "Capital et emprunt : d'où vient l'argent ?", "Deux origines possibles pour financer un projet. Les deux se retrouvent au passif du bilan, mais elles n'ont pas le même prix ni le même risque.")
     + `<div class="grid2 fade-in" style="margin-bottom:18px">
-      <div class="card col" style="--c1:var(--gold)"><h3>💼 Le capital (fonds propres)</h3><p class="def">L'argent apporté par les fondateurs. Il n'est pas remboursé : il reste dans l'entreprise. En échange, les fondateurs en sont propriétaires et se partagent les bénéfices.</p>
-        <div class="count"><b>${euro0(totCap)}</b><span>de capital dans la classe (${pct(totCap, tot)} % du financement)</span></div></div>
+      <div class="card col" style="--c1:var(--gold)"><h3>💼 Le capital ou l'apport (fonds propres)</h3><p class="def">L'argent apporté par les fondateurs : le capital (1000) d'une entreprise individuelle, l'apport des fondateurs (1100) d'une SRL, qui n'a plus de capital depuis la réforme de 2019. Il n'est pas remboursé : il reste dans l'entreprise. En échange, les fondateurs en sont propriétaires et se partagent les bénéfices.</p>
+        <div class="count"><b>${euro0(totCap)}</b><span>de fonds propres dans la classe (${pct(totCap, tot)} % du financement)</span></div></div>
       <div class="card col" style="--c1:var(--steel)"><h3>🏦 L'emprunt bancaire (dette)</h3><p class="def">L'argent prêté par la banque. Il faut le rembourser chaque mois, avec des intérêts, que l'entreprise gagne de l'argent ou non. La banque exige au moins 40 % de fonds propres : elle ne prend pas tout le risque.</p>
         <div class="count"><b>${euro0(totEmp)}</b><span>empruntés dans la classe · ${euro0(interets)} d'intérêts à payer sur 5 ans</span></div></div></div>
     ${L.length ? `<div class="panel fade-in"><h3>Le financement de chaque entreprise</h3><p class="help" style="margin:0 0 10px"><i style="display:inline-block;width:12px;height:12px;background:var(--gold);border-radius:3px;vertical-align:middle"></i> capital &nbsp; <i style="display:inline-block;width:12px;height:12px;background:var(--steel);border-radius:3px;vertical-align:middle"></i> emprunt</p>
@@ -1561,15 +1600,15 @@ V.financement = () => { const L = avecFinancement();
 };
 
 V.bilan = () => { const L = avecFinancement();
-  if (!L.length) return head("Fiche 2 · partie 2", "Le bilan d'ouverture", "Les bilans apparaissent dès la décision 8.");
+  if (!L.length) return head("Financer et comptabiliser (2)", "Le bilan d'ouverture", "Les bilans apparaissent dès la décision 8.");
   APP.exBilan = Math.max(0, Math.min(APP.exBilan, L.length - 1));
   const E = use(L[APP.exBilan]);
-  return head("Fiche 2 · partie 2", "Le bilan d'ouverture : la photo du patrimoine", "À gauche, ce que l'entreprise possède (l'actif). À droite, d'où vient l'argent (le passif). Les deux totaux sont toujours égaux : chaque euro possédé a une origine.")
+  return head("Financer et comptabiliser (2)", "Le bilan d'ouverture : la photo du patrimoine", "À gauche, ce que l'entreprise possède (l'actif). À droite, d'où vient l'argent (le passif). Les deux totaux sont toujours égaux : chaque euro possédé a une origine.")
     + `<div class="pres-top"><select id="selBilan" aria-label="Choisir une entreprise">${L.map((x, i) => `<option value="${i}" ${i === APP.exBilan ? "selected" : ""}>${esc(denoE(x))} – ${esc(x.prenom)}</option>`).join("")}</select></div>
     <div class="grid2 fade-in" style="align-items:start"><div class="card tight"><h3>${logoMark(28)} ${esc(deno())} · bilan au ${esc(E.dateCreation || "jour de la fondation")}</h3>${bilanHTML()}</div>
       <div><div class="card col" style="--c1:var(--mint)"><h3>Lire l'actif</h3><p class="def"><b style="color:var(--text)">Actif immobilisé</b> : ce qui reste longtemps dans l'entreprise. Les frais d'établissement (${euro0(fraisCreation())}) ont été payés, mais on les étale sur plusieurs années. La garantie locative (${euro0(garantie())}) est une créance : le propriétaire la rendra.</p>
         <p class="def"><b style="color:var(--text)">Actif circulant</b> : ce qui bouge vite. La banque (${euro0(tresorerie())}) servira à acheter le matériel (mission 2) et la marchandise (mission 3).</p></div>
-      <div class="card col" style="--c1:var(--gold);margin-top:12px"><h3>Lire le passif</h3><p class="def"><b style="color:var(--text)">Fonds propres</b> : le capital de ${euro0(capital())}, apporté par ${nbFondateurs() > 1 ? nbFondateurs() + " fondateurs" : "le fondateur"}. ${emprunt() ? `<b style="color:var(--text)">Dettes à plus d'un an</b> : l'emprunt de ${euro0(emprunt())}, remboursé sur 5 ans.` : "Pas de dettes : l'entreprise ne doit rien à personne."}</p>
+      <div class="card col" style="--c1:var(--gold);margin-top:12px"><h3>Lire le passif</h3><p class="def"><b style="color:var(--text)">Fonds propres</b> : ${E.direction === "plusieurs" ? "l'apport des fondateurs (1100)" : "le capital (1000)"} de ${euro0(capital())}, apporté par ${nbFondateurs() > 1 ? nbFondateurs() + " fondateurs" : "le fondateur"}. ${emprunt() ? `<b style="color:var(--text)">Dettes à plus d'un an</b> : l'emprunt de ${euro0(emprunt())}, remboursé sur 5 ans.` : "Pas de dettes : l'entreprise ne doit rien à personne."}</p>
         <p class="def">Total du bilan : <b class="money" style="color:var(--text)">${euro0(totalBilan())}</b> des deux côtés.</p></div></div></div>`
     + ask("Si l'entreprise achète demain un ordinateur à 900 € en payant par virement, que se passe-t-il au bilan ? (Banque −900, Matériel +900 : le total ne change pas.) Et si elle paie son premier loyer ? (Banque −, et une charge apparaît : le résultat diminue.)");
 };
@@ -1582,28 +1621,65 @@ function lireM2(d){
   const m = (d.missions || {})["2"]; if (!m || !m.entreprise) return null;
   const e = m.entreprise, achats = (m.achats || []).filter(a => a && a.bien);
   const erreur = achats.find(a => a.facture && a.facture.erreur);
-  return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes,
+  return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes, version:m.version || "",
     budget:(m.budget || {}).montant, engage:(m.budget || {}).engage || 0, respecte:(m.budget || {}).respecte, achats,
-    equipements:e.equipements || [], tresorerie:e.tresorerie, dettes:e.dettesFournisseurs || 0, tva:e.tvaARecuperer || 0, resultat:e.resultatPeriode || 0, autonomie:e.autonomieMois,
-    bilan:m.bilan || null, journal:m.journalAchats || [], defis:m.defisEclair || [],
-    piege: erreur ? { achat:erreur.bien.nom, type:erreur.facture.erreur.type, texte:erreur.facture.erreur.texte, surcout:erreur.facture.erreur.surcoutTTC, trouve:!!erreur.facture.erreurTrouvee, decision:erreur.facture.decision } : null,
+    equipements:e.equipements || [], tresorerie:e.tresorerie, dettes:e.dettesFournisseurs || 0, tva:e.tvaARecuperer || 0, resultat:e.resultatPeriode || 0, tropPaye:e.tropPaye || 0, autonomie:e.autonomieMois,
+    bilan:m.bilan || null, journal:m.journalAchats || [], ecritures:m.ecritures || [], defis:m.defisEclair || [],
+    piege: erreur ? { achat:erreur.bien.nom, type:erreur.facture.erreur.type, texte:erreur.facture.erreur.texte, surcout:erreur.facture.erreur.surcoutTTC, trouve:!!erreur.facture.erreurTrouvee, decision:erreur.facture.decision, contestations:erreur.facture.contestations || 0, rectification:erreur.facture.factureComplementaire ? "facture complémentaire" : erreur.facture.noteDeCredit ? "note de crédit" : "" } : null,
     credit:achats.filter(a => a.conditionPaiement === "30j").length, premium:achats.filter(a => a.offreChoisie && a.offreChoisie.niveau === "haut").length, eco:achats.filter(a => a.offreChoisie && a.offreChoisie.niveau === "petit").length };
 }
 function lireM3(d){
   const m = (d.missions || {})["3"]; if (!m || !m.entreprise) return null;
   const e = m.entreprise, cr = m.compteResultats || null, v = e.ventesDuMois || {};
-  return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes,
-    prix:e.prixDeVente || [], stockInitial:e.stockInitial || [], grossiste:e.grossiste || "", budgetStock:(m.decisions || {}).budgetStock,
+  return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes, version:m.version || "", prevision:!!m.prevision,
+    prix:e.prixDeVente || [], stockInitial:e.stockInitial || [], grossiste:e.grossiste || "", budgetStock:(m.decisions || {}).budgetStock, calendrier:m.calendrier || null,
     ca:v.chiffreAffairesHT != null ? v.chiffreAffairesHT : (cr ? cr.ventesHT : null), resultat:cr ? cr.resultat : (v.resultatMois != null ? v.resultatMois : null), unites:v.unitesVendues, cogs:cr ? cr.coutMarchandisesVendues : null,
-    cr, tresorerie:e.tresorerie, stockFinal:e.stockFinal, tvaNette:e.tvaNette, resultatCumule:e.resultatCumule, creances:e.creancesClients || 0, dettes:e.dettesFournisseurs || 0,
-    devis:m.devis || null, decisions:m.decisions || {}, factureVente:m.factureVente || null, exercice:m.exerciceFacture || null, semaines:m.semaines || [], bilan:m.bilan || null, defis:m.defisEclair || [] };
+    cr, tresorerie:e.tresorerie, caisse:e.caisse, stockFinal:e.stockFinal, tvaNette:e.tvaNette, tvaRecup:e.tvaARecuperer, tvaPayer:e.tvaAPayer, resultatCumule:e.resultatCumule, creances:e.creancesClients || 0, dettes:e.dettesFournisseurs || 0,
+    devis:m.devis || null, decisions:m.decisions || {}, reception:(m.stock && m.stock.reception) || null, factureVente:m.factureVente || null, exercice:m.exerciceFacture || null, semaines:m.semaines || [], bilan:m.bilan || null, defis:m.defisEclair || [], ecritures:m.ecritures || [], balance:m.balance || [] };
 }
-/** Bilan rendu à partir des données enregistrées (missions 2 et 3). */
+/** Bilan rendu à partir des données enregistrées (missions 2 et 3) : V3, avec les numéros de compte et le contrôle Actif = Passif. */
 function bilanDoc(b, court){
   if (!b || !b.actif) return `<div class="empty">Pas de bilan enregistré.</div>`;
-  const col = (titre, sous, lignes) => { let rub = null; return `<div class="col"><h5>${titre}<small>${sous}</small></h5>${lignes.map(l => { const h = l.rubrique !== rub ? `<div class="sect">${esc(l.rubrique || "")}</div>` : ""; rub = l.rubrique; return h + `<div class="l"><span class="k"><b>${esc(court && l.court ? l.court : l.libelle)}</b></span><span class="v">${euro(l.montant)}</span></div>`; }).join("")}<div class="t"><span>Total</span><span>${euro(lignes.reduce((s, l) => s + l.montant, 0))}</span></div></div>`; };
-  return `<div class="bilan">${col("ACTIF", "ce que l'entreprise possède", b.actif)}${col("PASSIF", "d'où vient l'argent", b.passif)}</div>`;
+  const tot = (L) => r2((L || []).reduce((s, l) => s + (+l.montant || 0), 0)), tA = tot(b.actif), tP = tot(b.passif), ok = Math.abs(tA - tP) < 0.05;
+  const col = (titre, sous, lignes) => { let rub = null; return `<div class="col"><h5>${titre}<small>${sous}</small></h5>${(lignes || []).map(l => { const h = l.rubrique !== rub ? `<div class="sect">${esc(l.rubrique || "")}</div>` : ""; rub = l.rubrique; return h + `<div class="l"><span class="k">${l.compte ? `<small class="cpt">${esc(l.compte)}</small>` : ""}<b>${esc(court && l.court ? l.court : l.libelle)}</b></span><span class="v">${euro(l.montant)}</span></div>`; }).join("")}<div class="t"><span>Total</span><span>${euro(tot(lignes))}</span></div></div>`; };
+  return `<div class="bilan">${col("ACTIF", "ce que l'entreprise possède", b.actif)}${col("PASSIF", "d'où vient l'argent", b.passif)}</div><p class="help" style="margin:6px 2px 0">${ok ? `✔ Actif = Passif : ${euro(tA)}.` : `⚠ Actif ${euro(tA)} ≠ Passif ${euro(tP)} : bilan déséquilibré, à signaler.`}</p>`;
 }
+/** V3 : le livre-journal et la balance d'une mission, tels qu'envoyés par la page de l'élève (comptes à quatre chiffres). */
+function journalProf(E){
+  if (!E || !E.length) return "";
+  const dc = (s) => s && /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(8, 10) + "/" + s.slice(5, 7) : esc(s || "");
+  const td = r2(E.reduce((s, e) => s + (e.lignes || []).reduce((t, l) => t + (+l.debit || 0), 0), 0)), tc = r2(E.reduce((s, e) => s + (e.lignes || []).reduce((t, l) => t + (+l.credit || 0), 0), 0));
+  return `<div class="jrn-wrap"><table class="led jrn"><thead><tr><th>Date</th><th>Journal</th><th>Pièce</th><th>Compte</th><th>Libellé</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody>
+    ${E.map(e => `<tr class="ecr-h"><td>${dc(e.date)}</td><td><span class="jtag j-${esc(e.journal || "")}">${esc(e.journal || "")}</span></td><td class="money">${esc(e.piece || "")}</td><td colspan="4" class="jl">${esc(e.libelle || "")}</td></tr>${(e.lignes || []).map(l => `<tr><td></td><td></td><td></td><td class="n cpt">${esc(l.compte)}</td><td>${l.credit && !l.debit ? "<span class='ind'></span>" : ""}${esc(l.libelle)}</td><td class="n">${l.debit ? euro(l.debit) : ""}</td><td class="n">${l.credit ? euro(l.credit) : ""}</td></tr>`).join("")}`).join("")}
+    <tr class="tot"><td colspan="5">Totaux (${E.length} écriture${E.length > 1 ? "s" : ""})</td><td class="n">${euro(td)}</td><td class="n">${euro(tc)}</td></tr></tbody></table></div><p class="help" style="margin:6px 2px 0">${Math.abs(td - tc) < 0.005 ? "✔ Total des débits = total des crédits." : "⚠ Débits ≠ crédits."}</p>`;
+}
+function balanceProf(B){
+  if (!B || !B.length) return "";
+  const t = (k) => r2(B.reduce((s, c) => s + (+c[k] || 0), 0)), ok = Math.abs(t("debit") - t("credit")) < 0.005 && Math.abs(t("soldeDebiteur") - t("soldeCrediteur")) < 0.005;
+  return `<div class="jrn-wrap"><table class="led jrn"><thead><tr><th>Compte</th><th>Libellé</th><th class="n">Total débit</th><th class="n">Total crédit</th><th class="n">Solde débiteur</th><th class="n">Solde créditeur</th></tr></thead><tbody>
+    ${B.map(c => `<tr><td class="n cpt">${esc(c.compte)}</td><td>${esc(c.libelle)}</td><td class="n">${euro(c.debit)}</td><td class="n">${euro(c.credit)}</td><td class="n">${c.soldeDebiteur ? euro(c.soldeDebiteur) : ""}</td><td class="n">${c.soldeCrediteur ? euro(c.soldeCrediteur) : ""}</td></tr>`).join("")}
+    <tr class="tot"><td colspan="2">Totaux</td><td class="n">${euro(t("debit"))}</td><td class="n">${euro(t("credit"))}</td><td class="n">${euro(t("soldeDebiteur"))}</td><td class="n">${euro(t("soldeCrediteur"))}</td></tr></tbody></table></div><p class="help" style="margin:6px 2px 0">${ok ? "✔ Balance équilibrée (débits = crédits, soldes débiteurs = soldes créditeurs)." : "⚠ Balance déséquilibrée, à signaler."}</p>`;
+}
+/** V3 : le compte de résultats de la mission 3 : lignes avec comptes si la page les a envoyées (version 3), sinon les neuf lignes des versions précédentes. */
+function crProf(cr){
+  if (!cr) return "";
+  if (Array.isArray(cr.lignes) && cr.lignes.length){
+    const l = (x) => `<div class="l ${x.type === "sous-total" ? "st" : ""}"><span>${x.compte ? `<small class="cpt">${esc(x.compte)}</small> ` : ""}${esc(x.libelle)}${x.detail ? `<small class="dt">${esc(x.detail)}</small>` : ""}</span><span>${x.type === "produit" ? "" : x.montant < 0 ? "+ " : "− "}${euro(Math.abs(+x.montant || 0))}</span></div>`;
+    const somme = r2(cr.lignes.filter(x => x.type === "produit").reduce((s, x) => s + (+x.montant || 0), 0) - cr.lignes.filter(x => x.type === "charge").reduce((s, x) => s + (+x.montant || 0), 0));
+    return `<div class="cr"><div class="sect">PRODUITS</div>${cr.lignes.filter(x => x.type === "produit").map(l).join("")}<div class="sect">CHARGES</div>${cr.lignes.filter(x => x.type !== "produit").map(l).join("")}<div class="t ${cr.resultat >= 0 ? "pos" : "neg"}"><span>${cr.resultat >= 0 ? "Bénéfice" : "Perte"} du mois</span><span>${euro(cr.resultat)}</span></div>${Math.abs(somme - cr.resultat) > 0.005 ? `<p class="help" style="padding:6px 14px;color:var(--amber)">⚠ Les lignes font ${euro(somme)}, pas ${euro(cr.resultat)} : à signaler.</p>` : ""}</div>`;
+  }
+  const lignes = [["Ventes de marchandises HT", cr.ventesHT, 1], ["Coût des marchandises vendues", cr.coutMarchandisesVendues], cr.remisesObtenues ? ["Remises obtenues (ancienne version : déduites des achats)", -cr.remisesObtenues] : null, cr.port ? ["Frais de transport", cr.port] : null, cr.invendusJetes ? ["Invendus frais jetés", cr.invendusJetes] : null, cr.publicite ? ["Publicité d'ouverture", cr.publicite] : null, ["Loyer", cr.loyer], ["Assurances, énergie, abonnements", cr.autresCharges], cr.interets ? ["Intérêts de l'emprunt", cr.interets] : null].filter(Boolean);
+  const somme = r2(lignes.reduce((s, x) => s + (x[2] ? +x[1] || 0 : -(+x[1] || 0)), 0));
+  return `<div class="cr"><div class="sect">PRODUITS</div>${lignes.filter(x => x[2]).map(x => `<div class="l"><span>${esc(x[0])}</span><span>${euro(x[1])}</span></div>`).join("")}<div class="sect">CHARGES</div>${lignes.filter(x => !x[2]).map(x => `<div class="l"><span>${esc(x[0])}</span><span>${x[1] < 0 ? "+ " : "− "}${euro(Math.abs(+x[1] || 0))}</span></div>`).join("")}<div class="t ${cr.resultat >= 0 ? "pos" : "neg"}"><span>${cr.resultat >= 0 ? "Bénéfice" : "Perte"} du mois</span><span>${euro(cr.resultat)}</span></div>${Math.abs(somme - cr.resultat) > 0.005 ? `<p class="help" style="padding:6px 14px;color:var(--amber)">⚠ Lignes incomplètes (ancienne version) : elles font ${euro(somme)}, pas ${euro(cr.resultat)}.</p>` : ""}</div>`;
+}
+const defisProf = (defis) => defis && defis.length ? `<h3 class="sub">⚡ Défis éclair</h3><div style="display:grid;gap:6px">${defis.map(q => `<div style="font-size:13.5px;display:flex;gap:8px"><span>${q.reussi === true ? "✅" : q.reussi === false ? "❌" : "⬜"}</span><span>${esc(q.question)}${q.reussi === false ? ` <span style="color:var(--dim)">(réponse : ${esc(q.reponse)})</span>` : ""}</span></div>`).join("")}</div>` : "";
+/** V3 : les sorties fixes de la mission 1, lues dans le dossier de l'élève (trois lignes de charges depuis la version 3 ; une seule avant), sinon recalculées. */
+function chargesCardProf(E, em){ const c = E.chargesM1, l = (k, v) => `<tr><td>${k}</td><td class="n">${euro(v)}</td></tr>`;
+  let rows = l(`Loyer (${esc(em.nom.toLowerCase())})`, c ? c.loyer : loyer());
+  if (c && c.assurances != null) rows += l("Assurances", c.assurances) + l(`Énergie (${euro(c.energie)} HT + TVA)`, r2(c.energie * 1.21)) + l(`Télécom et abonnements (${euro(c.telecom)} HT + TVA)`, r2(c.telecom * 1.21));
+  else rows += l("Assurances, énergie, abonnements", c ? c.assurancesEtAbonnements : CHARGES_AUTRES);
+  rows += l("Mensualité de l'emprunt", c ? c.remboursementEmprunt : mensualite());
+  return `<table class="led"><tbody>${rows}<tr class="tot"><td>Sorties fixes chaque mois</td><td class="n">${euro(c ? c.total : chargesMensuelles())}</td></tr>${c && c.chargesCompteResultats != null ? `<tr><td><small>dont charges au compte de résultats (sans le capital remboursé ni la TVA)</small></td><td class="n">${euro(c.chargesCompteResultats)}</td></tr>` : ""}</tbody></table>${c && c.assurances == null ? `<p class="help">Dossier d'une version précédente : autres charges de ${euro(c.assurancesEtAbonnements)} par mois.</p>` : ""}`; }
 function chartBanque(sem, debut){
   const pts = [debut].concat(sem.map(s => s.banqueFin)); if (pts.some(p => p == null)) return "";
   const min = Math.min(0, ...pts), max = Math.max(...pts) * 1.08 || 1, W = 520, H = 150, L = 54, R_ = 14, T = 16, Bt = 26, x = (i) => L + i * (W - L - R_) / (pts.length - 1), y = (v) => T + (H - T - Bt) * (1 - (v - min) / (max - min));
@@ -1650,22 +1726,29 @@ V.ventes = () => {
     + ask("Deux élèves avec la même activité et des résultats différents : prix, stock, devis ou décisions ? Un stock restant est-il une perte ? (Non : il est à l'actif.) Pourquoi la banque a-t-elle moins bougé que le résultat ?");
 };
 
-/** Sections missions 2 et 3 dans la vue « Élève par élève ». */
+/** Sections missions 2 et 3 dans la vue « Élève par élève » (V3 : comptes, écritures, balance, défis, réception, conditions du client). */
 function sectionsM23(E){
   let html = "";
-  if (E.m2){ const m = E.m2;
-    html += `<div class="card fade-in" style="margin-top:22px"><h3>🧰 Mission 2 · équipement ${stM(m)}</h3>
-      <div class="kpi-row"><div class="k"><span>Budget</span><b>${m.budget ? euro0(m.budget) : "–"}</b></div><div class="k"><span>Engagé TTC</span><b style="color:${m.respecte === false ? "var(--coral)" : "var(--text)"}">${euro0(m.engage)}</b></div><div class="k"><span>Trésorerie après</span><b style="color:var(--mint)">${m.tresorerie != null ? euro0(m.tresorerie) : "–"}</b></div><div class="k"><span>Dettes fournisseurs</span><b>${euro0(m.dettes)}</b></div><div class="k"><span>Facture piégée</span><b style="font-size:14px">${m.piege ? (m.piege.trouve ? "🦅 repérée" : m.piege.decision === "acceptee" ? "💸 acceptée" : m.piege.decision ? "⚠ mauvaise ligne" : "en attente") : "–"}</b></div></div>
-      ${m.journal.length ? `<table class="led"><thead><tr><th>Pièce</th><th>Fournisseur</th><th class="n">HT</th><th class="n">TVA</th>${m.journal.some(j => j.enTrop > 0) ? `<th class="n">En trop</th>` : ""}<th class="n">TTC</th><th>Paiement</th></tr></thead><tbody>${m.journal.map(j => `<tr><td class="money">${esc(j.piece)}</td><td>${esc(j.fournisseur)}</td><td class="n">${euro(j.ht)}</td><td class="n">${euro(j.tva)}</td>${m.journal.some(x => x.enTrop > 0) ? `<td class="n">${j.enTrop > 0 ? euro(j.enTrop) : "–"}</td>` : ""}<td class="n">${euro(j.ttc)}</td><td>${j.paye ? "✓ payé" : "📅 à 30 jours"}</td></tr>`).join("")}</tbody></table>` : `<p class="help">Achats en cours : ${m.achats.filter(a => a.termine).length}/3 terminés.</p>`}
+  if (E.m2){ const m = E.m2, trop = m.journal.some(j => j.enTrop > 0), escT = m.journal.some(j => j.escompte > 0), cpts = m.journal.some(j => j.compte), journal = m.journal.slice().sort((a, b) => (a.dateISO || "") < (b.dateISO || "") ? -1 : (a.dateISO || "") > (b.dateISO || "") ? 1 : 0);
+    html += `<div class="card fade-in" style="margin-top:22px"><h3>🧰 Mission 2 · équipement ${stM(m)}${m.version ? ` <small class="help" style="margin:0">· version ${esc(m.version)}</small>` : ""}</h3>
+      <div class="kpi-row"><div class="k"><span>Budget</span><b>${m.budget ? euro0(m.budget) : "–"}</b></div><div class="k"><span>Engagé TTC</span><b style="color:${m.respecte === false ? "var(--coral)" : "var(--text)"}">${euro0(m.engage)}</b></div><div class="k"><span>Trésorerie après</span><b style="color:var(--mint)">${m.tresorerie != null ? euro0(m.tresorerie) : "–"}</b></div><div class="k"><span>Dettes fournisseurs</span><b>${euro0(m.dettes)}</b></div><div class="k"><span>Escomptes obtenus</span><b style="color:var(--mint)">${euro(m.resultat)}</b></div><div class="k"><span>Facture piégée</span><b style="font-size:14px">${m.piege ? (m.piege.trouve ? "🦅 repérée" : m.piege.decision === "acceptee" ? "💸 acceptée" : m.piege.decision ? "⚠ mauvaise ligne" : "en attente") : "–"}</b></div></div>
+      ${m.piege ? `<p class="help" style="margin:0 0 10px">Piège : ${esc(m.piege.texte)} (${esc(m.piege.achat)})${m.piege.rectification ? ` · rectifié par ${esc(m.piege.rectification)}` : ""}${m.piege.surcout ? ` · écart ${euro(m.piege.surcout)} TVAC` : ""}${m.piege.contestations ? ` · ${m.piege.contestations} contestation${m.piege.contestations > 1 ? "s" : ""} sur une mauvaise ligne` : ""}.</p>` : ""}
+      ${journal.length ? `<div class="jrn-wrap"><table class="led"><thead><tr><th>Date</th><th>Pièce</th><th>Fournisseur</th>${cpts ? "<th>Compte</th>" : ""}<th class="n">HT</th>${escT ? `<th class="n">Escompte</th>` : ""}<th class="n">TVA</th>${trop ? `<th class="n">En trop</th>` : ""}<th class="n">TVAC</th><th>Paiement</th></tr></thead><tbody>${journal.map(j => `<tr><td>${esc(j.date || "")}</td><td class="money">${esc(j.piece)}</td><td>${esc(j.fournisseur)}</td>${cpts ? `<td class="n cpt">${esc(j.compte || "")}</td>` : ""}<td class="n">${euro(j.ht)}</td>${escT ? `<td class="n">${j.escompte ? "− " + euro(j.escompte) : "–"}</td>` : ""}<td class="n">${euro(j.tva)}</td>${trop ? `<td class="n">${j.enTrop > 0 ? euro(j.enTrop) : "–"}</td>` : ""}<td class="n">${euro(j.ttc)}</td><td>${j.paye ? "✓ payé" : "📅 à 30 jours"}</td></tr>`).join("")}</tbody></table></div>` : `<p class="help">Achats en cours : ${m.achats.filter(a => a.termine).length}/3 terminés.</p>`}
+      ${m.ecritures.length ? `<h3 class="sub">📒 Écritures (journal des achats et journal financier)</h3>${journalProf(m.ecritures)}` : ""}
+      ${defisProf(m.defis)}
       ${m.fini && m.bilan ? `<h3 class="sub">Bilan après équipement</h3>${bilanDoc(m.bilan)}` : ""}</div>`;
   }
-  if (E.m3){ const m = E.m3, dv = m.devis, cr = m.cr;
-    html += `<div class="card fade-in" style="margin-top:22px"><h3>🛍️ Mission 3 · premier mois ${stM(m)}</h3>
+  if (E.m3){ const m = E.m3, dv = m.devis, cr = m.cr, rc = m.reception, cal = m.calendrier;
+    html += `<div class="card fade-in" style="margin-top:22px"><h3>🛍️ Mission 3 · premier mois${cal ? ` (${esc(cal.nom)} ${esc(cal.an)})` : ""} ${stM(m)}${m.version ? ` <small class="help" style="margin:0">· version ${esc(m.version)}</small>` : ""}${m.prevision ? ` <span class="coh warn">prévision (mission en cours)</span>` : ""}</h3>
       ${m.prix.length ? `<table class="led"><thead><tr><th>Article</th><th class="n">Marché TTC</th><th class="n">Prix choisi TTC</th><th class="n">Marge / unité</th><th class="n">Coef.</th><th class="n">Prévision</th></tr></thead><tbody>${m.prix.map(p => `<tr><td>${esc(p.article)}</td><td class="n">${euro(p.prixMarcheTTC)}</td><td class="n" style="color:${p.prixVenteTTC > p.prixMarcheTTC * 1.15 ? "var(--amber)" : p.prixVenteTTC < p.prixMarcheTTC * 0.9 ? "var(--steel)" : "var(--text)"}">${euro(p.prixVenteTTC)}</td><td class="n">${euro(p.margeUnitaire)}</td><td class="n">×${p.coefficient}</td><td class="n">${p.previsionMois}</td></tr>`).join("")}</tbody></table>` : ""}
-      <div class="kpi-row"><div class="k"><span>Devis client</span><b style="font-size:14px">${dv && dv.etat ? (dv.etat === "accepte" ? `accepté · ${euro(dv.netUnitaireHT)} HT` : "client perdu") : "–"}</b></div><div class="k"><span>Client mécontent</span><b style="font-size:14px">${({ rembourser:"remboursé", echanger:"échangé", refuser:"refusé" })[m.decisions.retourClient] || "–"}</b></div><div class="k"><span>Promotion</span><b style="font-size:14px">${m.decisions.promotion == null ? "–" : m.decisions.promotion ? "oui" : "non"}</b></div><div class="k"><span>Facture de vente</span><b style="font-size:14px">${m.exercice && m.exercice.reussi != null ? (m.exercice.duPremierCoup ? "juste du 1er coup" : m.exercice.reussi ? "juste au 2e essai" : "complétée") : "–"}</b></div><div class="k"><span>Résultat du mois</span><b style="color:${m.resultat == null ? "" : m.resultat >= 0 ? "var(--mint)" : "var(--coral)"}">${m.resultat != null ? euro0(m.resultat) : "–"}</b></div></div>
+      <div class="kpi-row"><div class="k"><span>Réception</span><b style="font-size:14px">${rc && rc.anomalie ? (rc.decision === "accepter" ? "💸 signée sans réserve" : rc.decision ? `🦅 ${rc.decision === "refuser" ? "colis refusés" : "sous réserve"}` : "–") : rc && rc.decision ? "conforme" : "–"}</b></div><div class="k"><span>Devis client</span><b style="font-size:14px">${dv && dv.etat ? (dv.etat === "accepte" ? `accepté · ${euro(dv.netUnitaireHT)} HT${dv.conditions ? ` · ${dv.conditions === "comptant" ? "comptant" : "30 j"}` : ""}` : "client perdu") : "–"}</b></div><div class="k"><span>Client mécontent</span><b style="font-size:14px">${({ rembourser:"remboursé", echanger:"échangé", refuser:"refusé" })[m.decisions.retourClient] || "–"}</b></div><div class="k"><span>Promotion</span><b style="font-size:14px">${m.decisions.promotion == null ? "–" : m.decisions.promotion ? "oui" : "non"}</b></div><div class="k"><span>Facture de vente</span><b style="font-size:14px">${m.exercice && m.exercice.reussi != null ? (m.exercice.duPremierCoup ? "juste du 1er coup" : m.exercice.reussi ? "juste au 2e essai" : "complétée") : "–"}</b></div><div class="k"><span>Résultat du mois</span><b style="color:${m.resultat == null ? "" : m.resultat >= 0 ? "var(--mint)" : "var(--coral)"}">${m.resultat != null ? euro0(m.resultat) : "–"}</b></div></div>
+      ${rc && rc.anomalie ? `<p class="help" style="margin:0 0 10px">Livraison non conforme : ${esc(rc.anomalie.motif)}${rc.noteDeCredit ? ` · note de crédit ${esc(rc.noteDeCredit.numero)} de ${euro(rc.noteDeCredit.ttc)} TVAC (6080)` : ""}${rc.reserve ? ` · réserve écrite : « ${esc(rc.reserve)} »` : ""}.</p>` : ""}
       ${m.semaines.length ? `<div class="chart" style="border:1px solid var(--line);border-radius:var(--r);padding:8px 10px 2px;background:var(--panel2)">${chartBanque(m.semaines, m.semaines[0].banqueDebut)}</div>` : ""}
-      ${cr ? `<div class="grid2" style="margin-top:14px;align-items:start"><div class="cr"><div class="sect">PRODUITS</div><div class="l"><span>Ventes de marchandises HT</span><span>${euro(cr.ventesHT)}</span></div><div class="sect">CHARGES</div><div class="l"><span>Coût des marchandises vendues</span><span>− ${euro(cr.coutMarchandisesVendues)}</span></div>${cr.remisesObtenues ? `<div class="l"><span style="padding-left:14px;color:var(--muted)">Remises obtenues (608), déduites des achats</span><span>+ ${euro(cr.remisesObtenues)}</span></div>` : ""}${cr.port ? `<div class="l"><span style="padding-left:14px;color:var(--muted)">Frais de transport</span><span>− ${euro(cr.port)}</span></div>` : ""}${cr.invendusJetes ? `<div class="l"><span>Invendus frais jetés</span><span>− ${euro(cr.invendusJetes)}</span></div>` : ""}${cr.publicite ? `<div class="l"><span>Publicité d'ouverture</span><span>− ${euro(cr.publicite)}</span></div>` : ""}<div class="l"><span>Loyer</span><span>− ${euro(cr.loyer)}</span></div><div class="l"><span>Assurances, énergie, abonnements</span><span>− ${euro(cr.autresCharges)}</span></div>${cr.interets ? `<div class="l"><span>Intérêts de l'emprunt</span><span>− ${euro(cr.interets)}</span></div>` : ""}<div class="t ${cr.resultat >= 0 ? "pos" : "neg"}"><span>${cr.resultat >= 0 ? "Bénéfice" : "Perte"} du mois</span><span>${euro(cr.resultat)}</span></div></div>
-        <div>${m.bilan ? bilanDoc(Object.assign({}, m.bilan, { passif:(m.bilan.passif || []).map(l => /^Résultat cumulé/.test(l.libelle || "") ? Object.assign({}, l, { court:"Résultat cumulé" }) : l) }), true) : ""}${m.bilan && m.bilan.resultatCumul != null && m.bilan.resultatMois != null && Math.abs(m.bilan.resultatCumul - m.bilan.resultatMois) >= 0.005 ? `<p class="help" style="margin:8px 2px 0">Au bilan, le résultat est <b>cumulé</b> depuis la création de l'entreprise : ${euro(m.bilan.resultatCumul)} = ${euro(r2(m.bilan.resultatCumul - m.bilan.resultatMois))} (mission 2) + ${euro(m.bilan.resultatMois)} (ce mois).</p>` : ""}</div></div>` : ""}</div>`;
+      ${cr ? `<div class="grid2" style="margin-top:14px;align-items:start"><div>${crProf(cr)}</div>
+        <div>${m.bilan ? bilanDoc(Object.assign({}, m.bilan, { passif:(m.bilan.passif || []).map(l => /^Résultat cumulé/.test(l.libelle || "") ? Object.assign({}, l, { court:"Résultat cumulé" }) : l) }), true) : ""}${m.bilan && m.bilan.resultatCumul != null && m.bilan.resultatMois != null && Math.abs(m.bilan.resultatCumul - m.bilan.resultatMois) >= 0.005 ? `<p class="help" style="margin:8px 2px 0">Au bilan, le résultat est <b>cumulé</b> depuis la création de l'entreprise : ${euro(m.bilan.resultatCumul)} = ${euro(E.m2 ? E.m2.resultat : r2(m.bilan.resultatCumul - m.bilan.resultatMois))} (mission 2${E.m2 && Math.abs(E.m2.resultat + m.bilan.resultatMois - m.bilan.resultatCumul) > 0.005 ? ", ⚠ écart avec le dossier de la mission 2" : ""}) + ${euro(m.bilan.resultatMois)} (ce mois).</p>` : ""}${m.tvaRecup != null && m.tvaPayer != null ? `<p class="help" style="margin:6px 2px 0">TVA : ${euro(m.tvaRecup)} à récupérer (4110) − ${euro(m.tvaPayer)} à payer (4510) = position nette ${euro(m.tvaNette)}${m.caisse != null ? ` · caisse ${euro(m.caisse)}` : ""}.</p>` : ""}</div></div>` : ""}
+      ${m.ecritures.length ? `<h3 class="sub">📒 Livre-journal du mois (${m.ecritures.length} écritures)</h3>${journalProf(m.ecritures)}` : ""}
+      ${m.balance.length ? `<h3 class="sub">⚖️ Balance des comptes</h3>${balanceProf(m.balance)}` : ""}
+      ${defisProf(m.defis)}</div>`;
   }
   return html;
 }
