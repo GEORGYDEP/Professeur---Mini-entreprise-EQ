@@ -1404,7 +1404,7 @@ function normaliser(d){
     dateCreation: ent.dateCreation || et.dateCreation || "", signature: (m.declaration || {}).signature || "",
     concurrent: ((m.bonus || {}).concurrent) || ((et.bonus || {}).concurrent) || "", quiz: et.quiz || {}, defis: m.defisEclair || [], versionM1:m.version || "",
     chargesM1:(m.entreprise && m.entreprise.chargesFixesMensuelles) || ent.chargesFixesMensuelles || null, tresoM1:(m.entreprise && m.entreprise.tresorerieDepart != null) ? m.entreprise.tresorerieDepart : null, autonomieM1:(m.entreprise && m.entreprise.autonomieMois != null) ? m.entreprise.autonomieMois : null,
-    ancien, legacy: ancien ? ent.argent || null : null, m2: lireM2(d), m3: lireM3(d)
+    ancien, legacy: ancien ? ent.argent || null : null, m2: lireM2(d), m3: lireM3(d), m4: lireM4(d)
   };
   if (ancien && ent.argent){ E.apport = ent.argent.argentDeDepart || 10000; E.nbAssocies = 1; E.emprunt = 0; }
   return E;
@@ -1584,7 +1584,7 @@ V.eleve = () => {
         <div style="margin-top:10px;display:grid;gap:6px">${defis.map(q => `<div style="font-size:13.5px;display:flex;gap:8px"><span>${q.reussi === true ? "✅" : q.reussi === false ? "❌" : "⬜"}</span><span>${esc(q.question)}${q.reussi === false ? ` <span style="color:var(--dim)">(réponse : ${esc(q.reponse)})</span>` : ""}</span></div>`).join("")}</div></div>
       <div class="card tight"><h3>🏅 Progression</h3><div class="kpi-row" style="grid-template-columns:repeat(2,1fr);margin:0"><div class="k"><span>Décisions</span><b>${E.etape}/${E.total}</b></div><div class="k"><span>XP</span><b>${E.xp}</b></div><div class="k"><span>Niveau</span><b style="font-family:var(--display);font-size:15px">${esc(E.niveau || niveau())}</b></div><div class="k"><span>Badges</span><b>${E.badges.length}</b></div></div>
         <div class="chips" style="margin-top:10px">${E.badges.map(b => `<span class="chip">${esc(b)}</span>`).join("")}</div>${E.signature ? `<p class="help">Acte signé : <i style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold2)">${esc(E.signature)}</i> le ${esc(E.dateCreation)}</p>` : ""}</div>
-    </div>${sectionsM23(E)}`;
+    </div>${sectionsM23(E)}${sectionM4(E)}`;
 };
 
 V.bilans = () => {
@@ -1710,7 +1710,7 @@ const CLASSEUR = (() => {
   const dLong = (s) => s ? deIso(s).toLocaleDateString("fr-BE", { weekday:"long", day:"numeric", month:"long" }) : "";
   const hashC = (s) => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
   const TVA = 0.21, ESC = 0.02, J_COMPTANT = 8, J_CREDIT = 30;
-  const condTxt = (c) => c === "comptant" ? `au comptant : paiement dans les ${J_COMPTANT} jours après réception de la facture, escompte de ${Math.round(ESC * 100)} %` : `à ${J_CREDIT} jours date de facture`;
+  const condTxt = (c) => c === "comptant" ? `au comptant : paiement dans les ${J_COMPTANT} jours après réception de la facture, escompte ferme de ${Math.round(ESC * 100)} %` : `à ${J_CREDIT} jours date de facture`;
   const ICONES = { offre:"📨", bc:"📝", bl:"📦", facture:"🧾", nc:"↩️", fc:"➕", extrait:"🏦", devis:"📋", fv:"🧾", ticket:"🧾", caisse:"💶" };
   const NOMS_BIENS = { mobilier:"Le mobilier", caisse:"La caisse enregistreuse", ordinateur:"L'ordinateur" };
 
@@ -1723,7 +1723,7 @@ const CLASSEUR = (() => {
   function totaux(d, err){
     const T = [["Total des articles", d.brut, "sub"]], e = (k) => err === k ? " err" : "";
     if (d.remisePct || err === "remise") T.push([`− Remise ${d.remisePct || 0}${NB}%`, -d.remise, "sub" + e("remise")], ["= Net commercial", d.netCommercial, "sub"]);
-    if (d.cond === "comptant") T.push([`− Escompte ${Math.round(ESC * 100)}${NB}% (paiement dans les ${J_COMPTANT} jours)`, -d.escompte, "sub"], ["= Net HTVA", d.netHTVA, "sub"]);
+    if (d.cond === "comptant") T.push([`− Escompte ferme ${Math.round(ESC * 100)}${NB}% (paiement dans les ${J_COMPTANT} jours)`, -d.escompte, "sub"], ["= Net HTVA", d.netHTVA, "sub"]);
     T.push(["+ Frais de port", d.livraison, "sub" + e("livraison"), d.livraison ? null : "offerts"], ["= Montant taxable", d.totalHT, "b"], [`TVA ${d.tauxTva || 21}${NB}%`, d.tva, "sub" + e("tva")], ["Total à payer (TVAC)", d.totalTTC, "tot"]);
     return T;
   }
@@ -1821,7 +1821,7 @@ const CLASSEUR = (() => {
     if (!P.length) return `<p class="cls-vide">Ton classeur est encore vide : il se remplira à chaque document reçu ou envoyé.</p>`;
     const groupes = []; P.forEach(p => { const g = groupes.find(x => x.cle === p.dossier); if (g) g.P.push(p); else groupes.push({ cle:p.dossier, titre:p.dossierTitre || "Documents", statut:p.dossierStatut || "", ok:p.dossierOk, mission:p.m, cat:p.cat, P:[p] }); });
     const parMission = {}; groupes.forEach(g => { (parMission[g.mission] = parMission[g.mission] || []).push(g); });
-    const NOM_M = { 2:"Mission 2 · l'équipement", 3:"Mission 3 · le premier mois de ventes" };
+    const NOM_M = { 2:"Mission 2 · l'équipement", 3:"Mission 3 · le premier mois de ventes", 4:"Mission 4 · l'année 2027" };
     return Object.keys(parMission).sort().map(m => `<div class="cls-mission"><h4 class="cls-mtitre">${E(NOM_M[m] || "Mission " + m)}</h4>${parMission[m].map(g => `<section class="cls-dossier${g.cle === surligne ? " cls-surligne" : ""}" data-cls-dossier="${E(g.cle)}">
       <div class="cls-dtete"><span class="cls-onglet">${E(g.titre)}</span>${g.statut ? `<span class="cls-statut${g.ok ? " ok" : ""}">${g.ok ? "✓ " : ""}${E(g.statut)}</span>` : ""}</div>
       <div class="cls-pieces">${g.P.map(p => `<button type="button" class="cls-piece" data-cls-piece="${E(p.id)}"><i aria-hidden="true">${ICONES[p.type] || "📄"}</i><span><b>${E(p.titre)}</b><small class="cls-num">${E(p.numero || "")}</small>${p.dateISO ? `<small>${E(dLong(p.dateISO))}</small>` : ""}${p.montant != null ? `<em>${p.montant < 0 ? "− " + EUR(-p.montant) : EUR(p.montant)}</em>` : ""}</span></button>`).join("")}</div></section>`).join("")}</div>`).join("");
@@ -1861,7 +1861,7 @@ function piecesProf(E){
   m2.forEach(p => { if (p.type === "facture" && payees[p.numero]) dossiers[p.dossier] = payees[p.numero]; });
   const m2aj = m2.map(p => { const d = dossiers[p.dossier]; if (!d) return p; const q = Object.assign({}, p, { dossierStatut:`Payée le ${CLASSEUR.dFr(d)}`, dossierOk:true });
     if (p.type === "facture" && payees[p.numero]) Object.assign(q, { tampon:"PAYÉE", tamponCls:"" }); return q; });
-  return m2aj.concat((E.m3 && E.m3.classeur) || []);
+  return m2aj.concat((E.m3 && E.m3.classeur) || [], (E.m4 && E.m4.classeur) || []);
 }
 /** Le bloc « Documents classés » d'une mission, dans la fiche de l'élève. */
 function classeurProf(E, mission){
@@ -1903,6 +1903,43 @@ function lireM3(d){
     cr, tresorerie:e.tresorerie, caisse:e.caisse, stockFinal:e.stockFinal, tvaNette:e.tvaNette, tvaRecup:e.tvaARecuperer, tvaPayer:e.tvaAPayer, resultatCumule:e.resultatCumule, creances:e.creancesClients || 0, dettes:e.dettesFournisseurs || 0,
     devis:m.devis || null, decisions:m.decisions || {}, reception:(m.stock && m.stock.reception) || null, factureVente:m.factureVente || null, exercice:m.exerciceFacture || null, semaines:m.semaines || [], bilan:m.bilan || null, defis:m.defisEclair || [], ecritures:m.ecritures || [], balance:m.balance || [],
     classeur:(m.classeur && Array.isArray(m.classeur.pieces)) ? m.classeur.pieces : [], classeurM2:(m.classeur && Array.isArray(m.classeur.piecesMission2)) ? m.classeur.piecesMission2 : [], paiementsM2:(m.classeur && m.classeur.paiementsMission2) || [] };
+}
+// ======================================================================
+//  MISSION 4 (02/11/2026) : l'année 2027 dans la fiche de l'élève (lecture seule du paquet envoyé par la page)
+// ======================================================================
+function lireM4(d){
+  const m = (d.missions || {})["4"]; if (!m || !m.tableauStocks) return null;
+  return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes, version:m.version || "",
+    stocks:m.tableauStocks, plan:m.planTresorerie || null, trimestres:Array.isArray(m.trimestres) ? m.trimestres : [], decisions:m.decisions || {}, evenements:m.evenements || {}, cr:m.compteResultats || null, bilan:m.bilan || null,
+    ecritures:Array.isArray(m.ecritures) ? m.ecritures : [], defis:m.defisEclair || [], calculs:m.calculs || {}, classeur:(m.classeur && Array.isArray(m.classeur.pieces)) ? m.classeur.pieces : [], ex:(m.entreprise || {}).exercice2027 || {} };
+}
+/** La section « Mission 4 » de la fiche de l'élève : chiffres de l'année, décisions, plan de trésorerie, stocks, compte de résultats, bilan, classeur, défis. */
+function sectionM4(E){
+  const m = E.m4; if (!m) return "";
+  const dec = m.decisions || {}, ev = m.evenements || {}, plan = m.plan || {}, ex = m.ex || {}, nf = m.trimestres.length, g = ev.grosseCommande, perdus = m.trimestres.reduce((s, t) => s + (t.ventes || []).reduce((a, v) => a + (+v.perdu || 0), 0), 0);
+  const LIB_VIT = { reparer:"réparée et déclarée", attendre:"expert attendu (vitrine condamnée)", sansDeclarer:"réparée sans déclarer" }, LIB_FIN = { straight:"straight loan", caisse:"crédit de caisse", retard:"grossiste payé en retard", rien:"aucun" };
+  const fin = dec.financement || {}, gc = dec.grosseCommande || {};
+  const choix = [["📝 Commandes", (dec.commandes || []).map((q, k) => `T${k + 1} ${(q || []).map(x => x == null ? "–" : x).join("/")}`).join(" · ")], ["💤 Placement", dec.placement ? euro0(dec.placement) : "aucun"],
+    ["🔁 Prévision", dec.revisionPrevision == null ? "–" : dec.revisionPrevision ? "révisée (+35 %)" : "gardée"], ["🚧 Défi de la grève", dec.articleDevineGreve == null ? "–" : dec.articleDevineGreve === "aucun" ? "« aucune rupture »" : `article ${+dec.articleDevineGreve + 1}`],
+    ["🪟 Vitrine", LIB_VIT[dec.vitrine] || "–"], ["🤝 Grosse commande", gc.remise == null ? "–" : gc.acceptee === false ? "client perdu" : `remise ${gc.remise < 10 && gc.contreOffre ? "10 % (contre-offre)" : gc.remise + " %"}, livraison ${gc.livraison || "–"}`],
+    ["🏦 Financement", fin.type ? LIB_FIN[fin.type] + (fin.montant ? " " + euro0(fin.montant) : "") : "–"], ["🎁 Fin d'année", dec.promotionFinAnnee == null ? "–" : dec.promotionFinAnnee ? "promotion −20 %" : "prix gardé"]];
+  const lignePlan = (lab, k) => `<tr><td>${lab}</td>${[0,1,2,3].map(q => { const p = (plan.prevu || [])[q], r = (plan.reel || [])[q]; return `<td class="n">${p ? euro0(p[k]) : "–"}</td><td class="n" style="color:var(--steel)">${r ? euro0(r[k]) : "–"}</td>`; }).join("")}</tr>`;
+  const stocks = (m.stocks.articles || []).map(a => `<tr><td>${esc(a.article)}</td>${(a.trimestres || []).map(t => `<td class="n">${t.prevision}</td><td class="n">${t.ventesReelles == null ? "–" : t.ventesReelles}</td><td class="n" style="color:${t.ventesPerdues ? "var(--coral)" : "inherit"}">${t.ventesPerdues == null ? "–" : t.ventesPerdues}</td><td class="n">${t.stockFin == null ? "–" : t.stockFin}</td>`).join("")}</tr>`).join("");
+  const cr = m.cr && Array.isArray(m.cr.lignes) ? `<table class="led"><thead><tr><th></th><th class="n">T1</th><th class="n">T2</th><th class="n">T3</th><th class="n">T4</th><th class="n">2027</th></tr></thead><tbody>${m.cr.lignes.map(l => `<tr><td><small class="cpt">${esc(l.compte)}</small> ${esc(l.libelle)}</td>${(l.parTrimestre || []).map(x => `<td class="n">${l.sens === "charge" ? (x ? "− " + euro0(x) : "–") : euro0(x)}</td>`).join("")}<td class="n"><b>${l.sens === "charge" ? "− " : ""}${euro0(l.total)}</b></td></tr>`).join("")}
+    <tr class="tot"><td>Résultat</td>${(m.cr.resultatParTrimestre || []).map(x => `<td class="n">${euro0(x)}</td>`).join("")}<td class="n">${euro0(m.cr.resultat)}</td></tr></tbody></table>` : "";
+  return `<div class="card fade-in" style="margin-top:22px"><h3>📈 Mission 4 · l'année 2027 ${stM(m)}${m.version ? ` <small class="help" style="margin:0">· version ${esc(m.version)} · ${nf} trimestre${nf > 1 ? "s" : ""} sur 4</small>` : ""}</h3>
+    <div class="kpi-row"><div class="k"><span>Résultat 2027</span><b style="color:${(ex.resultat || 0) < 0 ? "var(--coral)" : "var(--mint)"}">${ex.resultat != null ? euro0(ex.resultat) : "–"}</b></div><div class="k"><span>Résultat prévu en janvier</span><b>${plan.resultatPrevu != null ? euro0(plan.resultatPrevu) : "–"}</b></div>
+      <div class="k"><span>Trésorerie ${nf === 4 ? "au 31/12" : "à ce jour"}</span><b>${ex.tresorerie != null ? euro0(ex.tresorerie) : "–"}</b></div><div class="k"><span>Ventes perdues (ruptures)</span><b style="color:${perdus ? "var(--amber)" : "inherit"}">${perdus}</b></div>
+      <div class="k"><span>Stock final</span><b>${ex.stockFinal != null ? euro0(ex.stockFinal) : "–"}</b></div><div class="k"><span>Calculs justes</span><b>${["stockAlerte", "tresorerie", "interets"].filter(k => m.calculs[k] === true).length}/3</b></div></div>
+    <div class="chips" style="margin:6px 0 12px">${choix.map(c => `<span class="chip"><b>${c[0]}</b> ${esc(c[1])}</span>`).join("")}</div>
+    ${g ? `<p class="help" style="margin:0 0 10px">Grosse commande (${esc(g.client)}) : ${(g.lignes || []).map(l => `${l.quantite} × ${esc(l.article)} à ${euro(l.prixNetHT)} HT (marge ${euro(l.marge)}, taux de marque ${String(l.tauxMarque).replace(".", ",")} %)`).join(" ; ")} · total ${euro(g.totalTTC)} TVAC · marge de la commande ${euro(g.marge)}${g.payeeLe ? ` · payée en retard le ${CLASSEUR.dFr(g.payeeLe)}` : ""}.</p>` : ""}
+    <h3 class="sub">💶 Plan de trésorerie : prévu (blanc) et réel (bleu)</h3><div class="jrn-wrap"><table class="led"><thead><tr><th></th>${[1,2,3,4].map(q => `<th class="n">T${q} prévu</th><th class="n">T${q} réel</th>`).join("")}</tr></thead><tbody>${lignePlan("Début", "debut")}${lignePlan("Entrées", "totalEntrees")}${lignePlan("Sorties", "totalSorties")}${lignePlan("Fin", "fin")}${lignePlan("Point le plus bas", "pointBas")}</tbody></table></div>
+    <p class="help" style="margin:4px 2px 10px">Trésorerie de sécurité : ${plan.tresorerieSecurite != null ? euro0(plan.tresorerieSecurite) : "–"}.</p>
+    <h3 class="sub">📦 Tableau des stocks : prévu, vendu, perdu, stock en fin de trimestre</h3><div class="jrn-wrap"><table class="led"><thead><tr><th>Article</th>${[1,2,3,4].map(q => `<th class="n">T${q} prévu</th><th class="n">vendu</th><th class="n">perdu</th><th class="n">stock</th>`).join("")}</tr></thead><tbody>${stocks}</tbody></table></div>
+    ${cr ? `<div class="grid2" style="margin-top:14px;align-items:start"><div><h3 class="sub" style="margin-top:0">📊 Compte de résultats 2027</h3><div class="jrn-wrap">${cr}</div></div><div><h3 class="sub" style="margin-top:0">⚖️ Bilan ${m.bilan && m.bilan.date ? "au " + CLASSEUR.dFr(m.bilan.date) : ""}</h3>${m.bilan ? bilanDoc(m.bilan, true) : ""}</div></div>` : (m.bilan ? `<h3 class="sub">⚖️ Bilan à ce jour</h3>${bilanDoc(m.bilan, true)}` : "")}
+    ${m.ecritures.length ? `<h3 class="sub">📒 Livre-journal de l'année (${m.ecritures.length} écritures)</h3>${journalProf(m.ecritures)}` : ""}
+    ${classeurProf(E, 4)}
+    ${defisProf(m.defis)}</div>`;
 }
 /** Bilan rendu à partir des données enregistrées (missions 2 et 3) : V3, avec les numéros de compte et le contrôle Actif = Passif. */
 function bilanDoc(b, court){
@@ -2028,7 +2065,7 @@ function sectionsM23(E){
 //  rouvrir une mission pour un élève, supprimer un dossier de test, sauvegardes.
 // ======================================================================
 const DUREES = [["30min","30 min"],["1h","1 h"],["2h","2 h"],["3h","3 h"],["4h","4 h"],["illimité","Sans limite"]];
-const MISSIONS_APPLI = [["1","🏗️","Fonde ton entreprise"],["2","🧰","Équipe ton entreprise"],["3","🛍️","Ton premier mois de ventes"]];
+const MISSIONS_APPLI = [["1","🏗️","Fonde ton entreprise"],["2","🧰","Équipe ton entreprise"],["3","🛍️","Ton premier mois de ventes"],["4","📈","Ton année 2027"]];
 const LIB_STATUT = { termine:["✅","terminée"], en_cours:["⏳","en cours"], reinitialise:["🔄","rouverte"] };
 const capitaliser = (s) => s.split("-").map(w => w ? w[0].toUpperCase() + w.slice(1) : w).join("-");
 const dateFichier = () => new Date().toISOString().slice(0, 10);
@@ -2084,7 +2121,7 @@ V.pilotage = () => {
       </div>
     </div>
     <div class="panel fade-in" style="margin-top:18px">
-      <div class="ptitre"><h3>Les élèves${APP.classe ? " · " + esc(APP.classe) : ""} (${lignes.length})</h3><span class="help">Clique sur l'état d'une mission pour la rouvrir à l'élève : son travail est archivé (rien n'est perdu). En mission 1, ses choix sont préremplis ; en missions 2 et 3, il recommence la mission avec son entreprise.</span></div>
+      <div class="ptitre"><h3>Les élèves${APP.classe ? " · " + esc(APP.classe) : ""} (${lignes.length})</h3><span class="help">Clique sur l'état d'une mission pour la rouvrir à l'élève : son travail est archivé (rien n'est perdu). En mission 1, ses choix sont préremplis ; en missions 2 à 4, il recommence la mission avec son entreprise.</span></div>
       <div class="tscroll"><table class="list ptab"><thead><tr><th>Élève</th><th>Classe</th><th>Entreprise</th>${MISSIONS_APPLI.map(m => `<th>Mission ${m[0]}</th>`).join("")}<th></th></tr></thead><tbody>
       ${lignes.map(l => { const e = l.dossier && l.dossier.entreprise ? (l.dossier.entreprise.denomination || l.dossier.entreprise.nom || "") : "";
         return `<tr><td><b>${esc(l.prenom)} ${esc(l.nom)}</b>${l.inscrit ? "" : `<span class="hors" title="Cette adresse n'est pas dans la liste de la classe">hors liste</span>`}<small style="display:block;color:var(--dim)">${esc(l.email)}</small></td>
@@ -2092,7 +2129,7 @@ V.pilotage = () => {
           <td>${e ? emoji(l) + esc(e) : `<span style="color:var(--dim)">${l.dossier ? "en création" : "pas encore commencé"}</span>`}</td>
           ${MISSIONS_APPLI.map(m => `<td>${pill(l, m[0])}</td>`).join("")}
           <td class="pact">${l.dossier && l.dossier.entreprise && TYPES.some(t => t.id === l.dossier.entreprise.typeId) ? `<button class="link" data-open="${esc(l.email)}" title="Voir son entreprise">👁️</button>` : ""}${l.inscrit ? `<button class="link" data-desinscrire="${esc(l.email)}" title="Retirer de la liste de la classe">✕</button>` : ""}${l.dossier ? `<button class="link danger" data-suppr="${esc(l.email)}" title="Supprimer ce dossier (compte de test…)">🗑️</button>` : ""}</td></tr>`; }).join("")
-        || `<tr><td colspan="7"><div class="empty">Aucun élève pour l'instant.</div></td></tr>`}
+        || `<tr><td colspan="${4 + MISSIONS_APPLI.length}"><div class="empty">Aucun élève pour l'instant.</div></td></tr>`}
       </tbody></table></div>
     </div>
     <div class="grid2 fade-in" style="margin-top:18px;align-items:start">
@@ -2229,15 +2266,15 @@ function exporterCSV(){
   const nb = (v) => v == null || v === "" || isNaN(v) ? "" : String(Math.round(+v * 100) / 100).replace(".", ",");
   const statut = (l, m) => { const x = missionDe(l, m); return x ? (LIB_STATUT[x.statut] || ["", x.statut || ""])[1] : ""; };
   const entetes = ["E-mail","Prénom","Nom","Classe","Dans la liste","Entreprise","Activité","Stratégie","Forme","Commune","Capital (€)","Emprunt (€)",
-    "Mission 1","Mission 2","Mission 3","XP total","Trésorerie après la mission 2 (€)","Chiffre d'affaires HT de la mission 3 (€)","Résultat du mois, mission 3 (€)"];
+    "Mission 1","Mission 2","Mission 3","Mission 4","XP total","Trésorerie après la mission 2 (€)","Chiffre d'affaires HT de la mission 3 (€)","Résultat du mois, mission 3 (€)","Résultat 2027, mission 4 (€)","Trésorerie fin 2027, mission 4 (€)"];
   const lignes = lignesPilotage().map(l => {
     const d = l.dossier || {}, e = d.entreprise || {}, fi = e.financement || {}, ms = d.missions || {}, m2 = ms["2"] || {}, m3 = ms["3"] || {};
     const t = TYPES.find(x => x.id === e.typeId), s = STRATEGIES.find(x => x.id === (e.strategie || {}).id);
     const xp = l.dossier ? Object.values(ms).reduce((n, m) => n + (+m.xp || 0), 0) : "";
     const ca = (m3.entreprise && m3.entreprise.ventesDuMois) ? m3.entreprise.ventesDuMois.chiffreAffairesHT : null, res = m3.compteResultats ? m3.compteResultats.resultat : null;
     return [l.email, l.prenom, l.nom, l.classe, l.inscrit ? "oui" : "non", e.denomination || e.nom || "", t ? t.nom : "", s ? s.nom : "", e.formeCourte || e.forme || "", (e.adresse || {}).commune || "",
-      nb(fi.capital != null ? fi.capital : (e.argent || {}).argentDeDepart), nb(fi.emprunt), statut(l, "1"), statut(l, "2"), statut(l, "3"), xp,
-      nb(m2.entreprise ? m2.entreprise.tresorerie : null), nb(ca), nb(res)].map(cell).join(sep);
+      nb(fi.capital != null ? fi.capital : (e.argent || {}).argentDeDepart), nb(fi.emprunt), statut(l, "1"), statut(l, "2"), statut(l, "3"), statut(l, "4"), xp,
+      nb(m2.entreprise ? m2.entreprise.tresorerie : null), nb(ca), nb(res), nb(((ms["4"] || {}).entreprise || {}).exercice2027 ? ms["4"].entreprise.exercice2027.resultat : null), nb(((ms["4"] || {}).entreprise || {}).exercice2027 ? ms["4"].entreprise.exercice2027.tresorerie : null)].map(cell).join(sep);
   });
   telecharger("﻿" + [entetes.map(cell).join(sep)].concat(lignes).join("\r\n"), `eleves-mini-entreprise-eq-${dateFichier()}.csv`, "text/csv;charset=utf-8");
 }
@@ -3154,6 +3191,8 @@ function vitrineSVG(cfg, uid){
 // v1.3 (27/10/2026) : film() (scène de 3 s au plus sur tout l'écran, passée d'un clic, comme aux 3P), cascade(), confettis(),
 // xpSaute(), vivant() (cartes qui réagissent, reflets, notifications façon téléphone), couperFilms() pour les bancs d'essai.
 // v1.4 (30/10/2026) : creditsImages() pose une ligne visible au bas de la page (comme aux 3P) ; la liste ajoute les photos libres de la page.
+// v1.5 (30/10/2026) : film({ long:true }) peut durer jusqu'à 9 s (scènes plus réalistes de la mission 2) ; sans « long », toujours 3 s au plus ;
+// film({ toujours:true }) se joue en entier même quand l'ordinateur demande moins d'animations.
 const COMPTA = (() => {
   const X = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 
@@ -3390,7 +3429,10 @@ const COMPTA = (() => {
   function film(o){
     if (filmsCoupes || !o || !o.html || !premiereFois("film-" + o.cle)) return Promise.resolve(false);
     if (filmEnCours) filmEnCours();
-    const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches, ms = reduit ? 700 : Math.min(3000, o.duree || 2400);
+    // v1.5 : un film « long » (o.long, demande du professeur du 30/10/2026 : scènes plus réalistes, comme aux 3P) peut durer jusqu'à 9 s ; les autres, 3 s au plus.
+    // Un film « toujours » (o.toujours) se joue en entier même si l'ordinateur demande moins d'animations (Windows : effets d'animation désactivés) :
+    // ses étapes avancent au rythme prévu, seuls les fondus et glissements disparaissent.
+    const reduit = !o.toujours && matchMedia("(prefers-reduced-motion: reduce)").matches, ms = reduit ? 700 : Math.min(o.long ? 9000 : 3000, o.duree || 2400);
     const el = document.createElement("div");
     el.className = "cpt-film" + (reduit ? " cpt-film-calme" : ""); el.setAttribute("aria-hidden", "true");
     el.innerHTML = `<div class="cpt-film-boite">${o.html}${o.texte ? `<p class="cpt-film-texte">${X(o.texte)}</p>` : ""}</div><span class="cpt-film-passer">Clique pour passer</span><i class="cpt-film-temps" style="animation-duration:${ms}ms"></i>`;
