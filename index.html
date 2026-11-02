@@ -396,6 +396,23 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .cls-modal .parties b{display:block; font-size:11.5px; color:var(--paper-muted); margin-bottom:3px; font-weight:600}
 .cls-modal .cond{font-size:12.5px; color:var(--paper-muted); margin-top:8px}
 @media (max-width:640px){ .cls-modal .parties{grid-template-columns:minmax(0,1fr)} }
+/* ─── V4.2 (02/11/2026) : actualisation automatique sans animations ; les missions dans le menu ; le bilan comparé de la mission 4 ─── */
+#app.calme *, #app.calme *::before, #app.calme *::after{animation:none !important; transition:none !important}
+.m-barre .m-titre{font-weight:800; margin-right:4px}
+.m-barre .m-sel{width:auto; min-width:300px; max-width:380px; padding:9px 12px; border-radius:10px; font-size:14px; background:#1b1233; color:#fff}
+.m-barre .m-sel option{background:#1b1233; color:#fff}
+.m-eleve{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin:4px 0 0}
+.m-eleve .who-big{margin:0}
+.m-eleve .dn{font-size:28px; font-weight:800; line-height:1.1}
+.m-eleve .sl{color:var(--dim); font-size:14px; margin-top:4px}
+.m-eleve-r{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.bilan.pf-b2 .l, .bilan.pf-b2 .t, .bilan.pf-b2 .pf-b2-h{display:grid; grid-template-columns:minmax(0,1fr) 8.4em 8.4em; gap:14px; align-items:baseline}
+.bilan.pf-b2 .pf-b2-h{padding:7px 14px 5px; font-size:11.5px; font-weight:600; color:var(--dim); border-bottom:1px solid var(--line)}
+.bilan.pf-b2 .pf-b2-h span, .bilan.pf-b2 .l .v, .bilan.pf-b2 .t span+span{text-align:right}
+.bilan.pf-b2 .pf-b2-h span:last-child{color:var(--text)}
+.bilan.pf-b2 .pf-b2-avant{color:var(--dim)}
+.bilan.pf-b2 .l .v{font-size:13px}
+@media (max-width:560px){ .bilan.pf-b2 .l, .bilan.pf-b2 .t, .bilan.pf-b2 .pf-b2-h{grid-template-columns:minmax(0,1fr) 84px 84px; gap:6px} .bilan.pf-b2 .l .v, .bilan.pf-b2 .t span+span{font-size:12px} }
 </style>
 <style id="kit-realiste">
 /* ═══ KIT RÉALISTE COMMUN v1, version EQ — début (identique dans les missions 1, 2 et 3 : ne pas modifier ici, modifier outils/kit-realiste-eq) ═══ */
@@ -1325,7 +1342,7 @@ const CONFIG = {
   SUPABASE_CLE: "sb_publishable_f5Gc6ezEciyzfSYz9wGzgw_IxZqpB_W",     // clé publique : faite pour être dans la page
   EMAIL_STOCKAGE: "mini-entreprise-compta-prof-email",                 // adresse du compte professeur, retenue sur cet ordinateur
   CLASSE_STOCKAGE: "mini-entreprise-compta-prof-classe",               // classe choisie dans le filtre
-  AUTO_REFRESH_S: 20,
+  AUTO_REFRESH_S: 60,   // V4.2 (02/11/2026) : une minute ; l'écran ne bouge que si les données affichées changent (renduCalme)
   // Application Web du Google Sheet des EQ (même adresse qu'avant) : elle recopie la base dans ses onglets « 💾 »
   GOOGLE_SHEET_URL: "https://script.google.com/macros/s/AKfycbwliltGZSZ99qaUpQ3MmWlJXINPYIQCua_hwGEGQNmw69CEwr8OA80jWykJ7Vr9268x/exec"
 };
@@ -1469,8 +1486,8 @@ const VUES = [
   ["identites","📇","Cartes d'identité"], ["biens","🧺","Biens ou services"], ["familles","🏭","Que font-elles ?"], ["secteurs","🌍","Secteurs d'activité"], ["formes","🏛️","Individuelle ou société"],
   ["sep","Le cours · financer et comptabiliser (fiches 310 à 350, plan comptable)"],
   ["financement","🏦","Capital, apport et emprunt"], ["bilan","📘","Le bilan d'ouverture"],
-  ["sep","Missions 2 et 3"],
-  ["achats","🧰","Mission 2 · les achats"], ["ventes","🛍️","Mission 3 · le premier mois"]
+  ["sep","Les missions · la classe, puis un élève"],
+  ["achats","🧰","Mission 2 · Équipe ton entreprise"], ["ventes","🛍️","Mission 3 · Ton premier mois"], ["annee","📈","Mission 4 · Ton année 2027"]
 ];
 const avecEntreprise = () => APP.liste.filter(E => E.typeId);
 const avecFinancement = () => avecEntreprise().filter(E => pretE(E) && E.emplacement);
@@ -1493,7 +1510,7 @@ const barre = (emoji, label, v, max, color) => `<div class="bar"><span class="e"
 const V = {};
 
 V.ensemble = () => {
-  const L = APP.liste, n = L.length, fin = L.filter(E => E.statut === "termine").length, enc = L.filter(E => E.statut === "en_cours" || E.statut === "reinitialise").length, fin2 = L.filter(E => E.m2 && E.m2.fini).length, fin3 = L.filter(E => E.m3 && E.m3.fini).length;
+  const L = APP.liste, n = L.length, fin = L.filter(E => E.statut === "termine").length, enc = L.filter(E => E.statut === "en_cours" || E.statut === "reinitialise").length, fin2 = L.filter(E => E.m2 && E.m2.fini).length, fin3 = L.filter(E => E.m3 && E.m3.fini).length, fin4 = L.filter(E => E.m4 && E.m4.fini).length;
   const F = avecFinancement();
   const capM = moy(F.map(capE)), empN = F.filter(E => empE(E) > 0).length, tresoM = moy(F.map(tresoE)), autoM = moy(F.map(autoE).filter(a => a != null));
   const max = APP.config && APP.config.max ? APP.config.max : 4;
@@ -1505,7 +1522,7 @@ V.ensemble = () => {
   return head("Mini-entreprises · Technicien en comptabilité", "La classe en <span class='grad'>un coup d'œil</span>", "L'avancement de chacun et les grandes tendances. Clique sur un élève pour projeter son entreprise.")
   + `<div class="kpis fade-in">
       <div class="kpi" style="--c:var(--gold)"><div class="n">${n}</div><div class="l">entreprises créées ou en cours</div></div>
-      <div class="kpi" style="--c:var(--mint)"><div class="n">${fin} · ${fin2} · ${fin3}</div><div class="l">missions 1 · 2 · 3 terminées</div></div>
+      <div class="kpi" style="--c:var(--mint)"><div class="n">${fin} · ${fin2} · ${fin3} · ${fin4}</div><div class="l">missions 1 · 2 · 3 · 4 terminées</div></div>
       <div class="kpi" style="--c:var(--amber)"><div class="n">${enc}</div><div class="l">mission 1 en cours</div></div>
       <div class="kpi" style="--c:var(--steel)"><div class="n">${F.length ? euro0(capM) : "–"}</div><div class="l">capital moyen</div></div>
       <div class="kpi" style="--c:var(--violet)"><div class="n">${F.length ? empN + "/" + F.length : "–"}</div><div class="l">ont emprunté à la banque</div></div>
@@ -1530,13 +1547,13 @@ V.ensemble = () => {
         <h3 style="margin-top:18px">Pour la discussion</h3><p class="help" style="margin:0">Qui a pris le plus de risques ? Qui tient le plus longtemps sans vendre ? Les vues « Comparer les bilans » et « Marché et positionnement » répondent avec les chiffres de la classe.</p></div>
     </div>
     <div class="panel fade-in" style="margin-top:18px"><h3>Les élèves</h3>
-      <table class="list"><thead><tr><th>Élève</th><th>Entreprise</th><th>Avancement</th><th>Mission 1</th><th>Mission 2</th><th>Mission 3</th><th class="n">Trésorerie</th><th class="n">Autonomie</th><th class="n">XP</th><th></th></tr></thead><tbody>
+      <table class="list"><thead><tr><th>Élève</th><th>Entreprise</th><th>Avancement</th><th>Mission 1</th><th>Mission 2</th><th>Mission 3</th><th>Mission 4</th><th class="n">Trésorerie</th><th class="n">Autonomie</th><th class="n">XP</th><th></th></tr></thead><tbody>
       ${L.map(E => { const t = typeE(E), ok = pretE(E) && E.emplacement; return `<tr><td><div class="who"><div><b>${esc(E.prenom)} ${esc(E.nomEleve)}</b><small>${esc(E.email)}</small></div></div></td>
         <td><div class="who">${logoE(E, 34)}<div><span class="${styleCls(E)}" style="font-size:16px">${esc(denoE(E) || "–")}</span><small>${t ? t.emoji + " " + esc(t.nom) : ""}</small></div></div></td>
         <td><div class="prog"><i style="width:${pct(E.etape, E.total)}%"></i></div><small style="color:var(--dim)">${E.etape}/${E.total} décisions</small></td>
-        <td><span class="st ${E.statut}">${esc(STATUTS[E.statut] || E.statut)}</span></td><td>${stM(E.m2)}</td><td>${stM(E.m3)}</td>
-        <td class="n">${E.m3 && E.m3.tresorerie != null ? euro0(E.m3.tresorerie) : E.m2 && E.m2.tresorerie != null ? euro0(E.m2.tresorerie) : ok ? euro0(tresoE(E)) : "–"}</td><td class="n">${ok && autoE(E) != null ? autoE(E) + " mois" : "–"}</td><td class="n">${E.xp}</td>
-        <td><button class="link" data-open="${esc(E.email)}">Voir</button></td></tr>`; }).join("") || `<tr><td colspan="10"><div class="empty">Aucune donnée pour le moment. Les entreprises apparaissent dès que les élèves commencent la mission 1.</div></td></tr>`}
+        <td><span class="st ${E.statut}">${esc(STATUTS[E.statut] || E.statut)}</span></td><td>${stM(E.m2)}</td><td>${stM(E.m3)}</td><td>${stM(E.m4)}</td>
+        <td class="n">${E.m4 && E.m4.fini && E.m4.ex && E.m4.ex.tresorerie != null ? euro0(E.m4.ex.tresorerie) : E.m3 && E.m3.tresorerie != null ? euro0(E.m3.tresorerie) : E.m2 && E.m2.tresorerie != null ? euro0(E.m2.tresorerie) : ok ? euro0(tresoE(E)) : "–"}</td><td class="n">${ok && autoE(E) != null ? autoE(E) + " mois" : "–"}</td><td class="n">${E.xp}</td>
+        <td><button class="link" data-open="${esc(E.email)}">Voir</button></td></tr>`; }).join("") || `<tr><td colspan="11"><div class="empty">Aucune donnée pour le moment. Les entreprises apparaissent dès que les élèves commencent la mission 1.</div></td></tr>`}
       </tbody></table></div>`;
 };
 
@@ -1911,7 +1928,27 @@ function lireM4(d){
   const m = (d.missions || {})["4"]; if (!m || !m.tableauStocks) return null;
   return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes, version:m.version || "",
     stocks:m.tableauStocks, plan:m.planTresorerie || null, trimestres:Array.isArray(m.trimestres) ? m.trimestres : [], decisions:m.decisions || {}, evenements:m.evenements || {}, cr:m.compteResultats || null, bilan:m.bilan || null,
-    ecritures:Array.isArray(m.ecritures) ? m.ecritures : [], defis:m.defisEclair || [], calculs:m.calculs || {}, classeur:(m.classeur && Array.isArray(m.classeur.pieces)) ? m.classeur.pieces : [], ex:(m.entreprise || {}).exercice2027 || {} };
+    ecritures:Array.isArray(m.ecritures) ? m.ecritures : [], defis:m.defisEclair || [], calculs:m.calculs || {}, classeur:(m.classeur && Array.isArray(m.classeur.pieces)) ? m.classeur.pieces : [], ex:(m.entreprise || {}).exercice2027 || {},
+    ouverture:(m.ouverture && m.ouverture.bilan && Array.isArray(m.ouverture.bilan.actif)) ? m.ouverture.bilan : null };   // V4.2 : le bilan du 31/12/2026, pour le bilan comparé
+}
+const jjmmaaaa = (s) => /^\d{4}-\d{2}-\d{2}/.test(s || "") ? `${s.slice(8, 10)}/${s.slice(5, 7)}/${s.slice(0, 4)}` : "";
+/** V4.2 (02/11/2026, demande du professeur) : le bilan du 31/12/2026 (bilan d'ouverture envoyé par la page) à côté du dernier bilan de l'année, poste par poste. */
+function bilanCompareProf(o, b){
+  if (!b || !b.actif) return `<div class="empty">Pas de bilan enregistré.</div>`;
+  if (!o) return bilanDoc(b, true);
+  const RUB = ["Actif immobilisé", "Actif circulant", "Fonds propres", "Dettes à plus d'un an", "Dettes à un an au plus"], tot = (L) => r2((L || []).reduce((s, l) => s + (+l.montant || 0), 0));
+  const d1 = jjmmaaaa(b.date) || "à ce jour", m = (x) => x == null ? `<span style="opacity:.5">–</span>` : euro(x);
+  const lignes = (cote) => { const L = [], cle = (l) => l.compte || "1450";   // le résultat de l'année (sans compte) juste après le résultat reporté
+    [o, b].forEach((x, k) => (x[cote] || []).forEach(l => { let r = L.find(y => y.compte === l.compte && y.rubrique === l.rubrique);
+      if (!r) L.push(r = { compte:l.compte, libelle:l.libelle, rubrique:l.rubrique, v:[null, null] }); else if (k) r.libelle = l.libelle;
+      r.v[k] = +l.montant || 0; }));
+    return L.sort((a, c) => RUB.indexOf(a.rubrique) - RUB.indexOf(c.rubrique) || cle(a).localeCompare(cle(c))); };
+  const col = (titre, sous, cote) => { let rub = null;
+    return `<div class="col"><h5>${titre}<small>${sous}</small></h5><div class="pf-b2-h"><span></span><span>31/12/2026</span><span>${esc(d1)}</span></div>${lignes(cote).map(l => { const h = l.rubrique !== rub ? `<div class="sect">${esc(l.rubrique || "")}</div>` : ""; rub = l.rubrique;
+      return h + `<div class="l"><span class="k">${l.compte ? `<small class="cpt">${esc(l.compte)}</small>` : ""}<b>${esc(l.libelle)}</b></span><span class="v pf-b2-avant">${m(l.v[0])}</span><span class="v">${m(l.v[1])}</span></div>`; }).join("")}
+      <div class="t"><span>Total</span><span class="pf-b2-avant">${euro(tot(o[cote]))}</span><span>${euro(tot(b[cote]))}</span></div></div>`; };
+  const ok = Math.abs(tot(o.actif) - tot(o.passif)) < 0.05 && Math.abs(tot(b.actif) - tot(b.passif)) < 0.05;
+  return `<div class="bilan pf-b2">${col("ACTIF", "ce que l'entreprise possède", "actif")}${col("PASSIF", "d'où vient l'argent", "passif")}</div><p class="help" style="margin:6px 2px 0">${ok ? `✔ Actif = Passif aux deux dates : ${euro(tot(o.actif))} au 31/12/2026, ${euro(tot(b.actif))} au ${esc(d1)}.` : "⚠ Un des deux bilans est déséquilibré : à signaler."}</p>`;
 }
 /** La section « Mission 4 » de la fiche de l'élève : chiffres de l'année, décisions, plan de trésorerie, stocks, compte de résultats, bilan, classeur, défis. */
 function sectionM4(E){
@@ -1936,7 +1973,8 @@ function sectionM4(E){
     <h3 class="sub">💶 Plan de trésorerie : prévu (blanc) et réel (bleu)</h3><div class="jrn-wrap"><table class="led"><thead><tr><th></th>${[1,2,3,4].map(q => `<th class="n">T${q} prévu</th><th class="n">T${q} réel</th>`).join("")}</tr></thead><tbody>${lignePlan("Début", "debut")}${lignePlan("Entrées", "totalEntrees")}${lignePlan("Sorties", "totalSorties")}${lignePlan("Fin", "fin")}${lignePlan("Point le plus bas", "pointBas")}</tbody></table></div>
     <p class="help" style="margin:4px 2px 10px">Trésorerie de sécurité : ${plan.tresorerieSecurite != null ? euro0(plan.tresorerieSecurite) : "–"}.</p>
     <h3 class="sub">📦 Tableau des stocks : prévu, vendu, perdu, stock en fin de trimestre</h3><div class="jrn-wrap"><table class="led"><thead><tr><th>Article</th>${[1,2,3,4].map(q => `<th class="n">T${q} prévu</th><th class="n">vendu</th><th class="n">perdu</th><th class="n">stock</th>`).join("")}</tr></thead><tbody>${stocks}</tbody></table></div>
-    ${cr ? `<div class="grid2" style="margin-top:14px;align-items:start"><div><h3 class="sub" style="margin-top:0">📊 Compte de résultats 2027</h3><div class="jrn-wrap">${cr}</div></div><div><h3 class="sub" style="margin-top:0">⚖️ Bilan ${m.bilan && m.bilan.date ? "au " + CLASSEUR.dFr(m.bilan.date) : ""}</h3>${m.bilan ? bilanDoc(m.bilan, true) : ""}</div></div>` : (m.bilan ? `<h3 class="sub">⚖️ Bilan à ce jour</h3>${bilanDoc(m.bilan, true)}` : "")}
+    ${cr ? `<h3 class="sub">📊 Compte de résultats 2027</h3><div class="jrn-wrap">${cr}</div>` : ""}
+    ${m.bilan ? `<h3 class="sub">⚖️ Bilan au 31/12/2026 et ${jjmmaaaa(m.bilan.date) ? "au " + jjmmaaaa(m.bilan.date) : "à ce jour"} : l'évolution de l'année, poste par poste</h3>${bilanCompareProf(m.ouverture, m.bilan)}` : ""}
     ${m.ecritures.length ? `<h3 class="sub">📒 Livre-journal de l'année (${m.ecritures.length} écritures)</h3>${journalProf(m.ecritures)}` : ""}
     ${classeurProf(E, 4)}
     ${defisProf(m.defis)}</div>`;
@@ -2031,7 +2069,9 @@ V.ventes = () => {
 };
 
 /** Sections missions 2 et 3 dans la vue « Élève par élève » (V3 : comptes, écritures, balance, défis, réception, conditions du client). */
-function sectionsM23(E){
+function sectionsM23(E){ return sectionM2(E) + sectionM3(E); }
+/** V4.2 (02/11/2026) : la section de chaque mission, aussi affichée seule dans la vue de la mission (menu « Les missions »). */
+function sectionM2(E){
   let html = "";
   if (E.m2){ const m = E.m2, trop = m.journal.some(j => j.enTrop > 0), escT = m.journal.some(j => j.escompte > 0), cpts = m.journal.some(j => j.compte), journal = m.journal.slice().sort((a, b) => (a.dateISO || "") < (b.dateISO || "") ? -1 : (a.dateISO || "") > (b.dateISO || "") ? 1 : 0);
     html += `<div class="card fade-in" style="margin-top:22px"><h3>🧰 Mission 2 · équipement ${stM(m)}${m.version ? ` <small class="help" style="margin:0">· version ${esc(m.version)}</small>` : ""}</h3>
@@ -2043,6 +2083,10 @@ function sectionsM23(E){
       ${defisProf(m.defis)}
       ${m.fini && m.bilan ? `<h3 class="sub">Bilan après équipement</h3>${bilanDoc(m.bilan)}` : ""}</div>`;
   }
+  return html;
+}
+function sectionM3(E){
+  let html = "";
   if (E.m3){ const m = E.m3, dv = m.devis, cr = m.cr, rc = m.reception, cal = m.calendrier;
     html += `<div class="card fade-in" style="margin-top:22px"><h3>🛍️ Mission 3 · premier mois${cal ? ` (${esc(cal.nom)} ${esc(cal.an)})` : ""} ${stM(m)}${m.version ? ` <small class="help" style="margin:0">· version ${esc(m.version)}</small>` : ""}${m.prevision ? ` <span class="coh warn">prévision (mission en cours)</span>` : ""}</h3>
       ${m.prix.length ? `<table class="led"><thead><tr><th>Article</th><th class="n">Marché TTC</th><th class="n">Prix choisi TTC</th><th class="n">Marge / unité</th><th class="n">Coef.</th><th class="n">Prévision</th></tr></thead><tbody>${m.prix.map(p => `<tr><td>${esc(p.article)}</td><td class="n">${euro(p.prixMarcheTTC)}</td><td class="n" style="color:${p.prixVenteTTC > p.prixMarcheTTC * 1.15 ? "var(--amber)" : p.prixVenteTTC < p.prixMarcheTTC * 0.9 ? "var(--steel)" : "var(--text)"}">${euro(p.prixVenteTTC)}</td><td class="n">${euro(p.margeUnitaire)}</td><td class="n">×${p.coefficient}</td><td class="n">${p.previsionMois}</td></tr>`).join("")}</tbody></table>` : ""}
@@ -2059,6 +2103,84 @@ function sectionsM23(E){
   return html;
 }
 
+// ======================================================================
+//  V4.2 (02/11/2026, demandes du professeur) : les missions 2, 3 et 4 dans le menu de gauche, chacune avec la classe puis un élève à analyser ;
+//  l'actualisation automatique sans clignotement.
+// ======================================================================
+/** Chaque mission du menu : qui l'a commencée, et la section de la fiche de l'élève pour cette mission seule. */
+const MISSIONS_VUE = {
+  achats:{ m:"2", nom:"Mission 2 · Équipe ton entreprise", a:(E) => !!(E.m2 && E.m2.achats && E.m2.achats.length), section:(E) => sectionM2(E) },
+  ventes:{ m:"3", nom:"Mission 3 · Ton premier mois de ventes", a:(E) => !!E.m3, section:(E) => sectionM3(E) },
+  annee:{ m:"4", nom:"Mission 4 · Ton année 2027", a:(E) => !!E.m4, section:(E) => sectionM4(E) } };
+APP.mEleve = { achats:null, ventes:null, annee:null };   // l'élève analysé dans chaque mission (son adresse) ; null : la classe
+/** La mission 4 pour toute la classe : résultats, trésorerie, ruptures, décisions (comme les vues des missions 2 et 3). */
+function classeM4(){
+  const L = avecEntreprise().filter(E => E.m4);
+  if (!L.length) return head("Mission 4 · l'année 2027", "L'année 2027 de <span class='grad'>la classe</span>", "Les données apparaîtront dès que les élèves auront commencé la mission 4.") + `<div class="empty">Aucune donnée de mission 4 pour l'instant.</div>`;
+  const ex = (E) => E.m4.ex || {}, perdus = (E) => E.m4.trimestres.reduce((s, t) => s + (t.ventes || []).reduce((a, v) => a + (+v.perdu || 0), 0), 0), calc = (E) => ["stockAlerte", "tresorerie", "interets"].filter(k => E.m4.calculs[k] === true).length;
+  const F = L.filter(E => E.m4.fini && ex(E).resultat != null), LIB_FIN = { straight:"🏦 straight loan", caisse:"💳 crédit de caisse", retard:"⏳ grossiste payé en retard", rien:"🤷 aucun" };
+  const best = F.slice().sort((a, b) => ex(b).resultat - ex(a).resultat)[0], riche = F.slice().sort((a, b) => ex(b).tresorerie - ex(a).tresorerie)[0], prudent = F.slice().sort((a, b) => perdus(a) - perdus(b))[0];
+  const emprunt = F.filter(E => /^(straight|caisse)$/.test(((E.m4.decisions || {}).financement || {}).type || "")).length;
+  const hl = (c, lab, E, val) => E ? `<div class="hl" style="--c:${c}"><span>${lab}</span><b>${esc(denoE(E))}</b><small>${val}</small></div>` : "";
+  return head("Mission 4 · l'année 2027", "L'année 2027 de <span class='grad'>la classe</span>", "Le même calendrier pour tous (bouche-à-oreille, grève, vitrine brisée, grosse commande, impayé, article à la traîne), mais des commandes, des remises et des financements différents : d'où viennent les écarts de résultat et de trésorerie ?")
+    + `<div class="kpis fade-in"><div class="kpi" style="--c:var(--gold)"><div class="n">${F.length}/${L.length}</div><div class="l">missions 4 terminées</div></div>
+      <div class="kpi" style="--c:var(--mint)"><div class="n">${F.length ? euro0(moy(F.map(E => ex(E).resultat))) : "–"}</div><div class="l">résultat moyen de 2027</div></div>
+      <div class="kpi" style="--c:var(--steel)"><div class="n">${F.length ? euro0(moy(F.map(E => ex(E).tresorerie))) : "–"}</div><div class="l">trésorerie moyenne au 31 décembre</div></div>
+      <div class="kpi" style="--c:var(--amber)"><div class="n">${F.length ? Math.round(moy(F.map(perdus))) : "–"}</div><div class="l">ventes perdues en moyenne (ruptures)</div></div>
+      <div class="kpi" style="--c:var(--violet)"><div class="n">${F.length ? emprunt + "/" + F.length : "–"}</div><div class="l">ont emprunté à l'automne</div></div></div>
+    <div class="grid3 fade-in" style="margin-bottom:18px">${hl("var(--mint)", "Meilleur résultat", best, best ? euro0(ex(best).resultat) + " en 2027" : "")}${hl("var(--steel)", "Plus grosse trésorerie", riche, riche ? euro0(ex(riche).tresorerie) + " au 31 décembre" : "")}${hl("var(--amber)", "Le moins de ruptures", prudent, prudent ? perdus(prudent) + " vente(s) perdue(s) sur l'année" : "")}</div>
+    <div class="panel fade-in"><table class="list"><thead><tr><th>Entreprise</th><th class="n">Résultat prévu</th><th class="n">Résultat réel</th><th class="n">Trésorerie au 31/12</th><th class="n">Ventes perdues</th><th>Grosse commande</th><th>Financement</th><th>Fin d'année</th><th class="n">Calculs justes</th><th></th></tr></thead><tbody>
+    ${L.map(E => { const m = E.m4, d = m.decisions || {}, g = d.grosseCommande || {}, f = d.financement || {}, e = ex(E);
+      return `<tr><td><div class="who">${logoE(E, 30)}<div><span class="${styleCls(E)}" style="font-size:15px">${esc(denoE(E))}</span><small>${esc(E.prenom)} ${esc(E.nomEleve)} · ${stM(m)}${m.fini ? "" : ` · ${m.trimestres.length}/4 trimestres`}</small></div></div></td>
+        <td class="n">${m.plan && m.plan.resultatPrevu != null ? euro0(m.plan.resultatPrevu) : "–"}</td><td class="n" style="color:${!m.fini || e.resultat == null ? "" : e.resultat >= 0 ? "var(--mint)" : "var(--coral)"}">${m.fini && e.resultat != null ? euro0(e.resultat) : "–"}</td>
+        <td class="n">${m.fini && e.tresorerie != null ? euro0(e.tresorerie) : "–"}</td><td class="n" style="color:${perdus(E) ? "var(--amber)" : ""}">${m.trimestres.length ? perdus(E) : "–"}</td>
+        <td>${g.remise == null ? "–" : g.acceptee === false ? `<span class="coh warn">client perdu</span>` : `remise ${g.remise < 10 && g.contreOffre ? "10 % (contre-offre)" : g.remise + " %"} · ${esc(g.livraison || "–")}`}</td>
+        <td>${f.type ? esc(LIB_FIN[f.type] || f.type) + (f.montant ? " " + euro0(f.montant) : "") : "–"}</td><td>${d.promotionFinAnnee == null ? "–" : d.promotionFinAnnee ? "🔥 promotion" : "prix gardé"}</td>
+        <td class="n">${calc(E)}/3</td><td><button class="link" data-open="${esc(E.email)}">Voir</button></td></tr>`; }).join("")}</tbody></table></div>`
+    + ask("Même grève et même impayé pour tous : qui avait assez de stock de sécurité, qui a dû emprunter ? Pour la grosse commande, quelle remise rapportait le plus de marge ? Pourquoi le résultat de l'année n'est-il pas égal à la variation de la trésorerie ?");
+}
+const CLASSE_VUE = { achats:V.achats, ventes:V.ventes, annee:classeM4 };
+Object.keys(MISSIONS_VUE).forEach(k => { V[k] = () => vueMission(k); });
+/** La barre du haut d'une mission : la classe, ou un élève (flèches, position, liste). */
+function barreMission(k, L, i){
+  return `<div class="pres-top m-barre"><span class="m-titre">${esc(MISSIONS_VUE[k].nom)}</span><button class="btn btn-ghost ${i < 0 ? "on" : ""}" data-mel="${k}|">👥 La classe</button>
+    ${L.length ? `${i >= 0 ? `<button class="arrow" data-mnav="${k}|-1" aria-label="Élève précédent">←</button><button class="arrow" data-mnav="${k}|1" aria-label="Élève suivant">→</button><span class="pos">${i + 1} / ${L.length}</span>` : ""}
+      <select class="inp m-sel" data-msel="${k}" aria-label="Analyser un élève"><option value="">👤 Analyser un élève…</option>${L.map(E => `<option value="${esc(E.email)}" ${i >= 0 && L[i].email === E.email ? "selected" : ""}>${esc(E.prenom)} ${esc(E.nomEleve)} – ${esc(denoE(E) || "(sans nom)")}</option>`).join("")}</select>`
+      : `<span class="help" style="margin:0">Aucun élève n'a encore commencé cette mission.</span>`}</div>`;
+}
+/** Une mission : la classe (les boutons « Voir » restent dans la mission), ou la mission d'un seul élève, à projeter en classe. */
+function vueMission(k){
+  const M = MISSIONS_VUE[k], L = avecEntreprise().filter(M.a), em = APP.mEleve[k], i = em ? L.findIndex(E => E.email === em) : -1;
+  if (i < 0){ APP.mEleve[k] = null; return barreMission(k, L, -1) + CLASSE_VUE[k]().replace(/data-open="/g, `data-mel="${k}|`); }
+  const E = use(L[i]), t = typeE(E);
+  return barreMission(k, L, i) + `<div class="m-eleve fade-in"><div class="who-big">${logoE(E, 60)}<div><div class="dn ${styleCls(E)}" style="color:${E.couleur || "#fff"}">${esc(denoE(E) || "(sans nom)")}</div>
+      <div class="sl">${esc(E.prenom)} ${esc(E.nomEleve)}${E.classe ? " · " + esc(E.classe) : ""}${t ? ` · ${t.emoji} ${esc(t.nom)}` : ""}</div></div></div>
+      <div class="m-eleve-r">${stM(E["m" + M.m])}<button class="btn btn-ghost" data-open="${esc(E.email)}">📂 Tout son dossier (missions 1 à 4)</button></div></div>` + M.section(E);
+}
+// Le menu ouvre toujours la classe ; « Voir », les flèches et la liste ouvrent un élève dans la même mission.
+document.addEventListener("click", (e) => { const b = e.target.closest("button[data-vue]"); if (b && MISSIONS_VUE[b.dataset.vue]) APP.mEleve[b.dataset.vue] = null; }, true);
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-mel],[data-mnav]"); if (!b) return;
+  if (b.dataset.mel != null){ const [k, em] = b.dataset.mel.split("|"); APP.mEleve[k] = em || null; render(); window.scrollTo({ top:0 }); return; }
+  const [k, d] = b.dataset.mnav.split("|"), L = avecEntreprise().filter(MISSIONS_VUE[k].a); if (!L.length) return;
+  const i = Math.max(0, L.findIndex(E => E.email === APP.mEleve[k])); APP.mEleve[k] = L[(i + +d + L.length) % L.length].email; render();
+});
+document.addEventListener("change", (e) => { const s = e.target.closest && e.target.closest("[data-msel]"); if (!s) return; APP.mEleve[s.dataset.msel] = s.value || null; s.blur(); render(); window.scrollTo({ top:0 }); });
+document.addEventListener("keydown", (e) => {
+  if (!MISSIONS_VUE[APP.vue] || !APP.mEleve[APP.vue] || ["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName)) return;
+  if (e.key === "ArrowRight" || e.key === "ArrowLeft"){ const b = document.querySelector(`[data-mnav="${APP.vue}|${e.key === "ArrowRight" ? 1 : -1}"]`); if (b) b.click(); }
+});
+/** L'actualisation automatique (toutes les minutes) : si la vue affichée n'a pas changé, seule l'heure de la barre du haut bouge ;
+ *  sinon la vue est redessinée sans les animations d'arrivée, à la même hauteur, avec les mêmes sections ouvertes. */
+function renduCalme(){
+  const app = $("#app"); if (!app || !APP.source || APP.source === "chargement" || !V[APP.vue]){ render(); return; }
+  let neuf; try { neuf = rail() + V[APP.vue](); } catch(e) { render(); return; }
+  if (neuf === APP.dernierRendu){ APP.renduEnAttente = false; const tb = app.querySelector(".topbar"); if (tb) tb.outerHTML = topbar(); return; }
+  const x = window.scrollX, y = window.scrollY, ouverts = [...app.querySelectorAll("details")].map(d => d.open);
+  APP.calme = true; render();
+  app.querySelectorAll("details").forEach((d, i) => { if (ouverts[i] != null) d.open = ouverts[i]; });
+  window.scrollTo(x, y);
+}
 // ======================================================================
 //  ⚙️ PILOTAGE DE LA CLASSE (remplace le menu « 🏪 Mini-entreprise » du Google Sheet)
 //  Ouvrir / fermer l'accès, missions ouvertes, places par activité, liste de la classe,
@@ -2357,7 +2479,7 @@ document.addEventListener("click", async (e) => {
 function rail(){
   return `<nav class="rail" aria-label="Menu"><div class="brand"><div class="lg">SL</div><div><b>Mini-entreprises</b><small>Console professeur · Technicien en comptabilité</small></div></div>
     ${VUES.map(v => v[0] === "sep" ? `<div class="navlab">${v[1]}</div>` : `<button class="nv ${APP.vue === v[0] ? "on" : ""}" data-vue="${v[0]}"><span class="i">${v[1]}</span>${v[2]}</button>`).join("")}
-    <div class="foot">Missions 1, 2 et 3<br>Données : ${APP.source === "demo" ? "démonstration" : "base de l'école (Supabase)"}</div></nav>`;
+    <div class="foot">Missions 1 à 4<br>Données : ${APP.source === "demo" ? "démonstration" : "base de l'école (Supabase)"}</div></nav>`;
 }
 /** État de l'accès des élèves, en clair (pour la barre du haut et le pilotage). */
 function etatAcces(){
@@ -2405,17 +2527,18 @@ function gate(){
 }
 function render(){
   const app = $("#app");
-  APP.renduEnAttente = false;
+  APP.renduEnAttente = false; app.classList.toggle("calme", !!APP.calme); APP.calme = false;   // V4.2 : « calme » = actualisation automatique, sans animations d'arrivée
   if (!APP.source){ app.innerHTML = gate(); const c = $(APP.email ? "#pcode" : "#pmail"); if (c) c.focus(); return; }
   if (APP.source === "chargement"){ app.innerHTML = `<main style="grid-column:1/-1"><div class="gate card fade-in"><div class="kick">Console professeur</div><h2><span class="spin"></span> Chargement de ta classe…</h2><p class="help">Connexion à la base de l'école.</p>${APP.err ? `<div class="err">${esc(APP.err)}</div>` : ""}</div></main>`; return; }
   if (!V[APP.vue]) APP.vue = "pilotage";
-  app.innerHTML = rail() + `<main>${topbar()}<div id="vue">${V[APP.vue]()}</div></main>`;
+  const r = rail(), vv = V[APP.vue](); APP.dernierRendu = r + vv;
+  app.innerHTML = r + `<main>${topbar()}<div id="vue">${vv}</div></main>`;
 }
 /** Actualisation silencieuse : si le professeur est en train d'écrire dans un champ, on attend qu'il en sorte. */
 function renduSilencieux(){
   const a = document.activeElement;
   if (a && ["INPUT", "TEXTAREA", "SELECT"].includes(a.tagName) && a.id !== "selClasse"){ APP.renduEnAttente = true; return; }
-  render();
+  renduCalme();
 }
 
 // ======================================================================
