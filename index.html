@@ -1939,9 +1939,14 @@ function lireM4(d){
   const m = (d.missions || {})["4"]; if (!m || !m.tableauStocks) return null;
   return { statut:m.statut || "en_cours", fini:m.statut === "termine", etape:m.etape || {}, xp:+m.xp || 0, badges:(m.recompenses || {}).badges || [], duree:m.dureeMinutes, version:m.version || "",
     stocks:m.tableauStocks, plan:m.planTresorerie || null, trimestres:Array.isArray(m.trimestres) ? m.trimestres : [], decisions:m.decisions || {}, evenements:m.evenements || {}, cr:m.compteResultats || null, bilan:m.bilan || null,
-    ecritures:Array.isArray(m.ecritures) ? m.ecritures : [], defis:m.defisEclair || [], calculs:m.calculs || {}, classeur:(m.classeur && Array.isArray(m.classeur.pieces)) ? m.classeur.pieces : [], ex:(m.entreprise || {}).exercice2027 || {},
+    ecritures:Array.isArray(m.ecritures) ? m.ecritures : [], defis:(m.defisEclair || []).map(defiM4), calculs:m.calculs || {}, classeur:(m.classeur && Array.isArray(m.classeur.pieces)) ? m.classeur.pieces : [], ex:(m.entreprise || {}).exercice2027 || {},
     ouverture:(m.ouverture && m.ouverture.bilan && Array.isArray(m.ouverture.bilan.actif)) ? m.ouverture.bilan : null };   // V4.2 : le bilan du 31/12/2026, pour le bilan comparé
 }
+/** V4.4 (03/11/2026) : jusqu'au 03/11/2026, la page comptait juste « Non, seulement quand le client aura payé » au défi de la TVA d'une facture impayée.
+ *  La réussite de ce défi se relit d'après la réponse donnée (ancienne et nouvelle formulation de la bonne réponse). */
+const T4_JUSTES = ["Oui : la TVA est due pour la période de la facture, même si le client n'a pas encore payé",
+  "Oui : elle est due pour la période de la facture, même si le client n'a pas encore payé ; s'il ne paie jamais (perte prouvée), tu la récupéreras"];
+const defiM4 = (q) => q && q.defi === "t4" && q.reponse ? Object.assign({}, q, { reussi:T4_JUSTES.includes(q.reponse) }) : q;
 const jjmmaaaa = (s) => /^\d{4}-\d{2}-\d{2}/.test(s || "") ? `${s.slice(8, 10)}/${s.slice(5, 7)}/${s.slice(0, 4)}` : "";
 /** V4.2 (02/11/2026, demande du professeur) : le bilan du 31/12/2026 (bilan d'ouverture envoyé par la page) à côté du dernier bilan de l'année, poste par poste. */
 function bilanCompareProf(o, b){
